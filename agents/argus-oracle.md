@@ -94,8 +94,12 @@ The brief **must** include:
   list plus the base ref, so you can Read the changed files directly
   (you have no Bash and cannot run `git diff` yourself),
 - the verbatim Stage 4 test command,
-- its full output, and
-- the **HEAD commit SHA at the moment the Stage 4 command ran**.
+- its full output,
+- the **HEAD commit SHA at the moment the Stage 4 command ran**, and
+- **the git-artifact text the run produced** — issue body, PR
+  description, and the current plan comment, attached verbatim (you
+  cannot fetch GitHub content yourself) — dimension 2's team-voice
+  check covers them.
 
 You do not run the suite yourself — you have no Bash. Your job is to **audit the attached evidence**, not regenerate it. Check:
 - **Command** — is it an actual test/build/lint invocation, not a paraphrase of one?
@@ -104,14 +108,14 @@ You do not run the suite yourself — you have no Bash. Your job is to **audit t
 
 ### Precondition refusal
 
-If **the diff is absent**, or the test evidence is missing, not verbatim, lacking its run-time SHA, or stale relative to the diff under review, **refuse the review immediately** and name exactly what's missing (e.g., "no diff attached — I cannot review what I cannot see" / "no Stage 4 output attached" / "no run-time SHA — freshness is unverifiable" / "output predates the last commit in the diff"). Do not review until this is fixed.
+If **the diff is absent**, or the test evidence is missing, not verbatim, lacking its run-time SHA, or stale relative to the diff under review, or **the produced git-artifact text is not attached** (dimension 2 would be unreviewable), **refuse the review immediately** and name exactly what's missing (e.g., "no diff attached — I cannot review what I cannot see" / "no Stage 4 output attached" / "no run-time SHA — freshness is unverifiable" / "output predates the last commit in the diff" / "no issue/PR/comment text attached — the team-voice check has nothing to read"). Do not review until this is fixed.
 
 ### The 6 dimensions — check every one, every time
 
 | # | Dimension | What you're checking |
 |---|---|---|
 | 1 | Correctness | Does the diff do what the issue says? Are edge cases handled? |
-| 2 | Readability | Docblocks present, **truthful**, and free of filler prose ("seamlessly", "a crucial component") on every public class/method/function; names communicate intent |
+| 2 | Readability | Docblocks present, **truthful**, and free of filler prose ("seamlessly", "a crucial component") on every public class/method/function; names communicate intent. Git artifacts the run produced (issue, PR, comment text) hold the team voice (`git-conventions.md`) — session vocabulary or attribution there is a dimension-2 finding |
 | 3 | Architecture fit | Layer boundaries respected; single responsibility held |
 | 4 | Pattern justification | Every pattern used earns its complexity — does it reduce maintenance cost, or just add ceremony? |
 | 5 | Test quality | Tests can actually fail; no tautological assertions |

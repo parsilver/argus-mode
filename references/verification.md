@@ -51,7 +51,10 @@ for the two that skip the rest of the rubric entirely when missing.
    test (`pipeline.md`) — or is it pushing an oversized single PR
    through the gate? Past ~5 implementation stages, a diff beyond the
    reviewable bar, or multiple independently shippable outcomes →
-   `revise` toward a parent issue with sub-issues, one PR each.
+   `revise` toward a parent issue with sub-issues, one PR each —
+   unless the plan carries the unavoidable-size justification
+   `git-conventions.md` permits (a rename sweep, generated code), in
+   which case judge the justification, not the size alone.
 
 Verdict is structured: `approve`, or `revise` with reasons tied to the
 specific rubric item(s) that failed.
@@ -60,7 +63,7 @@ specific rubric item(s) that failed.
 
 A plan arriving **without failable checks**, or **without a test list**
 for an implementation stage, gets an instant `revise` naming the missing
-precondition — the oracle does not attempt items 1–7 above on a plan it
+precondition — the oracle does not attempt items 1–8 above on a plan it
 cannot actually review. Reviewing a plan with no way to fail is theater;
 name the gap and send it back.
 

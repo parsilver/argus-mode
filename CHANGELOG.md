@@ -26,8 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   issue fields the repo actually has (labels/milestone/type —
   discover, then apply, never invent); a Project-board sync section
   adds the issue to the repo's Projects v2 board and advances its
-  Status at the same boundaries that update the plan comment, with a
-  degradation row for missing boards or token scope.
+  Status as the work moves (In Progress → In Review → Done, Blocked on
+  holds), with a degradation row for missing boards or token scope.
 - Decomposition rule (`references/pipeline.md`,
   `references/verification.md` rubric item 8,
   `references/delegation.md`): the big-work counterpart of the

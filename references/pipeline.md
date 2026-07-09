@@ -3,7 +3,8 @@
 The git/GitHub mechanics shared by both skills: how work enters the repo
 (Stage 1), how the plan stays durable and visible (Stage 2.5 onward), what
 degrades when the platform doesn't cooperate, and how a Stage 5 verdict
-turns into an action. Read this file at Stage 1, and again at Stage 5.
+turns into an action. Read this file at Stage 1, apply its
+decomposition test at Stage 2, and read it again at Stage 5.
 
 ## Stage 1 — Triviality escape hatch (run this first)
 
@@ -119,8 +120,8 @@ Work that isn't on the repo's board is invisible to everyone who
 tracks the project there. At intake, detect a Projects v2 board —
 `gh project list --owner <owner>` (requires the `project` token
 scope), or the board the repo's recent issues already sit on. When one
-exists, add the issue to it and advance its Status field at the same
-boundaries that update the plan comment:
+exists, add the issue to it and advance its Status field at these
+boundaries:
 
 | Pipeline event | Board Status |
 |---|---|
@@ -135,7 +136,8 @@ the same treatment as their parent.
 
 - Refusal condition: a board update skipped silently at a boundary is
   the board lying to its readers — when the board can't be updated (no
-  board, missing scope), name it once in the final report instead.
+  board, missing scope, no option that maps by meaning), name it once
+  in the final report instead.
 
 ## Plan-comment lifecycle
 

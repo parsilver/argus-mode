@@ -66,8 +66,8 @@ not decoration.
    - Open a **draft** PR with `Closes #<n>` on the first line of the
      description; title and description contract per
      `git-conventions.md` (the title is the future squash subject).
-   - This draft PR is the durable home for the plan comment (posted at
-     Stage 2.5) and the per-stage status that follows it.
+   - This draft PR mirrors the plan comment (posted at Stage 2.5) and
+     anchors the durable state its checklist updates keep current.
 
 - Refusal condition: implementation work starting before the draft PR
   exists skips the durable-state contract every later stage depends on —

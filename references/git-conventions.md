@@ -134,10 +134,15 @@ a repo audience is pasting a shell transcript into a design doc.
   comment text, grep the draft:
 
   ```
-  grep -inE 'argus|oracle|implementer|explorer|reviewer agent|fan-?out|revise cycle|fix-then-ship|checkpoint|failable|stage [0-9]|GREEN|triviality|generated (by|with)' draft.md
+  grep -inE 'argus|oracle gate|revise cycle|fix-then-ship|implementer|explorer agent|reviewer agent|checkpoint [0-9]|failable|stage [0-9]+ (done|gate|review)|generated (by|with)|co-authored-by' draft.md
   ```
 
-  Any hit is a rewrite, before it posts.
+  Any hit is a rewrite, before it posts — with one triage rule: a hit
+  that is the repo's own domain vocabulary (an Oracle database, a WAL
+  checkpoint, a rollout's own stage numbering) is a false positive; the
+  rewrite command targets session narration. When in doubt, ask whether
+  the sentence describes this run's internal process — only that gets
+  rewritten.
 - **Carve-out — repos whose subject matter is the pipeline.** Where the
   pipeline itself is the product under edit (this plugin's own repo),
   its vocabulary is product terminology and appears as content; the

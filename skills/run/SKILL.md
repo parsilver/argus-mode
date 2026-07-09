@@ -147,7 +147,7 @@ A red check that resists one obvious correction is a debugging event, not a retr
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` again now** for the verdict→action mapping and the degraded merge semantics.
 
-Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline per the Agent availability check above). **The brief must attach the verbatim Stage 4 command and its full output** — the reviewer's precondition demands it. **Precondition refusal:** the reviewer refuses a diff whose test suite is not shown GREEN — it returns immediately naming the missing precondition.
+Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline per the Agent availability check above). **The brief must attach the verbatim Stage 4 command and its full output** — the reviewer's precondition demands it — **and name the issue and PR under review** so the reviewer can read their text with its read-only `gh` grant (dimension 2 covers the artifacts this run produced). **Precondition refusal:** the reviewer refuses a diff whose test suite is not shown GREEN — it returns immediately naming the missing precondition.
 
 Review dimensions (rubric shared with `quality.md`):
 

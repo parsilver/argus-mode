@@ -47,8 +47,9 @@ Count signals, don't estimate remaining context by feel:
 | Long output re-scrolled | scrolling back through the same long output repeatedly |
 
 - **Two or more true** → finish the current atomic step, then
-  **propose** a handoff to the user with per-stage status. "Almost
-  done" does not cancel the proposal — propose anyway.
+  **propose** a handoff to the user, pointing at the plan comment's
+  checklist state. "Almost done" does not cancel the proposal —
+  propose anyway.
 - **An authoritative low-context system warning** → hand off now, no
   proposal. This overrides the "two or more" count; one authoritative
   warning is sufficient on its own.
@@ -96,5 +97,5 @@ evidence, never the marker's internal numbering.
 
 Then update the plan comment (or `PLAN.md`) to match. The marker keeps
 the discipline in recent context on long runs; the comment update is
-what makes the per-stage status trustworthy at any point someone reads
+what makes the checklist state trustworthy at any point someone reads
 it mid-run.

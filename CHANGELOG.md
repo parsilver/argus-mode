@@ -17,7 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and a lexicon grep with a refusal condition (with a carve-out for
   repos whose subject matter is the pipeline itself). Review dimension
   2 (`references/verification.md`, reviewer and oracle agents) treats
-  violations as Readability findings.
+  violations as Readability findings, and the gates receive the
+  produced artifact text as evidence: a fourth consult-mode evidence
+  item, and a read-only `gh issue view`/`gh pr view` grant for the
+  reviewer.
 
 ### Changed
 

@@ -205,15 +205,20 @@ refusal naming the missing evidence, not a review.
 `/argus-mode:run`:** the review brief must carry, verbatim —
 1. **the diff itself** (patch text, or changed-file list + base ref the
    oracle can Read against — it has no Bash and cannot run `git diff`),
-2. the Stage 4 command and its full output, and
+2. the Stage 4 command and its full output,
 3. the **HEAD commit SHA at the moment the Stage 4 command ran**, so
-   freshness is checkable instead of taken on the lead's word.
+   freshness is checkable instead of taken on the lead's word, and
+4. **the git-artifact text this run produced** — issue body, PR
+   description, the current plan comment — so the team-voice check
+   (dimension 2) has something to read; the oracle cannot fetch
+   GitHub content itself.
 
-The oracle audits that evidence — command, suite scope, freshness —
-rather than re-running the suite itself (unlike `argus-reviewer`, which
-may re-run tests). A missing diff, missing SHA, or stale/ambiguous
-output is an instant refusal naming the gap: the oracle never reviews
-blind, and never audits evidence it can't trust.
+The oracle audits that evidence — command, suite scope, freshness,
+artifact voice — rather than re-running the suite itself (unlike
+`argus-reviewer`, which may re-run tests). A missing diff, missing SHA,
+missing artifact text, or stale/ambiguous output is an instant refusal
+naming the gap: the oracle never reviews blind, and never audits
+evidence it can't trust.
 
 On `ship` / `fix-then-ship`: update the PR description's "How it was
 verified" section with the Stage 4 command and its result — PR text in

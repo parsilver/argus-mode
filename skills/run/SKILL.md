@@ -56,7 +56,7 @@ Once the task clears the triviality check, the pipeline engages: **read `${CLAUD
 **Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` and `${CLAUDE_PLUGIN_ROOT}/references/git-conventions.md` now** — pipeline.md is the flow (follow it exactly, including its degradation rules); git-conventions.md is the naming and message standard every artifact below follows:
 
 1. `git fetch origin`, fast-forward the default branch.
-2. `gh issue create` describing the work.
+2. `gh issue create` describing the work — filling the fields the repo actually has (labels/milestone/type: discover, then apply) and adding the issue to the repo's project board when one exists (`pipeline.md`, Project-board sync).
 3. Branch via `gh issue develop <n>` (or `git switch -c`). Use an isolated worktree when the tree is dirty or other work is in flight; a clean solo checkout may branch in place.
 4. Empty bootstrap commit, open a **draft** PR with `Closes #<n>` immediately.
 
@@ -73,6 +73,8 @@ Write the plan as a task list, one row per stage, three columns filled for every
 | The stage's deliverable, and who executes it (lead or which agent) | A concrete check that can actually go RED (command + expected output) | Structures touched, patterns applied and why, test list (name tests before code) |
 
 A check that cannot fail ("looks good", "review the code") is not a check — rewrite it before moving on.
+
+**Decomposition test:** a plan past ~5 implementation stages, an expected diff beyond the reviewable bar, or multiple independently shippable outcomes splits into a parent issue with sub-issues — one branch and PR each, merged serially (`pipeline.md`, Decomposition). The oracle checks this at the gate.
 
 **Domain skill routing:** record which domains the task touches (UI/visual, shadcn project, data viz, database, …) against the table in `${CLAUDE_PLUGIN_ROOT}/references/delegation.md`. Detect matches from the **session's actual available-skills listing** — never invent a skill name from memory or training data. Plugin-namespaced variants count as matches. If no installed skill matches a domain the task touches, say so explicitly in the plan ("no matching skill installed for `<domain>`") and proceed on the quality doctrine alone — never a silent degrade.
 
@@ -169,7 +171,7 @@ Review dimensions (rubric shared with `quality.md`):
 | `rework` | Return to Stage 3 (or Stage 2 if the plan is implicated). A fresh Stage 5 review is mandatory afterward. Cap: two rework cycles, then escalate to the user. |
 | `reject` | Stop. Do not merge. Report the reviewer's reason to the user. |
 
-On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
+On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. Advance the project board's Status when one exists: In Review when this gate begins, Done on merge (`pipeline.md`, Project-board sync). (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
 
 ### Deliver
 

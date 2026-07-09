@@ -54,8 +54,8 @@ against a stale snapshot and reports "already installed".
 ## The pipeline
 
 1. **Model gate** — confirm the lead is on an accepted tier for the command invoked.
-2. **Intake** — triviality check (escape hatch for genuinely small edits); otherwise git intake: issue → branch/worktree → draft PR.
-3. **Plan** — staged three-column plan (what/owner, failable check, architecture & patterns); domain skill routing recorded.
+2. **Intake** — triviality check (escape hatch for genuinely small edits); otherwise git intake: issue (fields filled; added to the repo's project board when one exists) → branch/worktree → draft PR.
+3. **Plan** — staged three-column plan (what/owner, failable check, architecture & patterns); domain skill routing recorded; oversized plans decompose into a parent issue with sub-issues, one PR each.
 4. **Plan review gate** — `argus-oracle` reviews goal-backward, simpler-alternative pass first; verdict `approve` or `revise`.
 5. **Execute** — TDD red → green → refactor, solo or fanned out to `argus-implementer`/`argus-explorer`; the lead verifies and commits every slice.
 6. **Verify** — run the real build/test/lint commands; GREEN evidence required before any "done" claim.

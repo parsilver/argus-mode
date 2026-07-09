@@ -3,7 +3,8 @@
 The git/GitHub mechanics shared by both skills: how work enters the repo
 (Stage 1), how the plan stays durable and visible (Stage 2.5 onward), what
 degrades when the platform doesn't cooperate, and how a Stage 5 verdict
-turns into an action. Read this file at Stage 1, and again at Stage 5.
+turns into an action. Read this file at Stage 1, apply its
+decomposition test at Stage 2, and read it again at Stage 5.
 
 ## Stage 1 — Triviality escape hatch (run this first)
 
@@ -54,7 +55,16 @@ not decoration.
 2. Create a GitHub issue describing the work: `gh issue create` — title
    and description per `git-conventions.md` (failable acceptance
    criteria; bugs carry expected/actual, repro steps, verbatim
-   evidence).
+   evidence). Fill the fields the repo actually has — discover, then
+   apply; never invent:
+   - Labels: `gh label list` first; map the work's Conventional
+     Commits type onto existing labels (feat → enhancement,
+     fix → bug, docs → documentation). No match → skip; create a
+     label only on the user's ask.
+   - Milestone: assign when an open milestone clearly covers the work.
+   - Issue type (Bug / Feature / Task): set it when the repo has
+     types enabled.
+   - Project: per Project-board sync below.
 3. Branch — named `<issue-number>-<short-kebab-slug>`:
    - `gh issue develop <n>` (or `git switch -c` if `gh issue develop`
      isn't available).
@@ -75,6 +85,59 @@ not decoration.
 - The PR flips from draft to ready only at Stage 5, on a `ship` or
   `fix-then-ship` verdict (see the mapping below) — never before the
   review gate.
+
+## Decomposition — the big-work counterpart of the triviality hatch
+
+Trivial work escapes the pipeline; oversized work must not squeeze
+through it as one piece. At Stage 2, when the plan crosses any of:
+
+- more than ~5 implementation stages, or
+- an expected diff past the reviewable bar (`git-conventions.md`,
+  ~400 changed lines), or
+- multiple independently shippable outcomes,
+
+decompose instead of proceeding as one PR:
+
+- The parent issue holds the goal and the full plan checklist.
+- Each slice becomes a sub-issue — native sub-issues where available
+  (GraphQL `addSubIssue`); a task list of issue links in the parent
+  body otherwise — with its own branch and PR, sized to review.
+- Slices merge serially; the tree is releasable after every merge.
+- The parent closes only when its checklist is complete — never by a
+  PR that leaves items unmet.
+
+The oracle checks this at the plan review (`verification.md`): an
+oversized single-PR plan is a `revise`.
+
+- Refusal condition: a plan that fails the size test and ships as one
+  PR anyway has bypassed the reviewable-PR bar the same way a skipped
+  gate would — decompose it, or justify the size in the PR description
+  per `git-conventions.md`.
+
+## Project-board sync
+
+Work that isn't on the repo's board is invisible to everyone who
+tracks the project there. At intake, detect a Projects v2 board —
+`gh project list --owner <owner>` (requires the `project` token
+scope), or the board the repo's recent issues already sit on. When one
+exists, add the issue to it and advance its Status field at these
+boundaries:
+
+| Pipeline event | Board Status |
+|---|---|
+| Intake complete (issue + branch + draft PR) | In Progress |
+| Review gate begins (Stage 5) | In Review |
+| Merged | Done |
+| Escalation to the user, a hold, or a blocked dependency | Blocked |
+
+Map by meaning onto the board's own option names ("Doing" counts as In
+Progress); never create fields or options on the board. Sub-issues get
+the same treatment as their parent.
+
+- Refusal condition: a board update skipped silently at a boundary is
+  the board lying to its readers — when the board can't be updated (no
+  board, missing scope, no option that maps by meaning), name it once
+  in the final report instead.
 
 ## Plan-comment lifecycle
 
@@ -112,6 +175,7 @@ report.
 | Git repo, no GitHub remote (or no `gh` CLI) | Local branch only; skip issue and PR | `PLAN.md` in the worktree | `git diff <default-branch>...HEAD` | Local `git merge --no-ff` into the default branch, after the review gate |
 | Issues disabled on the repo, or no permission to create them | Branch + PR, no issue | Plan comment moves to the PR description (no issue thread to host it) | Normal — PR diff | Normal — merge the PR; note the missing issue in the final report |
 | User opts out ("no issue for this one") | Honor it: branch + PR, no issue | Plan comment moves to the PR description | Normal — PR diff | Normal — merge the PR; note the opt-out in the final report |
+| No Projects v2 board, or the token lacks the project scope (`project` in `gh auth status`) | Normal issue/PR flow | Issue comment as usual | Normal — PR diff | Normal — board sync skipped, named in the final report |
 
 - Refusal condition: a degraded form that isn't named in the final
   report is an undisclosed degrade, not a permitted one.

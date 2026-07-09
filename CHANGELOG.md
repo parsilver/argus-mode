@@ -22,6 +22,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   item, and a read-only `gh issue view`/`gh pr view` grant for the
   reviewer.
 
+- GitHub-native tracking (`references/pipeline.md`): intake fills the
+  issue fields the repo actually has (labels/milestone/type —
+  discover, then apply, never invent); a Project-board sync section
+  adds the issue to the repo's Projects v2 board and advances its
+  Status as the work moves (In Progress → In Review → Done, Blocked on
+  holds), with a degradation row for missing boards or token scope.
+- Decomposition rule (`references/pipeline.md`,
+  `references/verification.md` rubric item 8,
+  `references/delegation.md`): the big-work counterpart of the
+  triviality hatch — a plan past ~5 implementation stages, past the
+  reviewable-diff bar, or holding multiple independently shippable
+  outcomes splits into a parent issue with sub-issues, one branch and
+  PR each, merged serially. Decomposition (deliverable splitting) is
+  distinguished from fan-out (execution splitting inside one branch).
+
 ### Changed
 
 - Plan-comment lifecycle (`references/pipeline.md`) rewritten to the

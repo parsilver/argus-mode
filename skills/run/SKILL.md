@@ -1,6 +1,6 @@
 ---
 name: run
-description: The argus-mode engineering pipeline for Fable/Opus leads — staged plan with failable checks, independent oracle plan review, TDD execution with delegated agents, 6-dimension review gate before merge. Trigger when the user invokes /argus-mode:run or asks to run the argus pipeline on a task. Not for trivial lookups or 1-3 line edits.
+description: The argus-mode engineering pipeline for Fable/Opus leads — staged plan with failable checks, independent oracle plan review, TDD execution with delegated agents, 6-dimension review gate before merge. Trigger when the user invokes /argus-mode:run or asks to run the argus pipeline on a task. Not for trivial lookups or edits the triviality hatch covers.
 ---
 
 # /argus-mode:run — the Argus Mode pipeline
@@ -9,7 +9,7 @@ The `${CLAUDE_PLUGIN_ROOT}/references/` files are the source of truth: on
 any conflict between a summary in this file and a reference file, the
 reference wins.
 
-**Cost, up front:** a medium task pays the git ceremony (issue + branch/worktree + draft PR), at least one `argus-oracle` (opus) plan-review run — more on revise cycles — and an `argus-reviewer` review-gate run. Do **not** invoke this for a trivial lookup, a 1–3 line edit, or anything the Stage 1 triviality hatch covers — handle those directly instead.
+**Cost, up front:** a medium task pays the git ceremony (issue + branch/worktree + draft PR), at least one `argus-oracle` (opus) plan-review run — more on revise cycles — and an `argus-reviewer` review-gate run. Do **not** invoke this for a trivial lookup or anything the Stage 1 triviality hatch covers (≤3 changed lines AND one file AND no behavior change — a bugfix never qualifies) — handle those directly instead.
 
 ## Agent availability check
 
@@ -149,7 +149,7 @@ A red check that resists one obvious correction is a debugging event, not a retr
 
 ## Stage 5 — Review & deliver
 
-**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` again now** for the verdict→action mapping and the degraded merge semantics.
+**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` again now** for the verdict→action mapping and the degraded merge semantics. When a project board exists, set its Status to In Review as this gate begins (`pipeline.md`, Project-board sync).
 
 Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline per the Agent availability check above). **The brief must attach the verbatim Stage 4 command and its full output** — the reviewer's precondition demands it — **and name the issue and PR under review** so the reviewer can read their text with its read-only `gh` grant (dimension 2 covers the artifacts this run produced). **Precondition refusal:** the reviewer refuses a diff whose test suite is not shown GREEN — it returns immediately naming the missing precondition.
 
@@ -173,9 +173,9 @@ Review dimensions (rubric shared with `quality.md`):
 | `rework` | Return to Stage 3 (or Stage 2 if the plan is implicated). A fresh Stage 5 review is mandatory afterward. Cap: two rework cycles, then escalate to the user. |
 | `reject` | Stop. Do not merge. Report the reviewer's reason to the user. |
 
-**Subjective-goal hold:** when the goal is perceptual (visual fidelity to a reference, "looks like X"), `ship` readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance — and every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
+**Subjective-goal hold:** when the goal is perceptual (visual fidelity to a reference, "looks like X"), a merging verdict — `ship`, or `fix-then-ship` once its fixes are re-verified — readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance; every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
 
-On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. Advance the project board's Status when one exists: In Review when this gate begins, Done on merge (`pipeline.md`, Project-board sync). (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
+On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. Set the board Status to Done on merge, when a board exists. (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
 
 ### Deliver
 

@@ -171,6 +171,8 @@ Review dimensions (rubric shared with `quality.md`):
 | `rework` | Return to Stage 3 (or Stage 2 if the plan is implicated). A fresh Stage 5 review is mandatory afterward. Cap: two rework cycles, then escalate to the user. |
 | `reject` | Stop. Do not merge. Report the reviewer's reason to the user. |
 
+**Subjective-goal hold:** when the goal is perceptual (visual fidelity to a reference, "looks like X"), `ship` readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance — and every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
+
 On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. Advance the project board's Status when one exists: In Review when this gate begins, Done on merge (`pipeline.md`, Project-board sync). (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
 
 ### Deliver

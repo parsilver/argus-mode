@@ -201,6 +201,8 @@ holding the identical bar:
 | `rework` | return to Stage 3 (or Stage 2 if the plan is implicated); fresh Stage 5 review mandatory after; capped at two rework cycles, then escalate to the user |
 | `reject` | stop; do not merge; report the oracle's reason to the user |
 
+**Subjective-goal hold applies unchanged:** on a perceptual goal (visual fidelity, "looks like X"), `ship` readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance; every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
+
 **Precondition refusal still holds:** a non-GREEN diff gets an instant
 refusal naming the missing evidence, not a review.
 

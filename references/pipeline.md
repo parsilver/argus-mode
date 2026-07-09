@@ -5,6 +5,29 @@ The git/GitHub mechanics shared by both skills: how work enters the repo
 degrades when the platform doesn't cooperate, and how a Stage 5 verdict
 turns into an action. Read this file at Stage 1, and again at Stage 5.
 
+## Stage 1 — Triviality escape hatch (run this first)
+
+Canonical definition, shared by both skills. Trivial means ALL of:
+
+- ≤3 changed lines, AND
+- one file, AND
+- no public-API or behavior change — a bugfix changes behavior, so a
+  bugfix is never trivial, AND
+- no new test warranted.
+
+Read-only lookups: trivial if answerable from one file.
+
+Trivial → announce the classification ("this is a trivial edit — skipping
+the pipeline"), handle it directly, stop. No creed, no ceremony.
+
+**Re-entry rule:** if the "trivial" edit turns out to need a second edit,
+a second file, or its first check fails → stop, announce the
+reclassification, and enter the full pipeline at the git intake below.
+
+- Refusal condition: the hatch is not a bypass valve — a borderline task
+  classified trivial without announcing the classification is an
+  undisclosed skip of the pipeline.
+
 ## Stage 1 — Git intake
 
 Run these four steps, in order, when the project is a git repo. (No repo,

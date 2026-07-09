@@ -1,6 +1,6 @@
 ---
 name: consult
-description: The argus-mode pipeline for Sonnet/Haiku leads — the small model executes while a pinned-opus oracle gates the plan, arbitrates architecture, and performs the final review. Trigger when the user invokes /argus-mode:consult or asks for the argus pipeline on a smaller model.
+description: The argus-mode pipeline for Sonnet/Haiku leads — the small model executes while a pinned-opus oracle gates the plan, arbitrates architecture, and performs the final review. Trigger when the user invokes /argus-mode:consult or asks for the argus pipeline on a smaller model. Not for trivial lookups or 1-3 line edits.
 ---
 
 # /argus-mode:consult — small-model lead + oracle checkpoints
@@ -8,11 +8,16 @@ description: The argus-mode pipeline for Sonnet/Haiku leads — the small model 
 Runs the same disciplined pipeline as `/argus-mode:run` for a Sonnet/Haiku
 lead: the small model does all reading, writing, and testing; a pinned-`opus`
 `argus-oracle` gates the plan, arbitrates architecture mid-execution, and
-performs the final review. Expect at minimum: the git intake ceremony, one
-`argus-oracle` plan-review run (more on revise cycles), zero or more
-mid-execution oracle consults, and one oracle-led final review. This is not
-a cheap path — see "What this costs" at the end before invoking it on
-routine work.
+performs the final review. Three oracle checkpoint **types**; two always
+fire (plan review, final review), the mid-execution one fires whenever its
+objective triggers do. Expect at minimum: the git intake ceremony, one
+`argus-oracle` plan-review run (more on revise cycles), and one oracle-led
+final review. This is not a cheap path — see "What this costs" at the end
+before invoking it on routine work.
+
+The `${CLAUDE_PLUGIN_ROOT}/references/` files are the source of truth: on
+any conflict between a summary in this file and a reference file, the
+reference wins.
 
 ## Stage 0 — Model gate (reverse)
 
@@ -21,22 +26,25 @@ system prompt's "You are powered by the model named …" / model ID,
 substring match on the tier token (not a prefix whitelist).
 
 - Model ID contains `fable` or `opus` → this is the **wrong** skill for
-  this session. Announce the redirect in one line and run the
-  `/argus-mode:run` pipeline's Stage 0–5 directly, in this same turn —
-  no stop, no re-ask, no retyping. The user asked for the workflow; which
-  skill name got them there is an implementation detail.
+  this session. Announce the redirect in one line, then **read
+  `${CLAUDE_PLUGIN_ROOT}/skills/run/SKILL.md` and follow its Stage 0–5
+  directly, in this same turn** — no stop, no re-ask, no retyping. The
+  user asked for the workflow; which skill name got them there is an
+  implementation detail.
 - Otherwise (Sonnet, Haiku, or any other non-Fable/Opus tier) → this is
   the right skill. Continue below.
 
 ## Stage 1 — Intake
 
-Read `${CLAUDE_PLUGIN_ROOT}/references/creed.md` now and recite it once the
-triviality check clears (never before, never again mid-pipeline). Read
-`${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` now for the triviality hatch,
-git intake (issue → branch/worktree → draft PR), and the full degradation
-table. Nothing about intake changes in consult mode — same escape hatch,
-same re-entry rule, same degraded forms when there's no repo, no remote, or
-no `gh`.
+Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` now — it opens with
+the canonical triviality escape hatch (apply it first; trivial → announce,
+handle directly, stop), then the git intake (issue → branch/worktree →
+draft PR) and the full degradation table. Once the triviality check clears
+and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
+and recite the creed verbatim, once — never before the check, never again
+mid-pipeline. Nothing about intake changes in consult mode — same escape
+hatch, same re-entry rule, same degraded forms when there's no repo, no
+remote, or no `gh`.
 
 ## Stage 2 — Plan
 
@@ -61,13 +69,15 @@ difference:
 
 | | `/argus-mode:run` | `/argus-mode:consult` |
 |---|---|---|
-| `revise` verdict | may be overridden with an explicit user-visible justification | **no override path — ever** |
+| `revise` verdict | may be overridden with an explicit user-visible justification | **no lead override** (the user still decides at the two-cycle escalation) |
 | Revise-cycle cap | two, then escalate to the user | same: two, then escalate to the user |
 
 The lead **must** apply the oracle's verdict. On `approve`, the plan
 becomes durable exactly as in `/argus-mode:run`: post it as an issue
-comment (or `PLAN.md` in degraded mode), mirror a link in the draft PR,
-update per-stage status at every stage completion.
+comment — or the degraded location from `pipeline.md`'s degradation table
+(`PLAN.md` with no remote; the PR description when only issues are
+unavailable) — mirror a link in the draft PR, and update per-stage status
+at every stage completion.
 
 ## Stage 3 — Execute (checkpoint 2 of 3)
 
@@ -165,11 +175,21 @@ skipped and why — same shape as `/argus-mode:run`.
 
 ## Agent availability fallback
 
-Skills-only installs (e.g. `npx skills add`) ship no agents. If
-`argus-oracle` is unavailable, the lead runs each checkpoint **inline** —
-same rubric, same precondition refusal, same verdict set — and the final
-report states openly that the gate ran inline, not via an independent
-agent. Never silently skip a checkpoint because the agent isn't installed.
+Check agent availability **before Stage 0**. Skills-only installs (e.g.
+`npx skills add`) ship no agents. If `argus-oracle` is unavailable:
+
+- **Announce it to the user now**, plainly — not in the final report
+  alone. In consult mode this degrade is severe: a small lead grading its
+  own work is exactly what the oracle exists to prevent. Offer the user
+  the choice before proceeding: switch to a Fable/Opus session (or a full
+  plugin install), or explicitly accept inline gates.
+- On acceptance, run each checkpoint **inline** — same rubric, same
+  precondition refusal, same verdict set — and state in the final report
+  that every gate ran inline, not via an independent agent.
+- On a skills-only install `${CLAUDE_PLUGIN_ROOT}` may be unset and the
+  `references/` files unreachable — if a "Read now" target can't be read,
+  run from this file's summaries and announce that too.
+- Never silently skip a checkpoint because the agent isn't installed.
 
 ## What this costs
 

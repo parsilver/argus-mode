@@ -61,8 +61,8 @@ name the gap and send it back.
 
 ## Reviewer operating rules
 
-These apply to `argus-reviewer` in `/argus-mode`, and to `argus-oracle`
-when it performs the final review in `/argus-consult`.
+These apply to `argus-reviewer` in `/argus-mode:run`, and to
+`argus-oracle` when it performs the final review in `/argus-mode:consult`.
 
 - **End-to-end, not diff-local.** The diff is the entry point, not the
   scope. Trace the call graph through the unchanged code around it — bugs

@@ -3,7 +3,11 @@ name: run
 description: The argus-mode engineering pipeline for Fable/Opus leads — staged plan with failable checks, independent oracle plan review, TDD execution with delegated agents, 6-dimension review gate before merge. Trigger when the user invokes /argus-mode:run or asks to run the argus pipeline on a task. Not for trivial lookups or 1-3 line edits.
 ---
 
-# Run — the Argus Mode pipeline
+# /argus-mode:run — the Argus Mode pipeline
+
+The `${CLAUDE_PLUGIN_ROOT}/references/` files are the source of truth: on
+any conflict between a summary in this file and a reference file, the
+reference wins.
 
 **Cost, up front:** a medium task pays the git ceremony (issue + branch/worktree + draft PR), at least one `argus-oracle` (opus) plan-review run — more on revise cycles — and an `argus-reviewer` review-gate run. Do **not** invoke this for a trivial lookup, a 1–3 line edit, or anything the Stage 1 triviality hatch covers — handle those directly instead.
 
@@ -12,8 +16,10 @@ description: The argus-mode engineering pipeline for Fable/Opus leads — staged
 Before Stage 0, check whether `argus-oracle`, `argus-explorer`, `argus-implementer`, and `argus-reviewer` exist as spawnable agents (true on a Claude Code plugin install; not true on a skills-only install, e.g. `npx skills add`).
 
 - Missing → **announce this to the user now**, plainly. Never degrade silently.
-- Stage 2.5 (oracle gate) and Stage 5 (review gate) then run **inline**, performed by the lead itself, applying the same rubrics from `references/verification.md` and `references/quality.md`.
+- Stage 2.5 (oracle gate) and Stage 5 (review gate) then run **inline**, performed by the lead itself, applying the same rubrics from `${CLAUDE_PLUGIN_ROOT}/references/verification.md` and `${CLAUDE_PLUGIN_ROOT}/references/quality.md`.
+- Stage 3 fan-out has no executors either: the lead executes every slice **solo**, in plan order, under the same TDD and verification rules.
 - This is a **weaker gate** — the lead is grading its own work. State this plainly in the Deliver section of the final report.
+- On a skills-only install `${CLAUDE_PLUGIN_ROOT}` may be unset and the `references/` files unreachable. If a "Read now" target can't be read, run from this file's summaries, announce that too, and treat the references as authoritative the moment they're available again.
 
 ## Stage 0 — Model gate
 
@@ -22,18 +28,16 @@ Check the session's model ID (system prompt: "You are powered by the model named
 Not accepted → **hard stop**. Present exactly these three doors; do not proceed on any other outcome:
 
 1. Switch model (`/model`) and re-run this skill.
-2. Run the `/argus-mode:consult` pipeline immediately, in this same turn — offer to do it, don't make the user retype the request.
+2. Continue under the consult pipeline instead — offer this; on the user's yes, read `${CLAUDE_PLUGIN_ROOT}/skills/consult/SKILL.md` and follow it in that same turn, carrying the user's original request over so nothing is retyped.
 3. User explicitly replies "proceed anyway" → run on the current model with reduced guarantees. Record the override and the user's stated reason in the final report.
 
 Never warn-and-continue past a failed gate silently.
 
 ## Stage 1 — Intake
 
-**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` now.**
-
 ### Triviality escape hatch
 
-Trivial = ALL of: ≤3 changed lines, one file, no public-API or behavior change, no new test warranted. (Read-only lookups: trivial if answerable from one file.)
+Canonical definition lives in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Summary: trivial = ALL of ≤3 changed lines, one file, no public-API or behavior change (a bugfix changes behavior — a bugfix is never trivial), no new test warranted. (Read-only lookups: trivial if answerable from one file.)
 
 Trivial → announce the classification ("this is a trivial edit — skipping the pipeline"), handle it directly, stop. No creed, no ceremony.
 
@@ -45,14 +49,14 @@ Once the task clears the triviality check, the pipeline engages: **read `${CLAUD
 
 ### Git intake
 
-Follow `references/pipeline.md` exactly, including its degradation rules:
+**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` now** and follow it exactly, including its degradation rules:
 
 1. `git fetch origin`, fast-forward the default branch.
 2. `gh issue create` describing the work.
 3. Branch via `gh issue develop <n>` (or `git switch -c`). Use an isolated worktree when the tree is dirty or other work is in flight; a clean solo checkout may branch in place.
 4. Empty bootstrap commit, open a **draft** PR with `Closes #<n>` immediately.
 
-Every degraded form — no git repo, git repo but no GitHub remote/`gh`, issues disabled, or user opt-out — is defined in `references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.
+Every degraded form — no git repo, git repo but no GitHub remote/`gh`, issues disabled, or user opt-out — is defined in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.
 
 ## Stage 2 — Plan
 
@@ -66,7 +70,7 @@ Write the plan as a task list, one row per stage, three columns filled for every
 
 A check that cannot fail ("looks good", "review the code") is not a check — rewrite it before moving on.
 
-**Domain skill routing:** record which domains the task touches (UI/visual, shadcn project, data viz, database, …) against the table in `references/delegation.md`. Detect matches from the **session's actual available-skills listing** — never invent a skill name from memory or training data. Plugin-namespaced variants count as matches. If no installed skill matches a domain the task touches, say so explicitly in the plan ("no matching skill installed for `<domain>`") and proceed on the quality doctrine alone — never a silent degrade.
+**Domain skill routing:** record which domains the task touches (UI/visual, shadcn project, data viz, database, …) against the table in `${CLAUDE_PLUGIN_ROOT}/references/delegation.md`. Detect matches from the **session's actual available-skills listing** — never invent a skill name from memory or training data. Plugin-namespaced variants count as matches. If no installed skill matches a domain the task touches, say so explicitly in the plan ("no matching skill installed for `<domain>`") and proceed on the quality doctrine alone — never a silent degrade.
 
 ## Stage 2.5 — Plan review gate
 

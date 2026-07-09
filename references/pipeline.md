@@ -80,16 +80,25 @@ not decoration.
 
 Posted once, then kept current — this comment is the pipeline's durable
 state and the exact resume point a handoff relies on (`on-track.md`).
+It is also a git artifact read by humans: written in the team voice
+(`git-conventions.md`) — headed "Implementation plan", plain
+engineering language, no session vocabulary — and it passes the
+lexicon check before the initial post and before every subsequent
+edit.
 
 | Event | Action |
 |---|---|
-| Stage 2.5 oracle verdict = `approve` | Post the full three-column plan (What/Owner, Failable check, Architecture & patterns) as an issue comment. Mirror a link to it in the draft PR description. |
-| Every stage completion, Stage 3 onward | Edit the comment's per-stage status: finished stage → `done`, active stage → `in-flight`, the rest → `remaining` — each entry carries its next failable check. |
+| Stage 2.5 oracle verdict = `approve` | Post the plan as an issue comment headed "Implementation plan": the stages as a `- [ ]` task list, each item named (never numbered by pipeline stage), each carrying its done-check as `command → expected result`; design decisions with their reasons; long coordination detail folded into `<details>`. Mirror a link to it in the draft PR description. |
+| Every stage completion, Stage 3 onward | Tick the finished item's checkbox and append its evidence as `command → result`. Status words for anything not checkbox-shaped: done / in progress / blocked. |
 | Mid-pipeline handoff | Comment reflects state at the moment of handoff; a fresh session reads it to resume — no hand-written summary needed. |
 
+- Commit SHAs cited in the comment stop resolving on the default
+  branch after a squash-merge — cite them as PR-linked references (the
+  PR keeps them alive) or as full commit URLs.
 - Refusal condition: a stage boundary that passes without updating the
-  comment breaks the resume contract — the update is part of finishing
-  the stage, not an optional follow-up.
+  comment breaks the resume contract, and a post or edit that skips
+  the lexicon check ships session vocabulary to a human audience — the
+  update, in the team voice, is part of finishing the stage.
 
 ## Degradation rules
 

@@ -88,7 +88,12 @@ Checked on every review, every time — not opted into per task:
    handled?
 2. **Readability.** Docblocks present, truthful, and free of filler
    prose (`git-conventions.md`, prose style) on all public API; names
-   communicate intent without needing a comment to explain them.
+   communicate intent without needing a comment to explain them. Prose
+   artifacts are in scope too: session vocabulary, attribution, or a
+   machine-local path on any git artifact the run produced (issue, PR,
+   comment) violates `git-conventions.md`'s team voice and is a
+   dimension-2 finding, exactly like filler prose — the lexicon check
+   in `git-conventions.md` is the mechanical probe for it.
 3. **Architecture fit.** Boundaries respected; single responsibility held.
 4. **Pattern justification.** Every pattern in the diff earns its
    complexity — a pattern applied without a stated reason is unjustified

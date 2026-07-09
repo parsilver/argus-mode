@@ -64,9 +64,10 @@ To hand off:
 
 1. Commit work in progress (Conventional Commits — a WIP commit is still
    a real commit).
-2. Update the plan comment (or `PLAN.md` in degraded mode) with
-   per-stage status — done / in-flight / remaining — plus the next
-   failable check for the in-flight stage.
+2. Update the plan comment (or `PLAN.md` in degraded mode): tick the
+   finished items' checkboxes, mark the active item in progress, and
+   record its next check as `command → expected result`
+   (`pipeline.md`, plan-comment lifecycle).
 3. Tell the user to start a fresh session. It resumes from the
    issue/PR state (or `PLAN.md`), not from a hand-written summary.
 
@@ -86,6 +87,12 @@ Stage N done — failable check: <cmd> → GREEN | next: Stage N+1
 plan defined), not the pipeline's fixed step numbers — gate steps like
 the plan review produce a verdict, which is their own record, not a
 marker.
+
+The marker is session-only output — printed in the session, never
+posted to GitHub. The plan-comment update that follows it is a git
+artifact: it carries the same state in the team voice
+(`git-conventions.md`) — named checklist items and `command → result`
+evidence, never the marker's internal numbering.
 
 Then update the plan comment (or `PLAN.md`) to match. The marker keeps
 the discipline in recent context on long runs; the comment update is

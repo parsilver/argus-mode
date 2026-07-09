@@ -98,7 +98,7 @@ Verdict is structured: `approve` or `revise` + reasons.
 - A `revise` may be overridden only with an explicit, user-visible justification.
 - The oracle always runs at its pinned `opus` tier, regardless of the lead's model.
 
-**On `approve`, the plan becomes durable:** post the three-column plan as an issue comment and mirror the link in the draft PR — or the degraded location from `pipeline.md`'s table (`PLAN.md` with no remote; the PR description when only issues are unavailable). This comment is the exact resume point — update its per-stage status (done / in-flight / remaining + next failable check) at every stage boundary from here on.
+**On `approve`, the plan becomes durable:** post the plan as an issue comment and mirror the link in the draft PR — or the degraded location from `pipeline.md`'s table (`PLAN.md` with no remote; the PR description when only issues are unavailable). The comment is a git artifact: written in the team voice per `git-conventions.md` (headed "Implementation plan", named checkbox items, `command → result` evidence) — run the lexicon check before posting and before every edit. This comment is the exact resume point — update it at every stage boundary from here on.
 
 ## Stage 3 — Execute
 
@@ -135,6 +135,8 @@ Then, before starting the next stage, print the mandatory transition marker and 
 Stage N done — failable check: <cmd> → GREEN | next: Stage N+1
 ```
 
+The marker is session-only — printed here, never posted to GitHub. The plan-comment update that accompanies it is a git artifact and follows the team-voice contract in `git-conventions.md`.
+
 ## Stage 4 — Verify
 
 Run the actual build/test/lint commands and read the output. GREEN evidence is required before any "done / fixed / passing" claim. A red check is reported as red — never merged over, never rationalized away.
@@ -167,7 +169,7 @@ Review dimensions (rubric shared with `quality.md`):
 | `rework` | Return to Stage 3 (or Stage 2 if the plan is implicated). A fresh Stage 5 review is mandatory afterward. Cap: two rework cycles, then escalate to the user. |
 | `reject` | Stop. Do not merge. Report the reviewer's reason to the user. |
 
-On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result, flip the draft PR to ready, merge — the issue auto-closes. (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
+On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
 
 ### Deliver
 

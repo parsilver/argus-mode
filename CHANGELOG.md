@@ -5,6 +5,31 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Team-voice contract in `references/git-conventions.md`: every git
+  artifact reads as an engineer writing to teammates — no session
+  vocabulary, no attribution of any form, no machine-local paths, no
+  inlined infra values; `command → result` evidence lines, checkbox
+  status tracking, `<details>` folding for long coordination detail,
+  and a lexicon grep with a refusal condition (with a carve-out for
+  repos whose subject matter is the pipeline itself). Review dimension
+  2 (`references/verification.md`, reviewer and oracle agents) treats
+  violations as Readability findings.
+
+### Changed
+
+- Plan-comment lifecycle (`references/pipeline.md`) rewritten to the
+  team-voice contract: "Implementation plan" heading, named checklist
+  items instead of internal stage numerals, `command → result`
+  evidence, the lexicon check before every post and edit, and
+  PR-linked commit references that survive a squash-merge.
+- Stage-transition marker declared session-only
+  (`references/on-track.md`, both skills) — printed in the session,
+  never posted to GitHub.
+
 ## [0.3.0] - 2026-07-09
 
 ### Added

@@ -106,8 +106,9 @@ The lead **must** apply the oracle's verdict. On `approve`, the plan
 becomes durable exactly as in `/argus-mode:run`: post it as an issue
 comment — or the degraded location from `pipeline.md`'s degradation table
 (`PLAN.md` with no remote; the PR description when only issues are
-unavailable) — mirror a link in the draft PR, and update per-stage status
-at every stage completion.
+unavailable) — mirror a link in the draft PR, and update it at every
+stage completion. The comment is a git artifact: team voice per
+`git-conventions.md`, lexicon check before every post and edit.
 
 ## Stage 3 — Execute (checkpoint 2 of 3)
 
@@ -154,7 +155,9 @@ spawn the oracle per slice.
 
 Print the stage-transition marker at every boundary —
 `Stage N done — failable check: <cmd> → GREEN | next: Stage N+1` — and
-update the plan comment, exactly as in `/argus-mode:run`.
+update the plan comment, exactly as in `/argus-mode:run`. The marker is
+session-only — never posted to GitHub; the comment update follows the
+team-voice contract in `git-conventions.md`.
 
 ## Stage 4 — Verify
 
@@ -213,11 +216,11 @@ output is an instant refusal naming the gap: the oracle never reviews
 blind, and never audits evidence it can't trust.
 
 On `ship` / `fix-then-ship`: update the PR description's "How it was
-verified" section with the Stage 4 command and its result, flip the
-draft PR to ready, merge — issue auto-closes (degraded modes: local
-`git merge --no-ff` per `pipeline.md`). Final report to the user: what
-shipped, evidence, anything skipped and why — same shape as
-`/argus-mode:run`.
+verified" section with the Stage 4 command and its result — PR text in
+the team voice per `git-conventions.md` — flip the draft PR to ready,
+merge — issue auto-closes (degraded modes: local `git merge --no-ff`
+per `pipeline.md`). Final report to the user: what shipped, evidence,
+anything skipped and why — same shape as `/argus-mode:run`.
 
 ## What this costs
 

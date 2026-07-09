@@ -4,6 +4,16 @@ Delegation is a tool, not a default. Every fan-out costs a brief, a context
 copy, and a verification pass — spend that cost only when it buys more than
 it takes.
 
+## Decomposition is not fan-out
+
+PR-level decomposition (`pipeline.md`) splits *deliverables*: each
+sub-issue ships its own reviewed, mergeable PR. Fan-out here splits
+*execution inside one branch*: implementer slices the lead verifies and
+commits into a single PR. Size the deliverable first (decomposition),
+then decide who executes each slice (fan-out) — a plan that needs five
+executors is not automatically five PRs, and five PRs don't need five
+executors.
+
 ## When to stay solo vs fan out
 
 | Stay solo (lead executes in the main loop) | Fan out (delegate to agents) |

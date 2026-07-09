@@ -47,6 +47,11 @@ for the two that skip the rest of the rubric entirely when missing.
 7. **Domain routing matches surfaces.** Does the domain-skill routing
    recorded in the plan header actually match the surfaces the task
    touches (see the domain table in `delegation.md`)?
+8. **Right-sized for review.** Does the plan clear the decomposition
+   test (`pipeline.md`) — or is it pushing an oversized single PR
+   through the gate? Past ~5 implementation stages, a diff beyond the
+   reviewable bar, or multiple independently shippable outcomes →
+   `revise` toward a parent issue with sub-issues, one PR each.
 
 Verdict is structured: `approve`, or `revise` with reasons tied to the
 specific rubric item(s) that failed.

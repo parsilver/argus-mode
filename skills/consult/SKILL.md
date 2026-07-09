@@ -65,7 +65,8 @@ handle directly, stop — summary: ≤3 changed lines AND one file AND no
 public-API/behavior change AND no new test warranted; a bugfix is never
 trivial; read-only lookups are trivial if answerable from one file),
 then the read-only-work route (non-trivial lookups skip the git intake
-entirely — plan, explore, report), the git intake (issue →
+entirely — plan, explore, report), the git intake (issue with its
+fields filled and added to the repo's project board when one exists →
 branch/worktree → draft PR), and the full degradation table. Once the triviality check clears
 and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
 and recite the creed verbatim, once — never before the check, never again
@@ -83,7 +84,9 @@ failable check is — the plan's middle column is written against that
 definition, not discovered at the gate. Write the same three-column plan as
 `/argus-mode:run` — What/Owner, Failable check, Architecture & patterns —
 with a domain header recording which installed skills apply and which
-don't (never guessed from memory). The plan's shape doesn't change in
+don't (never guessed from memory). The decomposition test applies
+unchanged (`pipeline.md`): an oversized plan splits into a parent
+issue with sub-issues, one PR each. The plan's shape doesn't change in
 consult mode; what happens to it next does.
 
 ## Stage 2.5 — Plan review gate (checkpoint 1 of 3)
@@ -224,7 +227,9 @@ On `ship` / `fix-then-ship`: update the PR description's "How it was
 verified" section with the Stage 4 command and its result — PR text in
 the team voice per `git-conventions.md` — flip the draft PR to ready,
 merge — issue auto-closes (degraded modes: local `git merge --no-ff`
-per `pipeline.md`). Final report to the user: what shipped, evidence,
+per `pipeline.md`). Advance the project board's Status when one
+exists: In Review at this gate, Done on merge (`pipeline.md`,
+Project-board sync). Final report to the user: what shipped, evidence,
 anything skipped and why — same shape as `/argus-mode:run`.
 
 ## What this costs

@@ -91,6 +91,8 @@ Spawn `argus-oracle` (or, if unavailable, apply this rubric inline per the Agent
 5. Does the chosen architecture hold under `quality.md`?
 6. Is any stage delegating a decision that belongs to the lead (architecture, debugging, review, merge)?
 7. Does the domain-skill routing match the surfaces the task touches?
+8. Is the plan right-sized for review, or does it need decomposition (`pipeline.md`)?
+9. Do copied licensed assets carry their license basis and a visibility guard?
 
 **Precondition refusal:** a plan arriving without failable checks, or without a test list for an implementation stage, gets an instant `revise` naming the missing precondition — do not attempt a full review of an unreviewable plan.
 

@@ -38,7 +38,15 @@ refactor-ready at all times, and TDD drives every implementation.
 - No hooks, no MCP servers, no Workflow-tool orchestration scripts.
 - No per-language lint/format configuration — the doctrine is
   language-agnostic; repos keep their own tooling.
-- No standing agent roster beyond the 4 defined agents.
+- No standing agent roster beyond the 4 defined agents. Considered and
+  rejected: a **designer** agent (domain expertise routes in as skills the
+  lead invokes — see Domain skill routing in Stage 2; a plugin-shipped
+  designer would either depend on skills the user may not have installed
+  or duplicate their content and drift), a **debugger** (debugging is
+  never delegated), a **tester** (splitting test-writing from the
+  implementer breaks the red-green-refactor loop), a **security auditor**
+  (a review dimension, not an agent), and a **documenter** (docblocks are
+  the implementer's job; a separate doc-writer drifts from the code).
 
 ## Repository Structure
 
@@ -62,7 +70,7 @@ argus-mode/
 │   ├── argus-oracle.md        # model: opus  — read-only advisor (plan review, arch consult, final gate)
 │   ├── argus-explorer.md      # model: haiku — read-only codebase scout
 │   ├── argus-implementer.md   # model: sonnet — TDD-first executor, quality bar embedded
-│   └── argus-reviewer.md      # model: inherit — 5-dimension skeptical review gate
+│   └── argus-reviewer.md      # model: inherit — 6-dimension skeptical review gate
 ├── docs/superpowers/specs/    # design specs (this file)
 ├── CLAUDE.md                  # repo consistency invariants (see Repo Conventions)
 ├── README.md                  # install, usage, model matrix, philosophy
@@ -125,6 +133,17 @@ every stage must fill three columns:**
 
 A check that cannot fail ("looks good", "review the code") is not a check.
 
+**Domain skill routing.** The plan header records the domains the task
+touches (UI/visual, shadcn project, data viz, database, …) and which
+installed domain skills will be consulted (`frontend-design`, `shadcn`,
+`dataviz`, …). Skills compose, agents multiply: domain expertise enters
+the pipeline as a skill the **lead** invokes at the right stage —
+subagents cannot be assumed to see user-installed skills, so the skill's
+output (aesthetic direction, token system, component conventions) flows
+into executor briefs. If a matching skill is not installed, the plan says
+so explicitly and proceeds on the quality doctrine alone — never a silent
+degrade.
+
 ### Stage 2.5 — Plan Review Gate
 
 Spawn `argus-oracle` with the plan, the task statement, and relevant repo
@@ -143,6 +162,7 @@ context. The oracle reviews **goal-backward** against the rubric in
 - Does the chosen architecture hold under the doctrine in `quality.md`?
 - Is any stage delegating a decision that belongs to the lead
   (architecture, debugging, review, merge)?
+- Does the domain-skill routing match the surfaces the task touches?
 
 **Precondition refusal:** a plan arriving without failable checks, or
 without a test list for an implementation stage, gets an instant `revise`
@@ -204,6 +224,9 @@ as red — never merged over, never rationalized away.
   3. **Architecture fit** — boundaries respected; single responsibility.
   4. **Pattern justification** — patterns earn their complexity.
   5. **Test quality** — tests can actually fail; no tautologies.
+  6. **Security** — injection surfaces, authz seams, secrets in the diff,
+     unsafe defaults. Checked on every review, not only on "security
+     tasks".
 - Reviewer operating rules (`references/verification.md`):
   - **End-to-end, not diff-local.** The diff is the entry point, not the
     scope — trace the call graph through the unchanged code around it;
@@ -254,7 +277,7 @@ doctrine, TDD).
 | `argus-oracle` | `opus` (pinned) | read-only (Read, Grep, Glob, Bash read-only) | Advisor, never executor. Three duties: plan review (mandatory simpler-alternative pass, then the goal-backward rubric; structured verdict; instant `revise` on missing preconditions), architecture consultation (decision + rationale + risks), final skeptical review. Returns analysis; never edits files. |
 | `argus-explorer` | `haiku` | read-only | Fast codebase reconnaissance; returns findings as structured summaries with `file:line` references, not file dumps. |
 | `argus-implementer` | `sonnet` | all | Executes one self-contained implementation slice TDD-first. Quality bar embedded: docblocks on public API, SOLID, small modules, justified patterns, refactor leg mandatory, Conventional Commits. |
-| `argus-reviewer` | `inherit` | read-only + Bash (to run tests) | The 5-dimension review gate. Refuses non-GREEN diffs; runs the test suite itself; traces beyond the diff; never rubber-stamps; findings cite `file:line`; verdict `ship / fix-then-ship / rework / reject`. |
+| `argus-reviewer` | `inherit` | read-only + Bash (to run tests) | The 6-dimension review gate. Refuses non-GREEN diffs; runs the test suite itself; traces beyond the diff; never rubber-stamps; findings cite `file:line`; verdict `ship / fix-then-ship / rework / reject`. |
 
 ## Quality Doctrine (`references/quality.md`)
 
@@ -349,6 +372,9 @@ Before tagging `v0.1.0`:
 - A `PreToolUse` hook enforcing the model gate mechanically.
 - Workflow-tool orchestration scripts for large fan-outs.
 - Per-language quality profiles (e.g., PHP/Laravel, TypeScript presets).
+- Specialist review lenses (security / a11y / performance) as parallel
+  runs of the same `argus-reviewer` with a lens parameter — extra eyes,
+  not extra agents.
 
 ## Influences
 

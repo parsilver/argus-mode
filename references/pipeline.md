@@ -34,10 +34,19 @@ Run these four steps, in order, when the project is a git repo. (No repo,
 no remote, no `gh`, no issue permission — see Degradation rules below;
 each has a defined substitute for these steps, never a silent skip.)
 
+**Every name and message these steps produce follows
+`git-conventions.md` — read it together with this file.** Branches,
+commits, issues, and PRs land on shared repos and are read by developers
+with zero session context; the conventions are part of the deliverable,
+not decoration.
+
 1. `git fetch origin`, then fast-forward the default branch to origin —
    branch off the latest, not a stale local copy.
-2. Create a GitHub issue describing the work: `gh issue create`.
-3. Branch:
+2. Create a GitHub issue describing the work: `gh issue create` — title
+   and description per `git-conventions.md` (failable acceptance
+   criteria; bugs carry expected/actual, repro steps, verbatim
+   evidence).
+3. Branch — named `<issue-number>-<short-kebab-slug>`:
    - `gh issue develop <n>` (or `git switch -c` if `gh issue develop`
      isn't available).
    - Use an isolated git worktree whenever the working tree is dirty OR
@@ -45,7 +54,9 @@ each has a defined substitute for these steps, never a silent skip.)
    - A clean solo checkout may branch in place — no worktree needed.
 4. Bootstrap the PR immediately, before writing any implementation code:
    - Create an empty bootstrap commit.
-   - Open a **draft** PR with `Closes #<n>` in the description.
+   - Open a **draft** PR with `Closes #<n>` on the first line of the
+     description; title and description contract per
+     `git-conventions.md` (the title is the future squash subject).
    - This draft PR is the durable home for the plan comment (posted at
      Stage 2.5) and the per-stage status that follows it.
 

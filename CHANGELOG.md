@@ -22,10 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   read-only reconnaissance), `argus-implementer` (sonnet, TDD executor),
   `argus-reviewer` (inherit, 6-dimension review gate).
 - Shared reference docs: `creed.md`, `pipeline.md`, `delegation.md`,
-  `verification.md`, `quality.md`, `on-track.md`, and `debugging.md` — a
+  `verification.md`, `quality.md`, `on-track.md`, `debugging.md` — a
   self-contained diagnose loop (adapted with credit from
-  thananon/9arm-skills debug-mantra), with domain routing to a locally
-  installed `debug-mantra` skill when present.
+  thananon/9arm-skills debug-mantra) with domain routing to a locally
+  installed `debug-mantra` skill when present — and
+  `git-conventions.md` — branch naming, Conventional Commits, and
+  issue/PR title and description contracts for every artifact the
+  pipeline creates.
 - Self-hosted marketplace (`.claude-plugin/marketplace.json`) enabling
   `/plugin marketplace add parsilver/argus-mode`.
 

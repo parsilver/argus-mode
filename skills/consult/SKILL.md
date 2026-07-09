@@ -110,6 +110,12 @@ sentence, spawn `argus-oracle` with the plan, the stage in question, and
 what's proposed. Apply its verdict before continuing — same as checkpoint
 1, no override path.
 
+A red failable check also starts the diagnose loop in
+`${CLAUDE_PLUGIN_ROOT}/references/debugging.md` (or the `debug-mantra`
+skill when installed) — run it from the **first** failure; when trigger
+(c) fires on the second, bring the loop's ledger to the oracle rather
+than attempting a third run.
+
 **Slice acceptance stays mechanical.** The lead runs each slice's failable
 check against its written acceptance criteria and confirms the output —
 this is not a fourth oracle checkpoint. Judgment calls about slice

@@ -19,6 +19,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   routes to a locally installed `humanizer` skill, with the prose-style
   rules as the shipped fallback.
 
+### Fixed
+
+- Gate evidence chain: the run-skill reviewer brief now attaches the
+  verbatim Stage 4 command and output; the consult-mode oracle brief
+  additionally carries the diff and the run-time HEAD SHA, with
+  precondition refusal extended to a missing diff or SHA.
+- consult: agent-availability check relocated before Stage 0 and
+  extended to cover missing executors; inline triviality summary added
+  for the degraded path; the reverse gate follows the run skill in full.
+- Read triggers realigned: quality.md read at run Stage 2,
+  verification.md at consult Stage 2, pipeline.md re-read at both Stage
+  5s; a no-git route defined for non-trivial read-only work; the
+  dimension↔principle mapping corrected to one identical sentence in
+  quality.md and verification.md; consult's first-failure diagnose-loop
+  entry encoded in debugging.md; degraded-location pointers added to the
+  run skill's Stage 2.5 and Stage 5; stage-transition marker numbering
+  defined; a trivial-task exception added to the run skill's model gate.
+- README now links both SKILL.md files (repo invariant) and discloses
+  that skills-only installs may also lose the references/ documents;
+  delegation.md records that the implementer no-commit rule is a
+  prompt-level contract; both skills update the PR's "How it was
+  verified" section before flipping the draft ready.
+
 ### Changed
 
 - Readability bar tightened everywhere it is stated (quality doctrine,

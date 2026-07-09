@@ -15,17 +15,20 @@ Official install — this repo is its own marketplace:
 /plugin install argus-mode
 ```
 
-The real commands are `/argus-mode:run` and `/argus-mode:consult` — Claude
-Code always namespaces plugin skills by plugin name, so `/argus-mode` alone
-does not resolve to anything.
+The real commands are [`/argus-mode:run`](skills/run/SKILL.md) and
+[`/argus-mode:consult`](skills/consult/SKILL.md) — Claude Code always
+namespaces plugin skills by plugin name, so `/argus-mode` alone does not
+resolve to anything.
 
 Third-party install via `npx skills add parsilver/argus-mode` (vercel-labs) is
 **skills-only** — it does not install the agents (`argus-oracle`,
 `argus-explorer`, `argus-implementer`, `argus-reviewer`), which ship only with
-the Claude Code plugin. Under a skills-only install, both `SKILL.md` files
-check agent availability first; when an agent is missing, its gate runs
-inline by the lead instead — a weaker check, and the final report says so
-openly. It is never a silent degrade.
+the Claude Code plugin. A skills-only install may also leave
+`${CLAUDE_PLUGIN_ROOT}` unset, making the shared `references/` documents
+unreachable — the skills then run from their own inline summaries. Both
+`SKILL.md` files check agent availability first; when an agent or a
+reference is missing, its gate runs inline by the lead instead — a weaker
+check, and the final report says so openly. It is never a silent degrade.
 
 ## Updating
 

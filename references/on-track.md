@@ -82,6 +82,11 @@ Print this line at every stage boundary, before starting the next stage:
 Stage N done — failable check: <cmd> → GREEN | next: Stage N+1
 ```
 
+**"Stage N" counts the approved plan's rows** (the execution stages the
+plan defined), not the pipeline's fixed step numbers — gate steps like
+the plan review produce a verdict, which is their own record, not a
+marker.
+
 Then update the plan comment (or `PLAN.md`) to match. The marker keeps
 the discipline in recent context on long runs; the comment update is
 what makes the per-stage status trustworthy at any point someone reads

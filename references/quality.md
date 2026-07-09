@@ -68,6 +68,9 @@ reviewer never grade against different bars:
 3. **Oracle rubric** (`argus-oracle`, plan review and consult-mode final
    review) — "does the chosen architecture hold under the doctrine" is a
    direct check against this file.
-4. **Reviewer rubric** (`argus-reviewer`) — dimensions 2 through 6 of the
-   review (readability, architecture fit, pattern justification, test
-   quality, security) map one-to-one onto principles 1 and 3 through 6.
+4. **Reviewer rubric** (`argus-reviewer`) — review dimensions 2–6 map
+   onto principles 1, 2, 3, 5, and 6 respectively (readability→code for
+   humans, architecture fit→architecture before code, pattern
+   justification→patterns that earn their keep, test quality→TDD,
+   security→secure by default); principle 4 (refactor-ready) is upheld
+   through dimensions 3 and 5 together.

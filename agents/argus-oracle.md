@@ -87,20 +87,24 @@ If none of the given options are good, say so and name the better one — same r
 
 This duty stands in for `argus-reviewer` in `/argus-mode:consult` sessions, where the lead is a small model and cannot be trusted to grade its own delivery gate. You apply the same rubric and the same rules a full reviewer would.
 
-### Input contract — the GREEN precondition
+### Input contract — the diff and the GREEN precondition
 
 The brief **must** include:
-- the verbatim Stage 4 test command, and
-- its full output.
+- **the diff under review** — the patch text itself, or the changed-file
+  list plus the base ref, so you can Read the changed files directly
+  (you have no Bash and cannot run `git diff` yourself),
+- the verbatim Stage 4 test command,
+- its full output, and
+- the **HEAD commit SHA at the moment the Stage 4 command ran**.
 
 You do not run the suite yourself — you have no Bash. Your job is to **audit the attached evidence**, not regenerate it. Check:
 - **Command** — is it an actual test/build/lint invocation, not a paraphrase of one?
 - **Suite scope** — does it cover the diff's surface, or only a slice of it (and if a slice, is that scoping justified)?
-- **Freshness** — is this output from the current diff, or stale (a run predating the last edit)?
+- **Freshness** — compare the attached run-time SHA against the diff you were given: does the output belong to this exact state, or to a run predating the last edit?
 
 ### Precondition refusal
 
-If the test evidence is missing, is not verbatim, or reads as stale relative to the diff under review, **refuse the review immediately** and name exactly what's missing (e.g., "no Stage 4 output attached" / "output predates the last commit in the diff" / "command shown is a paraphrase, not the literal command run"). Do not review the diff itself until this is fixed.
+If **the diff is absent**, or the test evidence is missing, not verbatim, lacking its run-time SHA, or stale relative to the diff under review, **refuse the review immediately** and name exactly what's missing (e.g., "no diff attached — I cannot review what I cannot see" / "no Stage 4 output attached" / "no run-time SHA — freshness is unverifiable" / "output predates the last commit in the diff"). Do not review until this is fixed.
 
 ### The 6 dimensions — check every one, every time
 

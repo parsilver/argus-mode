@@ -33,6 +33,8 @@ Not accepted → **hard stop**. Present exactly these three doors; do not procee
 
 Never warn-and-continue past a failed gate silently.
 
+Exception: a task that plainly clears the Stage 1 triviality hatch may be handled directly without the model gate — announce the classification as usual. The gate protects the pipeline; work the pipeline itself would decline needs no protecting.
+
 ## Stage 1 — Intake
 
 ### Triviality escape hatch
@@ -42,6 +44,8 @@ Canonical definition lives in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Su
 Trivial → announce the classification ("this is a trivial edit — skipping the pipeline"), handle it directly, stop. No creed, no ceremony.
 
 **Re-entry rule:** if the "trivial" edit turns out to need a second edit, a second file, or its first check fails → stop, announce the reclassification, re-enter at Stage 1 proper (full pipeline, from git intake). The hatch is not a bypass valve for the pipeline.
+
+**Non-trivial read-only work** (analysis or a question needing more than one file) takes `pipeline.md`'s read-only route — plan, oracle review, explore, report; no git intake, no PR. It re-enters the git intake the moment it turns into a code change.
 
 ### Pipeline engagement
 
@@ -60,7 +64,7 @@ Every degraded form — no git repo, git repo but no GitHub remote/`gh`, issues 
 
 ## Stage 2 — Plan
 
-**Read `${CLAUDE_PLUGIN_ROOT}/references/delegation.md` now** for the domain routing table.
+**Read `${CLAUDE_PLUGIN_ROOT}/references/delegation.md` now** for the domain routing table, and **`${CLAUDE_PLUGIN_ROOT}/references/quality.md` now** — the plan's "Architecture & patterns" column is written against the doctrine, not graded against it for the first time at the gate.
 
 Write the plan as a task list, one row per stage, three columns filled for every row:
 
@@ -94,7 +98,7 @@ Verdict is structured: `approve` or `revise` + reasons.
 - A `revise` may be overridden only with an explicit, user-visible justification.
 - The oracle always runs at its pinned `opus` tier, regardless of the lead's model.
 
-**On `approve`, the plan becomes durable:** post the three-column plan as an issue comment and mirror the link in the draft PR. This comment is the exact resume point — update its per-stage status (done / in-flight / remaining + next failable check) at every stage boundary from here on.
+**On `approve`, the plan becomes durable:** post the three-column plan as an issue comment and mirror the link in the draft PR — or the degraded location from `pipeline.md`'s table (`PLAN.md` with no remote; the PR description when only issues are unavailable). This comment is the exact resume point — update its per-stage status (done / in-flight / remaining + next failable check) at every stage boundary from here on.
 
 ## Stage 3 — Execute
 
@@ -139,7 +143,9 @@ A red check that resists one obvious correction is a debugging event, not a retr
 
 ## Stage 5 — Review & deliver
 
-Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline per the Agent availability check above). **Precondition refusal:** the reviewer refuses a diff whose test suite is not GREEN — it returns immediately naming the missing precondition.
+**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` again now** for the verdict→action mapping and the degraded merge semantics.
+
+Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline per the Agent availability check above). **The brief must attach the verbatim Stage 4 command and its full output** — the reviewer's precondition demands it. **Precondition refusal:** the reviewer refuses a diff whose test suite is not shown GREEN — it returns immediately naming the missing precondition.
 
 Review dimensions (rubric shared with `quality.md`):
 
@@ -161,7 +167,7 @@ Review dimensions (rubric shared with `quality.md`):
 | `rework` | Return to Stage 3 (or Stage 2 if the plan is implicated). A fresh Stage 5 review is mandatory afterward. Cap: two rework cycles, then escalate to the user. |
 | `reject` | Stop. Do not merge. Report the reviewer's reason to the user. |
 
-On merge: flip the draft PR to ready, merge — the issue auto-closes.
+On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result, flip the draft PR to ready, merge — the issue auto-closes. (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
 
 ### Deliver
 

@@ -28,6 +28,15 @@ reclassification, and enter the full pipeline at the git intake below.
   classified trivial without announcing the classification is an
   undisclosed skip of the pipeline.
 
+## Read-only work (non-trivial lookups)
+
+Analysis, investigation, or a question that needs more than one file
+fails the hatch but produces **no diff and nothing to merge** — it never
+enters the git intake. Route: plan (Stage 2) → oracle plan review →
+explore/verify → deliver as the final report. No issue, no branch, no
+PR; say so in the report. The moment the work turns out to need a code
+change, re-enter at the git intake below.
+
 ## Stage 1 — Git intake
 
 Run these four steps, in order, when the project is a git repo. (No repo,

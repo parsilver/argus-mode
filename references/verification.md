@@ -109,6 +109,7 @@ Checked on every review, every time — not opted into per task:
 - **Stage 5 (Review & Deliver)** — the reviewer (or the oracle, in consult
   mode) applies the operating rules and the six dimensions to the diff
   before any merge.
-- **`quality.md`** — dimensions 2 and 4–6 map directly onto quality
-  doctrine principles 1 and 3–6; the reviewer and the oracle hold the diff
-  to the same bar the implementer was briefed against.
+- **`quality.md`** — review dimensions 2–6 map onto doctrine principles
+  1, 2, 3, 5, and 6 respectively; principle 4 (refactor-ready) is upheld
+  through dimensions 3 and 5 together. The reviewer and the oracle hold
+  the diff to the same bar the implementer was briefed against.

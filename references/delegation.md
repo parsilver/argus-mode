@@ -96,6 +96,11 @@ writes a line.
 - A cheaper executor is less reliable by construction — the lead's
   verification pass is not optional overhead, it's the reason delegation
   is safe at all.
+- Enforcement note: "implementers never commit" is a **prompt-level
+  contract** — the implementer's tool grant must include Bash for test
+  runs, and tool grants cannot block `git commit` while allowing test
+  commands. The lead's serialized verify-then-commit pass is the
+  mechanical backstop.
 
 ## What the lead never delegates
 

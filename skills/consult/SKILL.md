@@ -19,6 +19,29 @@ The `${CLAUDE_PLUGIN_ROOT}/references/` files are the source of truth: on
 any conflict between a summary in this file and a reference file, the
 reference wins.
 
+## Agent availability check (run this before Stage 0)
+
+Skills-only installs (e.g. `npx skills add`) ship no agents. Check that
+`argus-oracle`, `argus-explorer`, and `argus-implementer` exist as
+spawnable agents. If `argus-oracle` is unavailable:
+
+- **Announce it to the user now**, plainly — not in the final report
+  alone. In consult mode this degrade is severe: a small lead grading its
+  own work is exactly what the oracle exists to prevent. Offer the user
+  the choice before proceeding: switch to a Fable/Opus session (or a full
+  plugin install), or explicitly accept inline gates.
+- On acceptance, run each checkpoint **inline** — same rubric, same
+  precondition refusal, same verdict set — and state in the final report
+  that every gate ran inline, not via an independent agent.
+- Missing executors degrade the same way as in `/argus-mode:run`: Stage 3
+  fan-out has no agents, so the lead executes every slice **solo**, in
+  plan order, under the same TDD and verification rules — announced, not
+  silent.
+- On a skills-only install `${CLAUDE_PLUGIN_ROOT}` may be unset and the
+  `references/` files unreachable — if a "Read now" target can't be read,
+  run from this file's summaries and announce that too.
+- Never silently skip a checkpoint because the agent isn't installed.
+
 ## Stage 0 — Model gate (reverse)
 
 Check the session model exactly as `/argus-mode:run` Stage 0 does — the
@@ -27,10 +50,10 @@ substring match on the tier token (not a prefix whitelist).
 
 - Model ID contains `fable` or `opus` → this is the **wrong** skill for
   this session. Announce the redirect in one line, then **read
-  `${CLAUDE_PLUGIN_ROOT}/skills/run/SKILL.md` and follow its Stage 0–5
-  directly, in this same turn** — no stop, no re-ask, no retyping. The
-  user asked for the workflow; which skill name got them there is an
-  implementation detail.
+  `${CLAUDE_PLUGIN_ROOT}/skills/run/SKILL.md` and follow it in full —
+  from its agent-availability check onward — in this same turn**; no
+  stop, no re-ask, no retyping. The user asked for the workflow; which
+  skill name got them there is an implementation detail.
 - Otherwise (Sonnet, Haiku, or any other non-Fable/Opus tier) → this is
   the right skill. Continue below.
 
@@ -38,8 +61,12 @@ substring match on the tier token (not a prefix whitelist).
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` now — it opens with
 the canonical triviality escape hatch (apply it first; trivial → announce,
-handle directly, stop), then the git intake (issue → branch/worktree →
-draft PR) and the full degradation table. Once the triviality check clears
+handle directly, stop — summary: ≤3 changed lines AND one file AND no
+public-API/behavior change AND no new test warranted; a bugfix is never
+trivial; read-only lookups are trivial if answerable from one file),
+then the read-only-work route (non-trivial lookups skip the git intake
+entirely — plan, explore, report), the git intake (issue →
+branch/worktree → draft PR), and the full degradation table. Once the triviality check clears
 and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
 and recite the creed verbatim, once — never before the check, never again
 mid-pipeline. Nothing about intake changes in consult mode — same escape
@@ -49,8 +76,11 @@ remote, or no `gh`.
 ## Stage 2 — Plan
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/quality.md` now for the doctrine the
-plan must satisfy, and `${CLAUDE_PLUGIN_ROOT}/references/delegation.md` now
-for the domain-skill routing table. Write the same three-column plan as
+plan must satisfy, `${CLAUDE_PLUGIN_ROOT}/references/delegation.md` now
+for the domain-skill routing table, and
+`${CLAUDE_PLUGIN_ROOT}/references/verification.md` now for what a
+failable check is — the plan's middle column is written against that
+definition, not discovered at the gate. Write the same three-column plan as
 `/argus-mode:run` — What/Owner, Failable check, Architecture & patterns —
 with a domain header recording which installed skills apply and which
 don't (never guessed from memory). The plan's shape doesn't change in
@@ -140,7 +170,9 @@ the oracle can audit.
 ## Stage 5 — Review & deliver (checkpoint 3 of 3)
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` now for the
-reviewer operating rules and the 6-dimension rubric.
+reviewer operating rules and the 6-dimension rubric, and
+`${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` again for the
+verdict→action mapping and the degraded merge semantics.
 
 **`argus-reviewer` is not spawned in consult mode** — its `model: inherit`
 would grade the gate at the small lead's own tier, defeating the point of
@@ -167,35 +199,25 @@ holding the identical bar:
 refusal naming the missing evidence, not a review.
 
 **Evidence handling is the one structural difference from
-`/argus-mode:run`:** attach the Stage 4 command and its full output
-**verbatim** to the review brief. The oracle audits that evidence —
-command, suite scope, freshness — rather than re-running the suite itself
-(unlike `argus-reviewer`, which may re-run tests). If the attached
-evidence is stale, ambiguous, or doesn't cover the changed surface, that
-is itself a `revise`-equivalent finding: the oracle refuses to audit
-evidence it can't trust.
+`/argus-mode:run`:** the review brief must carry, verbatim —
+1. **the diff itself** (patch text, or changed-file list + base ref the
+   oracle can Read against — it has no Bash and cannot run `git diff`),
+2. the Stage 4 command and its full output, and
+3. the **HEAD commit SHA at the moment the Stage 4 command ran**, so
+   freshness is checkable instead of taken on the lead's word.
 
-On `ship` / `fix-then-ship`: flip the draft PR to ready, merge, issue
-auto-closes. Final report to the user: what shipped, evidence, anything
-skipped and why — same shape as `/argus-mode:run`.
+The oracle audits that evidence — command, suite scope, freshness —
+rather than re-running the suite itself (unlike `argus-reviewer`, which
+may re-run tests). A missing diff, missing SHA, or stale/ambiguous
+output is an instant refusal naming the gap: the oracle never reviews
+blind, and never audits evidence it can't trust.
 
-## Agent availability fallback
-
-Check agent availability **before Stage 0**. Skills-only installs (e.g.
-`npx skills add`) ship no agents. If `argus-oracle` is unavailable:
-
-- **Announce it to the user now**, plainly — not in the final report
-  alone. In consult mode this degrade is severe: a small lead grading its
-  own work is exactly what the oracle exists to prevent. Offer the user
-  the choice before proceeding: switch to a Fable/Opus session (or a full
-  plugin install), or explicitly accept inline gates.
-- On acceptance, run each checkpoint **inline** — same rubric, same
-  precondition refusal, same verdict set — and state in the final report
-  that every gate ran inline, not via an independent agent.
-- On a skills-only install `${CLAUDE_PLUGIN_ROOT}` may be unset and the
-  `references/` files unreachable — if a "Read now" target can't be read,
-  run from this file's summaries and announce that too.
-- Never silently skip a checkpoint because the agent isn't installed.
+On `ship` / `fix-then-ship`: update the PR description's "How it was
+verified" section with the Stage 4 command and its result, flip the
+draft PR to ready, merge — issue auto-closes (degraded modes: local
+`git merge --no-ff` per `pipeline.md`). Final report to the user: what
+shipped, evidence, anything skipped and why — same shape as
+`/argus-mode:run`.
 
 ## What this costs
 

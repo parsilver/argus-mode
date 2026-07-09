@@ -59,9 +59,11 @@ ruled in or out.
 
 - `on-track.md` still governs: the same failing command never runs a
   third time — two identical failures mean change approach or ask.
-- `/argus-mode:consult`: a stage's failable check failing twice is
-  checkpoint-2 trigger (c) — bring this loop's ledger to `argus-oracle`
-  instead of attempting a third run.
+- `/argus-mode:consult`: the loop starts at the **first** failure — a
+  deliberate, earlier entry than run's "resists one obvious correction"
+  rule — because a stage's failable check failing twice is checkpoint-2
+  trigger (c), and the ledger must already exist when it fires. Bring
+  the ledger to `argus-oracle` instead of attempting a third run.
 - The fix, once found, is implementation work: it re-enters the pipeline
   (its test first, then the fix, then Stage 4 evidence). The diagnose
   loop ends at the root cause, not at the merge.
@@ -69,7 +71,9 @@ ruled in or out.
 ## How this document is used
 
 - **Stage 3 (Execute)** — a red check that resists one obvious
-  correction starts this loop before any further attempt.
+  correction starts this loop before any further attempt (in
+  `/argus-mode:consult`: from the first failure — see the hand-back
+  section above).
 - **Stage 4 (Verify)** — an unexplained red is diagnosed here, never
   merged over or rationalized away.
 - **`delegation.md`** — debugging stays with the lead; this file is the

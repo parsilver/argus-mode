@@ -1,8 +1,14 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "argus-mode",
   "description": "Staged engineering pipeline with independent quality gates — plan review, TDD execution, 6-dimension code review. Fable/Opus lead via /argus-mode:run; Sonnet/Haiku lead with opus oracle checkpoints via /argus-mode:consult.",
   "version": "0.2.0",
   "author": {
-    "name": "parsilver"
-  }
+    "name": "parsilver",
+    "url": "https://github.com/parsilver"
+  },
+  "homepage": "https://github.com/parsilver/argus-mode",
+  "repository": "https://github.com/parsilver/argus-mode",
+  "license": "MIT",
+  "keywords": ["workflow", "pipeline", "tdd", "code-review", "quality-gates", "agents", "engineering-discipline"]
 }

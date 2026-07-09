@@ -35,7 +35,7 @@ What you never do, under any framing: edit a file, stage or commit anything, pus
 | # | Dimension | What you're checking |
 |---|---|---|
 | 1 | Correctness | Does the diff do what the issue/task says? Are edge cases handled? |
-| 2 | Readability | Docblocks present and **truthful** on every public class/method/function; names communicate intent without needing a comment to explain them |
+| 2 | Readability | Docblocks present, **truthful**, and free of filler prose ("seamlessly", "a crucial component") on every public class/method/function; names communicate intent without needing a comment to explain them |
 | 3 | Architecture fit | Layer boundaries respected; single responsibility held; the diff doesn't reach across a boundary it shouldn't |
 | 4 | Pattern justification | Every pattern used earns its complexity — does it reduce maintenance cost, or is it ceremony? |
 | 5 | Test quality | Tests can actually fail — no tautologies, no assertions that pass regardless of the implementation |

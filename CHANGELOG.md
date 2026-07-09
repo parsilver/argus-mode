@@ -5,6 +5,32 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Prose-style rules in `references/git-conventions.md` — every prose
+  artifact the pipeline writes (issue/PR descriptions, commit bodies,
+  docblocks, READMEs) is held free of AI-writing patterns: no filler, no
+  promotional tone, no rule-of-three padding, no sycophancy, no generic
+  conclusions, plain verbs, evidence-backed hedging only. Adapted with
+  credit from blader/humanizer (Wikipedia "Signs of AI writing").
+- Domain routing: long user-facing prose (docs, README, release notes)
+  routes to a locally installed `humanizer` skill, with the prose-style
+  rules as the shipped fallback.
+
+### Changed
+
+- Readability bar tightened everywhere it is stated (quality doctrine,
+  review dimension 2, reviewer/oracle/implementer agents): docblocks
+  must be truthful **and filler-free** — a docblock written like ad copy
+  is treated as missing.
+- `plugin.json` carries full manifest metadata: `$schema`, `homepage`,
+  `repository`, `license`, `keywords`.
+- Release discipline reworked to accumulate-then-release: shipped-file
+  changes record under this Unreleased section in their own PR; a
+  release PR moves them into a version entry and bumps `plugin.json`.
+
 ## [0.2.0] - 2026-07-09
 
 ### Added
@@ -47,5 +73,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Self-hosted marketplace (`.claude-plugin/marketplace.json`) enabling
   `/plugin marketplace add parsilver/argus-mode`.
 
+[Unreleased]: https://github.com/parsilver/argus-mode/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/parsilver/argus-mode/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/parsilver/argus-mode/releases/tag/v0.1.0

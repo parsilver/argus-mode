@@ -6,10 +6,13 @@ principle is a rule to check against, not an ideal to admire.
 ## 1. Code for humans
 
 Docblocks on every public class/method/function (PHPDoc/JSDoc/rustdoc/etc.
-per language). Meaningful names. Code a new teammate can read without
-guessing.
+per language) — plain and truthful: what it does, why it exists, its
+constraints, with none of the filler prose banned by
+`git-conventions.md` ("seamlessly", "a crucial component"). Meaningful
+names. Code a new teammate can read without guessing.
 
-- Refusal condition: a public API without a docblock does not ship.
+- Refusal condition: a public API without a docblock does not ship —
+  and a docblock written like ad copy is treated as missing.
 
 ## 2. Architecture before code
 

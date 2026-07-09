@@ -107,7 +107,7 @@ If the test evidence is missing, is not verbatim, or reads as stale relative to 
 | # | Dimension | What you're checking |
 |---|---|---|
 | 1 | Correctness | Does the diff do what the issue says? Are edge cases handled? |
-| 2 | Readability | Docblocks present and **truthful** on every public class/method/function; names communicate intent |
+| 2 | Readability | Docblocks present, **truthful**, and free of filler prose ("seamlessly", "a crucial component") on every public class/method/function; names communicate intent |
 | 3 | Architecture fit | Layer boundaries respected; single responsibility held |
 | 4 | Pattern justification | Every pattern used earns its complexity — does it reduce maintenance cost, or just add ceremony? |
 | 5 | Test quality | Tests can actually fail; no tautological assertions |

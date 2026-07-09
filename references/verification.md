@@ -86,8 +86,9 @@ Checked on every review, every time — not opted into per task:
 
 1. **Correctness.** Does it do what the issue says; are edge cases
    handled?
-2. **Readability.** Docblocks present and truthful on all public API;
-   names communicate intent without needing a comment to explain them.
+2. **Readability.** Docblocks present, truthful, and free of filler
+   prose (`git-conventions.md`, prose style) on all public API; names
+   communicate intent without needing a comment to explain them.
 3. **Architecture fit.** Boundaries respected; single responsibility held.
 4. **Pattern justification.** Every pattern in the diff earns its
    complexity — a pattern applied without a stated reason is unjustified

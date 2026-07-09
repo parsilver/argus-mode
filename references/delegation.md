@@ -133,11 +133,14 @@ Plugin-namespaced variants count as matches (e.g. a plugin's
 | `components.json` present in the repo (shadcn project) | `shadcn` |
 | Charts, plots, dashboards, data visualization | `dataviz` |
 | Bug investigation — root-causing a failure or unexplained behavior | `debug-mantra` |
+| Long user-facing prose — docs, README, release notes | `humanizer` |
 | (extend this table as new domains recur — it is a starting set, not a closed list) | — |
 
-The debugging row has a stronger fallback than the others: when no
-`debug-mantra` skill is installed, the lead runs the shipped diagnose
-loop in `debugging.md` — not the quality doctrine alone.
+Two rows have stronger fallbacks than the others: when no `debug-mantra`
+skill is installed, the lead runs the shipped diagnose loop in
+`debugging.md`; when no `humanizer` skill is installed, the prose-style
+rules in `git-conventions.md` apply — in neither case does the fallback
+degrade to the quality doctrine alone.
 
 If a detected domain has no installed skill matching it, the plan states
 **"no matching skill installed"** explicitly for that domain and proceeds

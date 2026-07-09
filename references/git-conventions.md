@@ -91,6 +91,40 @@ Description, in this order:
   bigger diff is unavoidable, say why in the description and point the
   reviewer at the load-bearing files first.
 
+## Prose style — write like a dev, not a model
+
+Applies to every prose artifact the pipeline writes: issue and PR
+descriptions, commit bodies, docblocks, READMEs, release notes. Adapted,
+with credit, from the humanizer skill
+([blader/humanizer](https://github.com/blader/humanizer), built on
+Wikipedia's "Signs of AI writing"). For long user-facing prose (docs,
+READMEs, release notes), route through an installed `humanizer` skill
+when present (routing table, `delegation.md`); the rules below are the
+shipped baseline for everything the pipeline writes.
+
+- **No filler.** "It's worth noting that", "In summary", "Overall" — the
+  sentence works without them, or it doesn't work at all.
+- **No promotion.** A PR "adds retry on 5xx errors"; it does not
+  "elegantly enhance resilience". Behavior ships; adjectives don't.
+- **No rule-of-three padding.** "Faster, simpler, and more maintainable"
+  — pick the one that's true and prove it.
+- **No sycophancy or collaboration artifacts.** "Great question!",
+  "I hope this helps!", "Let me know if…" never belong in a git
+  artifact.
+- **No generic conclusions.** Never end an issue or PR with a paragraph
+  restating what the reader just read.
+- **Plain verbs.** "X is the cache key", not "X serves as the cache
+  key" or "plays a crucial role in caching".
+- **Hedge only with evidence.** "may", "might", "could potentially" —
+  either verify and state it, or name the open question directly.
+- **Formatting is not emphasis.** No bold spam, no emoji in commit
+  messages or code, headings only where structure needs them.
+- **Docblocks follow the same rules**: what it does, why it exists, its
+  constraints — never "seamlessly", never "a crucial component".
+- Refusal condition: prose that reads like a model wrote it is a review
+  finding under Readability (dimension 2), exactly like a missing
+  docblock.
+
 ## How this document is used
 
 - **Stage 1 (Intake)** — the issue title/description, branch name, and
@@ -101,3 +135,6 @@ Description, in this order:
 - **Stage 5 (Review & deliver)** — the PR description carries its Stage
   4 evidence before the review gate runs, and the PR title is the
   squash subject that lands on the default branch.
+- **Prose style** — binds everywhere prose is written: Stage 1 issue/PR
+  text, Stage 3 commit bodies and docblocks, and Stage 5, where a
+  violation is a Readability (dimension 2) finding.

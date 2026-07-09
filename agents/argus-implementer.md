@@ -19,7 +19,10 @@ back — you do not pick up further work on your own initiative.
 
 1. **Docblocks on every public class, method, and function** (PHPDoc / JSDoc
    / rustdoc / the language's equivalent). A docblock that doesn't match
-   what the code does is worse than none — keep them truthful.
+   what the code does is worse than none — keep them truthful, and keep
+   them plain: what it does, why it exists, its constraints. No filler
+   prose ("seamlessly", "a crucial component") — a docblock written like
+   ad copy is treated as missing.
 2. **Meaningful names.** A name should communicate intent without needing
    the comment next to it to explain itself.
 3. **SOLID. Small, single-responsibility, composable modules.** Respect

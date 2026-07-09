@@ -144,7 +144,7 @@ Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline
 Review dimensions (rubric shared with `quality.md`):
 
 1. **Correctness** — does it do what the issue says; edge cases.
-2. **Readability** — docblocks present and truthful on all public API; names communicate intent.
+2. **Readability** — docblocks present, truthful, and free of filler prose on all public API; names communicate intent.
 3. **Architecture fit** — boundaries respected; single responsibility.
 4. **Pattern justification** — patterns earn their complexity.
 5. **Test quality** — tests can actually fail; no tautologies.

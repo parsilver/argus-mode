@@ -27,6 +27,18 @@ check agent availability first; when an agent is missing, its gate runs
 inline by the lead instead — a weaker check, and the final report says so
 openly. It is never a silent degrade.
 
+## Updating
+
+```
+claude plugin marketplace update argus-mode
+claude plugin update argus-mode@argus-mode
+```
+
+Then restart the session to apply. Updates are detected by the `version`
+field in `plugin.json`, and the installer reads your **local marketplace
+clone** — always update the marketplace first, or the installer compares
+against a stale snapshot and reports "already installed".
+
 ## Model matrix
 
 | Session model | Command | What you get |

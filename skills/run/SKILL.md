@@ -135,6 +135,8 @@ Stage N done — failable check: <cmd> → GREEN | next: Stage N+1
 
 Run the actual build/test/lint commands and read the output. GREEN evidence is required before any "done / fixed / passing" claim. A red check is reported as red — never merged over, never rationalized away.
 
+A red check that resists one obvious correction is a debugging event, not a retry event: **read `${CLAUDE_PLUGIN_ROOT}/references/debugging.md` now** and run the diagnose loop (reproduce → fail path → falsify → ledger) before any further attempt. If a `debug-mantra` skill is installed in the session, invoke it instead (domain routing, `references/delegation.md`).
+
 ## Stage 5 — Review & deliver
 
 Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline per the Agent availability check above). **Precondition refusal:** the reviewer refuses a diff whose test suite is not GREEN — it returns immediately naming the missing precondition.

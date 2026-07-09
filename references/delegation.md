@@ -102,7 +102,9 @@ writes a line.
 These stay with the lead, always, regardless of how routine they look:
 
 - **Architecture decisions** — what structure the code takes.
-- **Debugging** — root-causing a failure (see the debug-mantra discipline).
+- **Debugging** — root-causing a failure. The lead runs the diagnose loop
+  in `debugging.md` (or the `debug-mantra` skill when installed — see the
+  routing table below).
 - **The review gate** — Stage 5 belongs to `argus-reviewer` (or the oracle
   in consult mode), spawned and read by the lead, never skipped.
 - **Verification sign-off** — declaring a check GREEN is the lead's claim,
@@ -130,7 +132,12 @@ Plugin-namespaced variants count as matches (e.g. a plugin's
 | UI/visual work — layout, palette, type, motion, interface copy | `frontend-design` |
 | `components.json` present in the repo (shadcn project) | `shadcn` |
 | Charts, plots, dashboards, data visualization | `dataviz` |
+| Bug investigation — root-causing a failure or unexplained behavior | `debug-mantra` |
 | (extend this table as new domains recur — it is a starting set, not a closed list) | — |
+
+The debugging row has a stronger fallback than the others: when no
+`debug-mantra` skill is installed, the lead runs the shipped diagnose
+loop in `debugging.md` — not the quality doctrine alone.
 
 If a detected domain has no installed skill matching it, the plan states
 **"no matching skill installed"** explicitly for that domain and proceeds

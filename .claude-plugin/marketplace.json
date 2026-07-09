@@ -1,0 +1,13 @@
+{
+  "name": "argus-mode",
+  "owner": {
+    "name": "parsilver"
+  },
+  "plugins": [
+    {
+      "name": "argus-mode",
+      "source": "./",
+      "description": "Staged engineering pipeline with independent quality gates — plan review, TDD execution, 6-dimension code review. Fable/Opus lead via /argus-mode:run; Sonnet/Haiku lead with opus oracle checkpoints via /argus-mode:consult."
+    }
+  ]
+}

@@ -37,6 +37,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   PR each, merged serially. Decomposition (deliverable splitting) is
   distinguished from fan-out (execution splitting inside one branch).
 
+- Review-gate fixes from field testing (`references/pipeline.md`,
+  `references/verification.md`, both skills, README): a subjective-goal
+  hold — on perceptual goals `ship` readies the PR and posts comparison
+  evidence but the merge waits for the user's explicit acceptance, each
+  rejection cycle re-running verification and review before the next
+  ask; a planned check that cannot run fails its stage (build the
+  harness or record an explicit user waiver — disclosure is not
+  evidence); a post-merge rejection re-enters the full pipeline, and a
+  PR that defers checklist items must not auto-close its issue; the
+  plan review now diffs every plan decision against the issue's
+  acceptance criteria (a negation is an instant revise), counterweights
+  the simpler-alternative pass on parity goals (each reuse trim states
+  the visible delta it leaves), requires a goal-anchored comparison
+  check for external-reference goals, treats an old markup-coupled
+  suite staying green on a rebuild as non-evidence, and checks that
+  copied licensed assets carry their license basis and a
+  visibility guard.
+
 ### Changed
 
 - Plan-comment lifecycle (`references/pipeline.md`) rewritten to the

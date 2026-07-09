@@ -15,6 +15,12 @@ read — not eyeballed, not assumed.
   `{"status":"ok"}`.
 - Invalid — these are not checks, they are opinions: "looks good", "review
   the code", "seems fine", "should work now".
+- For a goal defined by an external reference ("matches the Fuse
+  template", "behaves like the legacy exporter"), at least one check
+  must compare against that reference — a side-by-side artifact a
+  disagreeing reviewer could point at. "Screenshots exist" is an
+  eyeball, not a check; "screenshot of each page against the matching
+  reference page, attached to the PR" is one.
 - Refusal condition: any claim of "done", "fixed", or "passing" that is
   not backed by a command that was actually run, plus its actual output,
   is rejected on sight — by the lead, the oracle, and the reviewer alike.
@@ -31,8 +37,20 @@ for the two that skip the rest of the rubric entirely when missing.
    10%-of-the-risk change that solves 90% of the goal, or solving it at a
    different layer? This is the single most valuable output the review can
    produce, and it runs before any other check.
+   **Parity-goal counterweight:** when the goal is resemblance or parity
+   with a named reference, invert the default — reuse-over-replace is
+   the risk, not the simplification, because the trimmed delta IS the
+   goal. Every "keep our existing X" trim must state the visible delta
+   it leaves against the reference; a trim that cannot name its delta
+   is a scope change for the user to approve, not a simplification to
+   apply.
 2. **Goal-backward stage check.** Do these stages, taken together, actually
-   reach the stated goal — not just keep the lead busy?
+   reach the stated goal — not just keep the lead busy? Mechanically:
+   diff every plan decision against the issue's acceptance-criteria
+   checklist, item by item — a decision that negates a written
+   criterion is an instant `revise` naming that criterion. Plan
+   approval is approval against the issue as written, never a quietly
+   re-scoped version of it.
 3. **Failable-check reality.** Is every stage's check capable of actually
    going RED, per the definition above?
 4. **Test list present.** Is a test list named, before the code, for every
@@ -55,6 +73,12 @@ for the two that skip the rest of the rubric entirely when missing.
    unless the plan carries the unavoidable-size justification
    `git-conventions.md` permits (a rename sweep, generated code), in
    which case judge the justification, not the size alone.
+9. **Third-party assets carry their license.** A plan that copies
+   licensed or purchased assets into the repo names the license basis
+   and why the use complies, plus a guard when compliance depends on
+   repo visibility (private-only assets flagged before any visibility
+   change). Provenance language stays neutral — "licensed Fuse v21.1.0
+   assets", not a narration of the copying.
 
 Verdict is structured: `approve`, or `revise` with reasons tied to the
 specific rubric item(s) that failed.
@@ -63,7 +87,7 @@ specific rubric item(s) that failed.
 
 A plan arriving **without failable checks**, or **without a test list**
 for an implementation stage, gets an instant `revise` naming the missing
-precondition — the oracle does not attempt items 1–8 above on a plan it
+precondition — the oracle does not attempt items 1–9 above on a plan it
 cannot actually review. Reviewing a plan with no way to fail is theater;
 name the gap and send it back.
 
@@ -107,7 +131,11 @@ Checked on every review, every time — not opted into per task:
    complexity — a pattern applied without a stated reason is unjustified
    complexity, not craftsmanship.
 5. **Test quality.** Tests can actually fail — no tautologies, no tests
-   that pass regardless of whether the code is correct.
+   that pass regardless of whether the code is correct. On a rebuild or
+   redesign, an old markup-coupled suite staying green measures how
+   little changed — anti-correlated with the goal; rewriting the specs
+   against the new surface is the default, and keeping old specs as a
+   constraint needs an explicit justification in the plan.
 6. **Security.** Injection surfaces, authorization seams, secrets in the
    diff, unsafe defaults — checked on every review, not only on tasks
    labeled "security."

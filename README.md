@@ -59,7 +59,7 @@ against a stale snapshot and reports "already installed".
 4. **Plan review gate** — `argus-oracle` reviews goal-backward, simpler-alternative pass first; verdict `approve` or `revise`.
 5. **Execute** — TDD red → green → refactor, solo or fanned out to `argus-implementer`/`argus-explorer`; the lead verifies and commits every slice.
 6. **Verify** — run the real build/test/lint commands; GREEN evidence required before any "done" claim.
-7. **Review & deliver** — `argus-reviewer` (or the oracle, in consult mode) runs the 6-dimension gate; verdict `ship / fix-then-ship / rework / reject` maps to merge, fix-and-merge, rework, or stop.
+7. **Review & deliver** — `argus-reviewer` (or the oracle, in consult mode) runs the 6-dimension gate; verdict `ship / fix-then-ship / rework / reject` maps to merge, fix-and-merge, rework, or stop. Subjective/visual goals additionally hold the merge for the user's explicit acceptance of the posted comparison evidence.
 
 ## Agents
 

@@ -91,6 +91,8 @@ Spawn `argus-oracle` (or, if unavailable, apply this rubric inline per the Agent
 5. Does the chosen architecture hold under `quality.md`?
 6. Is any stage delegating a decision that belongs to the lead (architecture, debugging, review, merge)?
 7. Does the domain-skill routing match the surfaces the task touches?
+8. Is the plan right-sized for review, or does it need decomposition (`pipeline.md`)?
+9. Do copied licensed assets carry their license basis and a visibility guard?
 
 **Precondition refusal:** a plan arriving without failable checks, or without a test list for an implementation stage, gets an instant `revise` naming the missing precondition — do not attempt a full review of an unreviewable plan.
 
@@ -170,6 +172,8 @@ Review dimensions (rubric shared with `quality.md`):
 | `fix-then-ship` | Fix the findings, re-run Stage 4, merge. No fresh review required. |
 | `rework` | Return to Stage 3 (or Stage 2 if the plan is implicated). A fresh Stage 5 review is mandatory afterward. Cap: two rework cycles, then escalate to the user. |
 | `reject` | Stop. Do not merge. Report the reviewer's reason to the user. |
+
+**Subjective-goal hold:** when the goal is perceptual (visual fidelity to a reference, "looks like X"), `ship` readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance — and every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
 
 On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. Advance the project board's Status when one exists: In Review when this gate begins, Done on merge (`pipeline.md`, Project-board sync). (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
 

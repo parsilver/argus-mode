@@ -196,3 +196,57 @@ report.
 - Refusal condition: merging over a `rework` or `reject` verdict, or
   skipping the fresh Stage 5 review after a `rework` cycle, is not a
   shortcut — it is the review gate failing to gate.
+
+## Subjective goals — the user holds the acceptance ask
+
+When the goal is perceptual — visual fidelity to a reference, look and
+feel, "reads like X" — a `ship` verdict readies the PR and posts the
+comparison evidence (per-surface screenshots against the named
+reference, light and dark where schemes exist), but does not merge.
+The merge waits for the user's explicit yes at the acceptance ask: a
+diff-reading review cannot judge what the user will see, and the model
+does not grade "looks right" on the user's behalf.
+
+- A rejection at the acceptance ask returns the work to Stage 3 on the
+  same branch. Each such cycle re-runs Stage 4 and the Stage 5 review
+  gate before the next acceptance ask — no fast path from edit to
+  re-ask.
+- User-directed cycles sit outside the rework cap: the cap bounds
+  automation disagreement, and here the human is the gate. But a
+  non-converging repeat — the same rejection reason returning with no
+  new information — is a loop signal (`on-track.md`): stop, lay out
+  what each cycle tried and what changed, and ask for direction
+  instead of churning.
+- Refusal condition: merging a subjective-goal PR on a `ship` verdict
+  alone, without the user's acceptance, repeats the failure this rule
+  exists to prevent — the gate that mattered would run after the
+  merge.
+
+## A check that cannot run fails its stage
+
+A planned check that turns out to be un-runnable — missing harness,
+unavailable backend, absent fixture — leaves its stage NOT done.
+Disclosure is not a substitute for evidence. Two exits:
+
+1. Build what makes the check runnable — a mock backend, a fixture, a
+   comparison harness — or
+2. ask the user for an explicit waiver, recorded in the plan comment
+   before any merge.
+
+- Refusal condition: `ship` or `fix-then-ship` over a planned check
+  that never ran is a green claim without its evidence — the exact
+  thing Stage 4 exists to forbid.
+
+## Post-merge rejection re-enters the full pipeline
+
+When the user rejects an already-merged result, the follow-up is a
+full pipeline run — plan, plan review, execution, review gate.
+Urgency is not a fast path: the rejected merge is evidence the gates
+were needed, not license to skip them.
+
+- An issue closes only when its acceptance checklist is met. A PR that
+  defers checklist items does not carry `Closes #<n>` — the unmet
+  criteria move to a follow-up issue, named in the PR description.
+- Refusal condition: a rejection-driven follow-up that skips the plan
+  or the review gate, or a deferring PR that auto-closes its issue,
+  reproduces the failure being corrected.

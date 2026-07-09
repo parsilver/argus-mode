@@ -86,8 +86,8 @@ writes a line.
   reports back the diff plus its check's output — nothing more.
 - **The lead verifies, then commits.** For each returned slice, the lead
   runs the slice's failable check against its acceptance criteria itself.
-  Only after it passes does the lead commit it, in Conventional Commits
-  format.
+  Only after it passes does the lead commit it — atomic, tree GREEN after
+  every commit, Conventional Commits format per `git-conventions.md`.
 - **Commits are serialized.** One slice verified and committed before the
   next is accepted — never batch-accept multiple unverified slices.
 - **Parallel fan-out only across disjoint file sets.** Two executors never

@@ -49,7 +49,7 @@ Once the task clears the triviality check, the pipeline engages: **read `${CLAUD
 
 ### Git intake
 
-**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` now** and follow it exactly, including its degradation rules:
+**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` and `${CLAUDE_PLUGIN_ROOT}/references/git-conventions.md` now** — pipeline.md is the flow (follow it exactly, including its degradation rules); git-conventions.md is the naming and message standard every artifact below follows:
 
 1. `git fetch origin`, fast-forward the default branch.
 2. `gh issue create` describing the work.

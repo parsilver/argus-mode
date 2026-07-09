@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.4.0] - 2026-07-10
 
 ### Added
 
@@ -54,6 +54,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   suite staying green on a rebuild as non-evidence, and checks that
   copied licensed assets carry their license basis and a
   visibility guard.
+
+### Fixed
+
+- Skill descriptions no longer steer 1–3-line edits away from the
+  pipeline before the triviality hatch can classify them — the hatch
+  decides (≤3 lines AND one file AND no behavior change), and a bugfix
+  never qualifies.
+- The subjective-goal hold covers both merging verdicts:
+  `fix-then-ship` waits for the user's acceptance exactly like `ship`.
+- Board-status guidance sets In Review at the start of the review
+  gate, not inside the merge step.
 
 ### Changed
 
@@ -157,6 +168,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Self-hosted marketplace (`.claude-plugin/marketplace.json`) enabling
   `/plugin marketplace add parsilver/argus-mode`.
 
+[0.4.0]: https://github.com/parsilver/argus-mode/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/parsilver/argus-mode/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/parsilver/argus-mode/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/parsilver/argus-mode/releases/tag/v0.1.0

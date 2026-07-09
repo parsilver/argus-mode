@@ -1,6 +1,6 @@
 ---
 name: consult
-description: The argus-mode pipeline for Sonnet/Haiku leads — the small model executes while a pinned-opus oracle gates the plan, arbitrates architecture, and performs the final review. Trigger when the user invokes /argus-mode:consult or asks for the argus pipeline on a smaller model. Not for trivial lookups or 1-3 line edits.
+description: The argus-mode pipeline for Sonnet/Haiku leads — the small model executes while a pinned-opus oracle gates the plan, arbitrates architecture, and performs the final review. Trigger when the user invokes /argus-mode:consult or asks for the argus pipeline on a smaller model. Not for trivial lookups or edits the triviality hatch covers.
 ---
 
 # /argus-mode:consult — small-model lead + oracle checkpoints
@@ -178,7 +178,9 @@ the oracle can audit.
 Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` now for the
 reviewer operating rules and the 6-dimension rubric, and
 `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` again for the
-verdict→action mapping and the degraded merge semantics.
+verdict→action mapping and the degraded merge semantics. When a
+project board exists, set its Status to In Review as this gate begins
+(`pipeline.md`, Project-board sync).
 
 **`argus-reviewer` is not spawned in consult mode** — its `model: inherit`
 would grade the gate at the small lead's own tier, defeating the point of
@@ -201,7 +203,7 @@ holding the identical bar:
 | `rework` | return to Stage 3 (or Stage 2 if the plan is implicated); fresh Stage 5 review mandatory after; capped at two rework cycles, then escalate to the user |
 | `reject` | stop; do not merge; report the oracle's reason to the user |
 
-**Subjective-goal hold applies unchanged:** on a perceptual goal (visual fidelity, "looks like X"), `ship` readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance; every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
+**Subjective-goal hold applies unchanged:** on a perceptual goal (visual fidelity, "looks like X"), a merging verdict — `ship`, or `fix-then-ship` once its fixes are re-verified — readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance; every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
 
 **Precondition refusal still holds:** a non-GREEN diff gets an instant
 refusal naming the missing evidence, not a review.
@@ -229,9 +231,8 @@ On `ship` / `fix-then-ship`: update the PR description's "How it was
 verified" section with the Stage 4 command and its result — PR text in
 the team voice per `git-conventions.md` — flip the draft PR to ready,
 merge — issue auto-closes (degraded modes: local `git merge --no-ff`
-per `pipeline.md`). Advance the project board's Status when one
-exists: In Review at this gate, Done on merge (`pipeline.md`,
-Project-board sync). Final report to the user: what shipped, evidence,
+per `pipeline.md`). Set the board Status to Done on merge, when a
+board exists. Final report to the user: what shipped, evidence,
 anything skipped and why — same shape as `/argus-mode:run`.
 
 ## What this costs

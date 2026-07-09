@@ -200,7 +200,8 @@ report.
 ## Subjective goals — the user holds the acceptance ask
 
 When the goal is perceptual — visual fidelity to a reference, look and
-feel, "reads like X" — a `ship` verdict readies the PR and posts the
+feel, "reads like X" — a merging verdict (`ship`, or `fix-then-ship`
+once its fixes are in and re-verified) readies the PR and posts the
 comparison evidence (per-surface screenshots against the named
 reference, light and dark where schemes exist), but does not merge.
 The merge waits for the user's explicit yes at the acceptance ask: a
@@ -217,10 +218,10 @@ does not grade "looks right" on the user's behalf.
   new information — is a loop signal (`on-track.md`): stop, lay out
   what each cycle tried and what changed, and ask for direction
   instead of churning.
-- Refusal condition: merging a subjective-goal PR on a `ship` verdict
-  alone, without the user's acceptance, repeats the failure this rule
-  exists to prevent — the gate that mattered would run after the
-  merge.
+- Refusal condition: merging a subjective-goal PR on the reviewer's
+  verdict alone — `ship` or `fix-then-ship` — without the user's
+  acceptance repeats the failure this rule exists to prevent: the gate
+  that mattered would run after the merge.
 
 ## A check that cannot run fails its stage
 

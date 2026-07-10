@@ -140,7 +140,9 @@ of re-running intake:
    session, resumed runs included.
 2. Intake steps 2–4 are replaced by adoption: fetch, check out the
    existing branch (or its worktree), and read the plan comment — it
-   is the checklist of record.
+   is the checklist of record. Adopted state with **no** plan comment
+   means the run died before plan approval — enter at Stage 2 and
+   plan against the adopted issue and branch.
 3. **Reconcile before trusting it: the branch's commit log outranks
    the comment.** A session can die between a commit and the comment's
    update, so diff the ticked items against

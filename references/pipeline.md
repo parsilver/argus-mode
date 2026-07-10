@@ -284,7 +284,7 @@ report.
 |---|---|
 | `ship` | Flip the draft PR to ready, merge — the issue auto-closes. |
 | `fix-then-ship` | Fix the findings, re-run Stage 4 (verify), then merge. No fresh review required. |
-| `rework` | Return to Stage 3 (or Stage 2 if the plan itself is implicated). A fresh Stage 5 review is mandatory afterward. |
+| `rework` | Return to Stage 3 (or Stage 2 if the plan itself is implicated — the revised plan re-enters the Stage 2.5 plan review before execution resumes, and the revise-cycle cap keeps counting). A fresh Stage 5 review is mandatory afterward. |
 | `reject` | Stop. Do not merge. Report the reviewer's reason to the user. |
 
 - **Rework cap: two cycles.** A third `rework` verdict on the same piece

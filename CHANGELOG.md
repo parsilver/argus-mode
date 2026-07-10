@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Self-check blind spots closed (development surface, not shipped to
+  installs — `tests/run-checks.sh`, `tests/changelog-gate.sh`,
+  `tests/fixtures/dirty.md`, `.github/workflows/ci.yml`,
+  `RELEASE-CHECKLIST.md`): the lexicon fixture is asserted per
+  alternation branch (deleting any single branch turns CI red); rubric
+  parity is checked mechanically (plan-review items 10/10/10 across
+  verification.md and both skills; review dimensions 6/6/6/6 across
+  verification.md, both review agents, and the run skill); every
+  released tag needs its RELEASE-CHECKLIST record row (v0.5.1's
+  missing row added); and the changelog CI gate now asserts entries
+  land inside the `## [Unreleased]` section, via a locally runnable
+  `tests/changelog-gate.sh`. (#42)
 - Degradation and lifecycle rows (`references/pipeline.md`,
   `references/post-mortem.md`, both skills): the no-remote row splits
   — "remote exists, `gh` missing" now pushes the branch and delivers

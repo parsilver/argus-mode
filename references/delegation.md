@@ -152,6 +152,7 @@ Plugin-namespaced variants count as matches (e.g. a plugin's
 | Research / deep-dive investigation — multi-file or multi-source questions | `deep-research`, `paper-research`, or any installed research skill |
 | Security review beyond the standing dimension-6 check — auth design, threat surfaces | `security-review` or similar |
 | Library-docs lookup — current API or version documentation for a dependency | a docs skill/server (e.g. `context7`) |
+| New-capability ideation — requirements unclear, solution space open | `brainstorming` or similar |
 | (extend this table as new domains recur — it is a starting set, not a closed list) | — |
 
 Several rows have stronger fallbacks than the quality doctrine alone:
@@ -161,7 +162,8 @@ research skill → the read-only route and its report contract
 (`pipeline.md`); no security-review skill → `quality.md` principle 6
 plus review dimension 6, applied deliberately rather than in passing;
 no docs skill → the library's official documentation via web fetch,
-never memory alone.
+never memory alone; no brainstorming skill → the ambiguity gate in
+`pipeline.md` (clarify before the issue).
 
 If a detected domain has no installed skill matching it, the plan states
 **"no matching skill installed"** explicitly for that domain and proceeds

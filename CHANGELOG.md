@@ -24,9 +24,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   questions answered before the plan is written, recorded as a
   `Scouted:` line in the plan header; the plan review checks the plan
   against that record.
-- Domain routing (`references/delegation.md`): three new rows —
-  research/deep-dive investigation, security review, and library-docs
-  lookup — each with a named shipped fallback.
+- Domain routing (`references/delegation.md`): four new rows —
+  research/deep-dive investigation, security review, library-docs
+  lookup, and new-capability ideation — each with a named shipped
+  fallback.
+- Docs-currency check (`references/verification.md` rubric item 10 and
+  dimension 2, both review agents, the run skill's inline rubric):
+  plans touching public API or user-visible behavior name the docs
+  they update or state that none mention the surface — checked, not
+  assumed; a README or doc example contradicted by the diff is a
+  Readability finding.
+- Ambiguity gate (`references/pipeline.md`): a new capability whose
+  acceptance criteria cannot be derived from the request gets targeted
+  questions — or two to three shaped options — before the issue is
+  written; answers recorded in the issue so the criteria trace to the
+  requester, not the pipeline's guess.
+- Decision records (`references/git-conventions.md`): a plan decision
+  marked load-bearing beyond its PR gets a committed `docs/adr/` entry
+  (or the repo's native equivalent), linked from the plan comment.
+
+### Fixed
+
+- Review polish from the 0.4.0 release review, both skills: the run
+  preamble's hatch summary carries all four criteria; Blocked board
+  status is named at the escalation points; the run skill's inline
+  fallback rubric carries the parity counterweight, the criteria diff,
+  the size escape, and the docs check; the consult intro no longer
+  overclaims ("leads all execution"); the third-run self-catch fires
+  before the run, not after it.
 
 ## [0.4.0] - 2026-07-10
 

@@ -156,6 +156,20 @@ a repo audience is pasting a shell transcript into a design doc.
   an ad-copy docblock, and grounds to rewrite the artifact before it
   ships.
 
+## Decision records
+
+A decision the plan marks as load-bearing beyond its own PR — an
+architecture choice future work must respect, a rejected alternative
+that will tempt again — gets a committed decision record:
+`docs/adr/NNNN-<slug>.md` (or the repo's native equivalent), one page:
+context, the decision, the consequences. Commit it with the change and
+link it from the plan comment — the plan comment records state; the
+decision record outlives it.
+
+- Refusal condition: a load-bearing decision that lives only in a
+  closed issue's comment thread is findable by archaeology, not by the
+  next dev — that is mentioned, not recorded.
+
 ## Prose style — write like a dev, not a model
 
 Applies to every prose artifact the pipeline writes: issue and PR

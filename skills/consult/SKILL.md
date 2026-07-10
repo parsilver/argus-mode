@@ -67,7 +67,9 @@ trivial; read-only lookups are trivial if answerable from one file),
 then the read-only-work route (non-trivial lookups skip the git intake
 entirely — plan, explore, report per the route's report contract; its
 landing rule decides where findings live, chat or a `question`-labeled
-issue), the git intake (issue with its
+issue), the ambiguity gate (a new capability with unstated
+requirements gets clarified with the requester before the issue is
+written), the git intake (issue with its
 fields filled and added to the repo's project board when one exists →
 branch/worktree → draft PR), and the full degradation table. Once the triviality check clears
 and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
@@ -101,9 +103,10 @@ rubric: the mandatory simpler-alternative pass first, the goal-backward
 review, and instant precondition refusal on a plan with no failable checks
 or no test list.
 
-Spawn `argus-oracle` with the plan, the task statement, and relevant repo
-context — the identical gate `/argus-mode:run` runs, with one binding
-difference:
+Spawn `argus-oracle` with the plan, the task statement, relevant repo
+context, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md`
+as the rubric's source of truth — the identical gate `/argus-mode:run`
+runs, with one binding difference:
 
 | | `/argus-mode:run` | `/argus-mode:consult` |
 |---|---|---|

@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Repo self-checks
         run: bash tests/run-checks.sh
 
@@ -27,15 +29,7 @@ jobs:
       - name: Shipped-file changes carry a changelog entry
         env:
           BASE_REF: ${{ github.base_ref }}
-        run: |
-          base="origin/${BASE_REF}"
-          changed=$(git diff --name-only "$base"...HEAD)
-          printf 'changed files:\n%s\n' "$changed"
-          if echo "$changed" | grep -qE '^(skills/|agents/|references/|\.claude-plugin/)'; then
-            echo "$changed" | grep -q '^CHANGELOG\.md$' \
-              || { echo "::error::shipped files changed without a CHANGELOG entry in this PR"; exit 1; }
-          fi
-          echo "gate satisfied"
+        run: bash tests/changelog-gate.sh "origin/${BASE_REF}"
 
   tag-version:
     if: startsWith(github.ref, 'refs/tags/v')

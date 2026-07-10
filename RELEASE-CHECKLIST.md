@@ -32,3 +32,4 @@ its surface changed; record honestly — "pending" beats a claimed pass.
 | Release | Every-release checks | Smoke tests |
 |---|---|---|
 | v0.5.0 | `bash tests/run-checks.sh` pass (35 checks) · plugin validation pass (7/7) · skill review pass, non-blocking (follow-ups filed) | #1 live — this release's own run (PRs #28–#31 and the release PR) |
+| v0.5.1 | `bash tests/run-checks.sh` pass (35 checks) · plugin validation and skill review not re-run — docs-only patch from the 0.5.0 release review | none exercised — docs-only patch |

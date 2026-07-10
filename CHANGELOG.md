@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Skill-summary gaps from the 0.5.0 release review, both skills: the
+  consult read-only-route summary names the plan-review step (was
+  "plan, explore, report"); the run intake carries a one-clause
+  ambiguity-gate mention, kept before the issue is written; consult uses
+  label-safe "a `question` issue" phrasing (existing labels only); both
+  landing-rule summaries carry the public-repo vulnerability exception (a
+  finding exposing a hole in a public repo never lands on a public
+  issue); and the consult inline-fallback plan-review rubric enumerates
+  all ten review items, reaching parity with the run skill so a
+  consult-only install stays self-contained.
+
 ## [0.5.0] - 2026-07-10
 
 ### Added
@@ -242,6 +257,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Self-hosted marketplace (`.claude-plugin/marketplace.json`) enabling
   `/plugin marketplace add parsilver/argus-mode`.
 
+[Unreleased]: https://github.com/parsilver/argus-mode/compare/v0.5.0...HEAD
 [0.5.0]: https://github.com/parsilver/argus-mode/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/parsilver/argus-mode/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/parsilver/argus-mode/compare/v0.2.0...v0.3.0

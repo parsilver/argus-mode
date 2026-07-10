@@ -45,13 +45,17 @@ Trivial → announce the classification ("this is a trivial edit — skipping th
 
 **Re-entry rule:** if the "trivial" edit turns out to need a second edit, a second file, or its first check fails → stop, announce the reclassification, re-enter at Stage 1 proper (full pipeline, from git intake). The hatch is not a bypass valve for the pipeline.
 
-**Non-trivial read-only work** (analysis or a question needing more than one file) takes `pipeline.md`'s read-only route — plan, oracle review, explore, report. The report follows the route's report contract (question → searched → `file:line`-cited findings → open questions), and its landing rule decides where findings live: chat for one-shot answers, a `question` issue when they feed later work, outlive the session, or hand off mid-run. It re-enters the git intake the moment it turns into a code change.
+**Non-trivial read-only work** (analysis or a question needing more than one file) takes `pipeline.md`'s read-only route — plan, oracle review, explore, report. The report follows the route's report contract (question → searched → `file:line`-cited findings → open questions), and its landing rule decides where findings live: chat for one-shot answers, a `question` issue when they feed later work, outlive the session, or hand off mid-run — except a finding exposing a vulnerability in a public repo which never lands on a public issue. It re-enters the git intake the moment it turns into a code change.
 
 ### Pipeline engagement
 
 Once the task clears the triviality check, the pipeline engages: **read `${CLAUDE_PLUGIN_ROOT}/references/creed.md` now and recite the Argus creed verbatim, once.** Never recite it again for the rest of this run.
 
 ### Git intake
+
+For a new capability whose acceptance criteria can't be derived from the
+request, the ambiguity gate applies — clarify with the requester before
+the issue is written (`pipeline.md`, Ambiguous ask).
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` and `${CLAUDE_PLUGIN_ROOT}/references/git-conventions.md` now** — pipeline.md is the flow (follow it exactly, including its degradation rules); git-conventions.md is the naming and message standard every artifact below follows:
 

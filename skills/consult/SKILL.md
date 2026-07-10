@@ -72,7 +72,10 @@ repo which never lands on a public issue), the ambiguity gate (a new
 capability with unstated requirements gets clarified with the requester
 before the issue is written), the git intake (issue with its
 fields filled and added to the repo's project board when one exists →
-branch/worktree → draft PR), and the full degradation table. Once the triviality check clears
+branch/worktree → draft PR), the Resume path (a request naming an
+existing issue, PR, or branch adopts the in-flight state instead of
+re-running intake — the branch's commit log outranks the plan comment,
+reconcile first), and the full degradation table. Once the triviality check clears
 and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
 and recite the creed verbatim, once — never before the check, never again
 mid-pipeline. Nothing about intake changes in consult mode — same escape

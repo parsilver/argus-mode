@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Resume path (`references/pipeline.md`, "Resume — the receiving
+  side"; both skills; `references/on-track.md`): a request naming an
+  existing issue, PR, or branch — or an in-flight branch whose plan
+  comment covers the task — adopts the durable state instead of
+  re-running intake; the branch's commit log outranks a lagging plan
+  comment and is reconciled first; an unchanged approved plan is not
+  re-reviewed; a recorded-but-unapplied review outcome is applied
+  before new work. The plan-comment lifecycle now records every
+  review-gate outcome and its round count, so rework/revise caps
+  survive a handoff. (#38)
+
 ## [0.5.1] - 2026-07-10
 
 ### Fixed
@@ -257,6 +272,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Self-hosted marketplace (`.claude-plugin/marketplace.json`) enabling
   `/plugin marketplace add parsilver/argus-mode`.
 
+[Unreleased]: https://github.com/parsilver/argus-mode/compare/v0.5.1...HEAD
 [0.5.1]: https://github.com/parsilver/argus-mode/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/parsilver/argus-mode/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/parsilver/argus-mode/compare/v0.3.0...v0.4.0

@@ -57,7 +57,9 @@ For a new capability whose acceptance criteria can't be derived from the
 request, the ambiguity gate applies — clarify with the requester before
 the issue is written (`pipeline.md`, Ambiguous ask).
 
-**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` and `${CLAUDE_PLUGIN_ROOT}/references/git-conventions.md` now** — pipeline.md is the flow (follow it exactly, including its degradation rules); git-conventions.md is the naming and message standard every artifact below follows:
+**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` and `${CLAUDE_PLUGIN_ROOT}/references/git-conventions.md` now** — pipeline.md is the flow (follow it exactly, including its degradation rules); git-conventions.md is the naming and message standard every artifact below follows.
+
+**Resume first (`pipeline.md`, Resume — the receiving side):** when the request names an existing issue, PR, or branch — or an in-flight branch with a plan comment already covers this task — adopt that state instead of creating new artifacts: reconcile the plan comment against the branch's commit log (the log outranks the comment), apply any recorded-but-unapplied review outcome, and enter at the first open item. The steps below create state only when none exists:
 
 1. `git fetch origin`, fast-forward the default branch.
 2. `gh issue create` describing the work — filling the fields the repo actually has (labels/milestone/type: discover, then apply) and adding the issue to the repo's project board when one exists (`pipeline.md`, Project-board sync).

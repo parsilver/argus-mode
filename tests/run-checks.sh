@@ -11,9 +11,11 @@ err()  { printf 'FAIL: %s\n' "$*"; fail=1; }
 #    the seeded dirty fixture and pass the clean one (which carries the
 #    known false-positive traps: Oracle DB, green environments, WAL
 #    checkpoints, rollout stages).
+[ -f tests/fixtures/dirty.md ] || err "dirty fixture missing (tests/fixtures/dirty.md)"
+[ -f tests/fixtures/clean.md ] || err "clean fixture missing (tests/fixtures/clean.md)"
 pattern=$(grep -o "grep -inE '[^']*'" references/git-conventions.md | head -1 | sed "s/^grep -inE '//; s/'\$//")
-if [ -z "$pattern" ]; then
-  err "lexicon pattern not found in references/git-conventions.md"
+if [ -z "$pattern" ] || [ ! -f tests/fixtures/dirty.md ] || [ ! -f tests/fixtures/clean.md ]; then
+  [ -n "$pattern" ] || err "lexicon pattern not found in references/git-conventions.md"
 else
   hits=$(grep -icE "$pattern" tests/fixtures/dirty.md || true)
   if [ "${hits:-0}" -ge 5 ]; then note "lexicon flags the dirty fixture ($hits hits)"; else err "lexicon: expected >=5 hits on dirty fixture, got ${hits:-0}"; fi
@@ -58,6 +60,8 @@ done
 for a in agents/*.md; do
   n=$(awk -F': ' '/^name:/{print $2; exit}' "$a")
   m=$(awk -F': ' '/^model:/{print $2; exit}' "$a")
+  [ -n "$n" ] || { err "agent $a has no name: line"; continue; }
+  [ -n "$m" ] || { err "agent $a has no model: line"; continue; }
   grep -q "\`$n\`" README.md && note "README lists agent $n" || err "README does not list agent $n"
   grep -qE "\`$n\`.*$m" README.md && note "README carries model $m for $n" || err "README missing model $m for agent $n"
 done

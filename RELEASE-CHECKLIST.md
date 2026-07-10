@@ -20,7 +20,7 @@ its surface changed; record honestly — "pending" beats a claimed pass.
 
 | # | Test | Last passed |
 |---|---|---|
-| 1 | Full pipeline end-to-end on a Fable/Opus session: issue → plan → plan review → execution → verification → review gate → merge | v0.4.0 and v0.5.0 — this repo's own releases ran it live (PRs #19–#22, #28–#31) |
+| 1 | Full pipeline end-to-end on a Fable/Opus session: issue → plan → plan review → execution → verification → review gate → merge | v0.4.0 — this repo's own release ran it live (PRs #19–#22) |
 | 2 | Sonnet/Haiku invoking the run command hits the hard stop with three doors; "proceed anyway" recorded in the final report | pending |
 | 3 | Consult mode: a seeded mid-execution deviation fires its trigger and the advisor rules on it before work continues | pending |
 | 4 | No-remote degradation: the plan lands in `PLAN.md`, the merge is a local `--no-ff`, the degrade named in the final report | pending |
@@ -31,4 +31,4 @@ its surface changed; record honestly — "pending" beats a claimed pass.
 
 | Release | Every-release checks | Smoke tests |
 |---|---|---|
-| v0.5.0 | recorded in the release PR | #1 live (this release's own run) |
+| (the release PR writes each row when the release actually happens) | | |

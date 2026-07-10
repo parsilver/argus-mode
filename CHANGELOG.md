@@ -9,18 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Research flow (`references/pipeline.md`): the read-only route gains a
-  report contract (question → what was searched → `file:line`-cited
-  findings → open questions) and a landing rule — one-shot answers may
-  stay in chat; findings that feed later work, outlive the session, or
-  hand off mid-run land on a `question`-labeled issue, with a
-  when-unsure tie-breaker toward durability and a degraded report-file
+- Research flow (`references/pipeline.md`, both skills): the read-only
+  route gains a report contract (question → what was searched →
+  `file:line`-cited findings → open questions) and a landing rule —
+  one-shot answers may stay in chat; findings that feed later work,
+  outlive the session, or hand off mid-run land on a `question` issue
+  that becomes the route's resume point, with a when-unsure
+  tie-breaker toward durability, a private channel for
+  vulnerability findings on public repos, and a degraded report-file
   form.
 - Scout before you plan (`references/pipeline.md`,
-  `references/verification.md`): surfaces not read this session get
-  their reconnaissance questions answered before the plan is written,
-  recorded as a `Scouted:` line in the plan header; the plan review
-  checks the plan against that record.
+  `references/verification.md`, both skills): surfaces not read this
+  session — or no longer in context — get their reconnaissance
+  questions answered before the plan is written, recorded as a
+  `Scouted:` line in the plan header; the plan review checks the plan
+  against that record.
 - Domain routing (`references/delegation.md`): three new rows —
   research/deep-dive investigation, security review, and library-docs
   lookup — each with a named shipped fallback.

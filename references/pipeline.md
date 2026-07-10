@@ -3,8 +3,8 @@
 The git/GitHub mechanics shared by both skills: how work enters the repo
 (Stage 1), how the plan stays durable and visible (Stage 2.5 onward), what
 degrades when the platform doesn't cooperate, and how a Stage 5 verdict
-turns into an action. Read this file at Stage 1, apply its
-decomposition test at Stage 2, and read it again at Stage 5.
+turns into an action. Read this file at Stage 1, apply its scout step
+and decomposition test at Stage 2, and read it again at Stage 5.
 
 ## Stage 1 — Triviality escape hatch (run this first)
 
@@ -45,13 +45,21 @@ codebase could not answer.
 
 **The landing rule.** A one-shot answer may deliver in chat. Findings
 that feed later work, outlive the session, or hand off mid-run land on
-a `question`-labeled issue — created for the investigation, answered
-as a comment in the report shape, then closed; closed issues stay
-searchable. When unsure whether a finding outlives the session, land
-it on an issue — durability is cheap to over-provide and impossible to
-retrofit. Degraded (no repo, no remote, or issues disabled): offer a
-committed report file; if declined, deliver in chat and name the
-degrade in the report.
+a `question` issue — created for the investigation, labeled per the
+intake's label rule (existing label only; absent → skip the label and
+say so in the issue body), answered as a comment in the report shape,
+then closed; closed issues stay searchable. When unsure whether a
+finding outlives the session, land it on an issue — durability is
+cheap to over-provide and impossible to retrofit. On a mid-run
+handoff, create the issue at the handoff point: the plan comment and
+its lifecycle attach to that issue, and it becomes the route's resume
+point exactly as the intake issue is for code work. One exception
+outranks the tie-breaker: findings that expose a vulnerability in a
+publicly visible repo never land on a public issue — use a private
+channel (a security advisory, or a report file on a branch) and name
+the exception in the report. Degraded (no repo, no remote, or issues
+disabled): offer a committed report file; if declined, deliver in chat
+and name the degrade in the report.
 
 - Refusal condition: an investigation whose findings the user will act
   on later, delivered only as chat prose, evaporates with the session
@@ -109,7 +117,8 @@ not decoration.
 
 A plan written against surfaces the lead has not read is guesswork
 wearing a table. When the task touches files or subsystems not read
-this session: name the reconnaissance questions first, answer them —
+this session — or read but no longer available in context; when in
+doubt, scout — name the reconnaissance questions first, answer them —
 direct reads, or the scout agent for breadth — and record the result
 as a `Scouted:` line in the plan header (areas read, questions
 answered, anything that changed the plan's shape). The plan review

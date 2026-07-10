@@ -45,7 +45,7 @@ Trivial → announce the classification ("this is a trivial edit — skipping th
 
 **Re-entry rule:** if the "trivial" edit turns out to need a second edit, a second file, or its first check fails → stop, announce the reclassification, re-enter at Stage 1 proper (full pipeline, from git intake). The hatch is not a bypass valve for the pipeline.
 
-**Non-trivial read-only work** (analysis or a question needing more than one file) takes `pipeline.md`'s read-only route — plan, oracle review, explore, report. The report follows the route's report contract (question → searched → `file:line`-cited findings → open questions), and its landing rule decides where findings live: chat for one-shot answers, a `question`-labeled issue when they feed later work or outlive the session. It re-enters the git intake the moment it turns into a code change.
+**Non-trivial read-only work** (analysis or a question needing more than one file) takes `pipeline.md`'s read-only route — plan, oracle review, explore, report. The report follows the route's report contract (question → searched → `file:line`-cited findings → open questions), and its landing rule decides where findings live: chat for one-shot answers, a `question` issue when they feed later work, outlive the session, or hand off mid-run. It re-enters the git intake the moment it turns into a code change.
 
 ### Pipeline engagement
 

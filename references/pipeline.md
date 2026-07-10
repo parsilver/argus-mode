@@ -275,8 +275,8 @@ report.
 | Condition | Issue / PR | Plan lives in | Reviewer scope | Merge semantics |
 |---|---|---|---|---|
 | No git repo | Offer `git init`; if declined, skip the git layer for every stage | The final report | Files created/modified this session | N/A — deliver = the final report |
-| Git repo, no remote at all | Local branch only; skip issue and PR | `PLAN.md` in the worktree | `git diff <default-branch>...HEAD` | Local `git merge --no-ff` into the default branch, after the review gate |
-| Remote exists, `gh` CLI missing | Skip issue and PR (no API access); push the branch to the remote | `PLAN.md` on the branch | `git diff <default-branch>...HEAD` | **Never merge locally while a remote exists** — the local default branch would diverge from origin and the next intake's fast-forward breaks. Deliver the pushed branch and its compare link, named in the final report; opening and merging the PR is the user's step |
+| Git repo, no remote at all | Local branch only; skip issue and PR | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | Local `git merge --no-ff` into the default branch, after the review gate — remove `PLAN.md` in a final commit on the branch first, so run state never lands on the default branch |
+| Remote exists, `gh` CLI missing | Skip issue and PR (no API access); push the branch to the remote | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | **Never merge locally while a remote exists** — the local default branch would diverge from origin and the next intake's fast-forward breaks. Deliver the pushed branch and its compare link, named in the final report; opening and merging the PR is the user's step. Push rejected (no rights) → deliver the branch locally (`git bundle` or patch file, or the user pushes), named the same way |
 | Remote exists, no push rights (fork / OSS contribution) | Issue on upstream when creatable, else skip and note; `gh repo fork --remote`, branch pushed to the fork | Issue comment as usual (PR description when no upstream issue) | Normal — PR diff | Cross-fork draft PR, readied after the review gate; merging belongs to the maintainer — deliver = the ready PR, named in the final report |
 | Issues disabled on the repo, or no permission to create them | Branch + PR, no issue | Plan comment moves to the PR description (no issue thread to host it) | Normal — PR diff | Normal — merge the PR; note the missing issue in the final report |
 | User opts out ("no issue for this one") | Honor it: branch + PR, no issue | Plan comment moves to the PR description | Normal — PR diff | Normal — merge the PR; note the opt-out in the final report |
@@ -294,7 +294,11 @@ run created and no longer needs, and name it in the final report:
 - a worktree created at intake is removed (`git worktree remove`);
 - the local branch is deleted after its merge (the remote branch per
   the repo's delete-on-merge setting); an abandoned branch is deleted
-  locally and on the remote once the user confirms the abandonment.
+  locally and on the remote once the user confirms the abandonment;
+- on `reject`, remove the worktree but **keep the branch** — it holds
+  the rejected work the user was just pointed at (and, degraded, the
+  post-mortem record); deleting it is the user's call, never the
+  run's.
 
 An unmerged branch under an open escalation or hold stays — cleanup
 applies to terminal outcomes, not pauses.

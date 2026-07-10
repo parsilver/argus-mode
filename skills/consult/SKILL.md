@@ -80,7 +80,7 @@ and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
 and recite the creed verbatim, once — never before the check, never again
 mid-pipeline. Nothing about intake changes in consult mode — same escape
 hatch, same re-entry rule, same degraded forms when there's no repo, no
-remote, or no `gh`.
+remote, no `gh`, or no push rights (fork flow).
 
 ## Stage 2 — Plan
 
@@ -155,8 +155,9 @@ then treat the agent as unavailable (`verification.md`, Malformed or
 missing verdicts — applies at every checkpoint). On `approve`, the plan
 becomes durable exactly as in `/argus-mode:run`: post it as an issue
 comment — or the degraded location from `pipeline.md`'s degradation table
-(`PLAN.md` with no remote; the PR description when only issues are
-unavailable) — mirror a link in the draft PR, and update it at every
+(`PLAN.md` committed on the branch when the platform can't host the
+comment — no remote, or no `gh`; the PR description when only issues
+are unavailable) — mirror a link in the draft PR, and update it at every
 stage completion. The comment is a git artifact: team voice per
 `git-conventions.md`, lexicon check before every post and edit.
 

@@ -15,8 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the compare link instead of merging locally into a default branch
   that would diverge from origin; a new "remote exists, no push
   rights" row defines the fork / cross-fork-PR flow; terminal
-  outcomes (merge, reject, confirmed abandonment) get a cleanup rule
-  for worktrees and branches; the triviality re-entry rule survives
+  outcomes get a cleanup rule (worktrees removed; branches deleted on
+  merge or confirmed abandonment, kept on reject — the rejected work
+  is the user's to dispose of); the triviality re-entry rule survives
   the commit (a hatch edit failing after commit/push re-enters the
   pipeline, reverting a broken default-branch commit first); and
   post-mortem records get degraded landing spots. (#41)

@@ -66,7 +66,7 @@ the issue is written (`pipeline.md`, Ambiguous ask).
 3. Branch via `gh issue develop <n>` (or `git switch -c`). Use an isolated worktree when the tree is dirty or other work is in flight; a clean solo checkout may branch in place.
 4. Empty bootstrap commit, open a **draft** PR with `Closes #<n>` immediately.
 
-Every degraded form — no git repo, git repo but no GitHub remote/`gh`, issues disabled, or user opt-out — is defined in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.
+Every degraded form — no git repo, no remote at all, remote without `gh`, remote without push rights (fork flow), issues disabled, or user opt-out — is defined in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.
 
 ## Stage 2 — Plan
 
@@ -111,7 +111,7 @@ Verdict is structured: `approve` or `revise` + reasons. A response lacking exact
 - A `revise` may be overridden only with an explicit, user-visible justification.
 - The oracle always runs at its pinned `opus` tier, regardless of the lead's model.
 
-**On `approve`, the plan becomes durable:** post the plan as an issue comment and mirror the link in the draft PR — or the degraded location from `pipeline.md`'s table (`PLAN.md` with no remote; the PR description when only issues are unavailable). The comment is a git artifact: written in the team voice per `git-conventions.md` (headed "Implementation plan", named checkbox items, `command → result` evidence) — run the lexicon check before posting and before every edit. This comment is the exact resume point — update it at every stage boundary from here on.
+**On `approve`, the plan becomes durable:** post the plan as an issue comment and mirror the link in the draft PR — or the degraded location from `pipeline.md`'s table (`PLAN.md` committed on the branch when the platform can't host the comment — no remote, or no `gh`; the PR description when only issues are unavailable). The comment is a git artifact: written in the team voice per `git-conventions.md` (headed "Implementation plan", named checkbox items, `command → result` evidence) — run the lexicon check before posting and before every edit. This comment is the exact resume point — update it at every stage boundary from here on.
 
 ## Stage 3 — Execute
 

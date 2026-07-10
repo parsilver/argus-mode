@@ -65,9 +65,10 @@ handle directly, stop — summary: ≤3 changed lines AND one file AND no
 public-API/behavior change AND no new test warranted; a bugfix is never
 trivial; read-only lookups are trivial if answerable from one file),
 then the read-only-work route (non-trivial lookups skip the git intake
-entirely — plan, explore, report per the route's report contract; its
-landing rule decides where findings live, chat or a `question`-labeled
-issue), the ambiguity gate (a new capability with unstated
+entirely — plan, oracle review, explore, report per the route's report
+contract; its landing rule decides where findings live, chat or a
+`question` issue, except a finding exposing a vulnerability in a public
+repo which never lands on a public issue), the ambiguity gate (a new capability with unstated
 requirements gets clarified with the requester before the issue is
 written), the git intake (issue with its
 fields filled and added to the repo's project board when one exists →
@@ -99,9 +100,36 @@ consult mode; what happens to it next does.
 ## Stage 2.5 — Plan review gate (checkpoint 1 of 3)
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` now for the full
-rubric: the mandatory simpler-alternative pass first, the goal-backward
-review, and instant precondition refusal on a plan with no failable checks
-or no test list.
+rubric. It is the same ten-item review order `/argus-mode:run` applies,
+enumerated here so a consult-only install stays self-contained when the
+reference is unreachable:
+
+1. **Simpler-alternative pass (mandatory, first)** — is there a smaller
+   or more elegant route to the goal; on a parity/fidelity goal the
+   default inverts (reuse is the risk, each trim states its visible delta).
+2. **Goal-backward stage check** — diff every plan decision against the
+   issue's acceptance criteria (a negation is `revise`) and against the
+   plan header's `Scouted:` record.
+3. **Failable-check reality** — can every stage's check actually go RED?
+4. **Test list present** — a test list named before code for each
+   implementation stage.
+5. **Architecture under `quality.md`** — SOLID, single responsibility,
+   patterns that carry a written justification.
+6. **No lead-only decision delegated** — architecture, debugging, review,
+   and merge stay with the lead.
+7. **Domain routing matches surfaces** — the plan header's routing matches
+   what the task touches.
+8. **Right-sized for review** — clears the decomposition test, or carries
+   the unavoidable-size justification.
+9. **Third-party assets carry their license** — copied licensed assets
+   name the license basis and a visibility guard.
+10. **Docs stay truthful** — a public-API or behavior change names the
+    docs it updates, or states none mention the surface (checked).
+
+**Precondition refusal:** a plan with no failable checks, or no test list
+for an implementation stage, gets an instant `revise` naming the missing
+precondition — the rest of the rubric is not attempted on an unreviewable
+plan.
 
 Spawn `argus-oracle` with the plan, the task statement, relevant repo
 context, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md`

@@ -34,9 +34,28 @@ reclassification, and enter the full pipeline at the git intake below.
 Analysis, investigation, or a question that needs more than one file
 fails the hatch but produces **no diff and nothing to merge** — it never
 enters the git intake. Route: plan (Stage 2) → oracle plan review →
-explore/verify → deliver as the final report. No issue, no branch, no
-PR; say so in the report. The moment the work turns out to need a code
-change, re-enter at the git intake below.
+explore/verify → deliver the report. The moment the work turns out to
+need a code change, re-enter at the git intake below.
+
+**The report contract.** Findings deliver in this shape, matching the
+scout agent's own output rules: the question as asked → what was
+searched (so a negative result reads as informed, not skipped) →
+findings, each carrying a `file:line` citation → open questions the
+codebase could not answer.
+
+**The landing rule.** A one-shot answer may deliver in chat. Findings
+that feed later work, outlive the session, or hand off mid-run land on
+a `question`-labeled issue — created for the investigation, answered
+as a comment in the report shape, then closed; closed issues stay
+searchable. When unsure whether a finding outlives the session, land
+it on an issue — durability is cheap to over-provide and impossible to
+retrofit. Degraded (no repo, no remote, or issues disabled): offer a
+committed report file; if declined, deliver in chat and name the
+degrade in the report.
+
+- Refusal condition: an investigation whose findings the user will act
+  on later, delivered only as chat prose, evaporates with the session
+  — the landing rule is part of delivering, not an optional extra.
 
 ## Stage 1 — Git intake
 
@@ -85,6 +104,20 @@ not decoration.
 - The PR flips from draft to ready only at Stage 5, on a `ship` or
   `fix-then-ship` verdict (see the mapping below) — never before the
   review gate.
+
+## Scout before you plan
+
+A plan written against surfaces the lead has not read is guesswork
+wearing a table. When the task touches files or subsystems not read
+this session: name the reconnaissance questions first, answer them —
+direct reads, or the scout agent for breadth — and record the result
+as a `Scouted:` line in the plan header (areas read, questions
+answered, anything that changed the plan's shape). The plan review
+checks the plan against this record (`verification.md`).
+
+- Refusal condition: a plan header with no `Scouted:` record on a
+  surface the lead first opened this run is unreviewable optimism —
+  the plan review sends it back.
 
 ## Decomposition — the big-work counterpart of the triviality hatch
 

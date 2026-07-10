@@ -149,13 +149,19 @@ Plugin-namespaced variants count as matches (e.g. a plugin's
 | Charts, plots, dashboards, data visualization | `dataviz` |
 | Bug investigation — root-causing a failure or unexplained behavior | `debug-mantra` |
 | Long user-facing prose — docs, README, release notes | `humanizer` |
+| Research / deep-dive investigation — multi-file or multi-source questions | `deep-research`, `paper-research`, or any installed research skill |
+| Security review beyond the standing dimension-6 check — auth design, threat surfaces | `security-review` or similar |
+| Library-docs lookup — current API or version documentation for a dependency | a docs skill/server (e.g. `context7`) |
 | (extend this table as new domains recur — it is a starting set, not a closed list) | — |
 
-Two rows have stronger fallbacks than the others: when no `debug-mantra`
-skill is installed, the lead runs the shipped diagnose loop in
-`debugging.md`; when no `humanizer` skill is installed, the prose-style
-rules in `git-conventions.md` apply — in neither case does the fallback
-degrade to the quality doctrine alone.
+Several rows have stronger fallbacks than the quality doctrine alone:
+no `debug-mantra` → the shipped diagnose loop in `debugging.md`; no
+`humanizer` → the prose-style rules in `git-conventions.md`; no
+research skill → the read-only route and its report contract
+(`pipeline.md`); no security-review skill → `quality.md` principle 6
+plus review dimension 6, applied deliberately rather than in passing;
+no docs skill → the library's official documentation via web fetch,
+never memory alone.
 
 If a detected domain has no installed skill matching it, the plan states
 **"no matching skill installed"** explicitly for that domain and proceeds

@@ -65,7 +65,9 @@ handle directly, stop — summary: ≤3 changed lines AND one file AND no
 public-API/behavior change AND no new test warranted; a bugfix is never
 trivial; read-only lookups are trivial if answerable from one file),
 then the read-only-work route (non-trivial lookups skip the git intake
-entirely — plan, explore, report), the git intake (issue with its
+entirely — plan, explore, report per the route's report contract; its
+landing rule decides where findings live, chat or a `question`-labeled
+issue), the git intake (issue with its
 fields filled and added to the repo's project board when one exists →
 branch/worktree → draft PR), and the full degradation table. Once the triviality check clears
 and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
@@ -84,7 +86,10 @@ failable check is — the plan's middle column is written against that
 definition, not discovered at the gate. Write the same three-column plan as
 `/argus-mode:run` — What/Owner, Failable check, Architecture & patterns —
 with a domain header recording which installed skills apply and which
-don't (never guessed from memory). The decomposition test applies
+don't (never guessed from memory). Scout before you plan applies
+unchanged (`pipeline.md`): surfaces not read this session get their
+reconnaissance questions answered first, recorded as a `Scouted:` line
+in the plan header. The decomposition test applies
 unchanged (`pipeline.md`): an oversized plan splits into a parent
 issue with sub-issues, one PR each. The plan's shape doesn't change in
 consult mode; what happens to it next does.

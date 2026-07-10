@@ -45,7 +45,7 @@ Trivial → announce the classification ("this is a trivial edit — skipping th
 
 **Re-entry rule:** if the "trivial" edit turns out to need a second edit, a second file, or its first check fails → stop, announce the reclassification, re-enter at Stage 1 proper (full pipeline, from git intake). The hatch is not a bypass valve for the pipeline.
 
-**Non-trivial read-only work** (analysis or a question needing more than one file) takes `pipeline.md`'s read-only route — plan, oracle review, explore, report; no git intake, no PR. It re-enters the git intake the moment it turns into a code change.
+**Non-trivial read-only work** (analysis or a question needing more than one file) takes `pipeline.md`'s read-only route — plan, oracle review, explore, report. The report follows the route's report contract (question → searched → `file:line`-cited findings → open questions), and its landing rule decides where findings live: chat for one-shot answers, a `question` issue when they feed later work, outlive the session, or hand off mid-run. It re-enters the git intake the moment it turns into a code change.
 
 ### Pipeline engagement
 
@@ -73,6 +73,8 @@ Write the plan as a task list, one row per stage, three columns filled for every
 | The stage's deliverable, and who executes it (lead or which agent) | A concrete check that can actually go RED (command + expected output) | Structures touched, patterns applied and why, test list (name tests before code) |
 
 A check that cannot fail ("looks good", "review the code") is not a check — rewrite it before moving on.
+
+**Scout before you plan** (`pipeline.md`): surfaces not read this session get their reconnaissance questions answered first — direct reads or `argus-explorer` — and the plan header records a `Scouted:` line; the oracle checks the plan against it.
 
 **Decomposition test:** a plan past ~5 implementation stages, an expected diff beyond the reviewable bar, or multiple independently shippable outcomes splits into a parent issue with sub-issues — one branch and PR each, merged serially (`pipeline.md`, Decomposition). The oracle checks this at the gate.
 

@@ -50,7 +50,11 @@ for the two that skip the rest of the rubric entirely when missing.
    checklist, item by item — a decision that negates a written
    criterion is an instant `revise` naming that criterion. Plan
    approval is approval against the issue as written, never a quietly
-   re-scoped version of it.
+   re-scoped version of it. Check the plan against its recorded
+   reconnaissance too — the `Scouted:` line in the plan header
+   (`pipeline.md`, Scout before you plan): a plan whose header carries
+   no `Scouted:` record on an unfamiliar surface is guesswork →
+   `revise`.
 3. **Failable-check reality.** Is every stage's check capable of actually
    going RED, per the definition above?
 4. **Test list present.** Is a test list named, before the code, for every

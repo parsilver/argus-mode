@@ -42,6 +42,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Decision records (`references/git-conventions.md`): a plan decision
   marked load-bearing beyond its PR gets a committed `docs/adr/` entry
   (or the repo's native equivalent), linked from the plan comment.
+- `references/releasing.md` (new): the lifecycle tail for repos that
+  version — record shipped changes under Unreleased in the same PR;
+  a release is its own task (roll-up, manifest bump, tag on the merge
+  commit, notes matching the entry; version from the Conventional
+  Commits types since the last tag). Canonical for this repo's own
+  release discipline, now referenced from `CLAUDE.md`.
+- Revert-first rule (`references/pipeline.md`): a merged change that
+  breaks production takes an expedited revert path — issue, revert PR,
+  verification evidence, review gate, no plan gate — bounded to clean
+  reverts; the real fix re-enters as a full run linking the revert.
+- `references/post-mortem.md` (new): a reject verdict, a rework-cap
+  escalation, a post-merge rejection, or a non-converging acceptance
+  hold files a four-field record on the triggering issue (what the
+  gate saw, what it missed, which check should have caught it, the
+  proposed change — surfaced to the user, never auto-filed). Routing
+  row added with an installed post-mortem skill preferred.
 
 ### Fixed
 

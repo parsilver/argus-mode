@@ -178,6 +178,8 @@ Review dimensions (rubric shared with `quality.md`):
 
 **Subjective-goal hold:** when the goal is perceptual (visual fidelity to a reference, "looks like X"), a merging verdict — `ship`, or `fix-then-ship` once its fixes are re-verified — readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance; every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
 
+**Lifecycle tail:** on a repo that versions, record the change under Unreleased in the same PR and treat a release as its own task (`${CLAUDE_PLUGIN_ROOT}/references/releasing.md`). A bad merge reverts first via the expedited path (`pipeline.md`). A `reject`, a rework-cap escalation, a post-merge rejection, or a non-converging hold files a post-mortem record on the triggering issue (`${CLAUDE_PLUGIN_ROOT}/references/post-mortem.md`).
+
 On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. Set the board Status to Done on merge, when a board exists. (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
 
 ### Deliver

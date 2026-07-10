@@ -58,6 +58,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   gate saw, what it missed, which check should have caught it, the
   proposed change — surfaced to the user, never auto-filed). Routing
   row added with an installed post-mortem skill preferred.
+- Repo self-enforcement (development surface, not shipped to
+  installs): a CI workflow enforcing the changelog-per-shipped-change
+  and version-consistency invariants, README completeness, and a
+  tag-equals-manifest check; `tests/run-checks.sh` proving the lexicon
+  pattern against dirty/clean fixtures and resolving every reference
+  cross-link; `RELEASE-CHECKLIST.md` recording the design spec's smoke
+  tests per release; a PR template carrying the two repo invariants
+  and a bug-report form capturing version, session model, command, and
+  install path.
 
 ### Fixed
 

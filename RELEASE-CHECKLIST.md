@@ -1,0 +1,34 @@
+# Release checklist
+
+Run before every tagged release; record the outcome per release in the
+table at the bottom. The two validation agents ship with the
+`plugin-dev` plugin (see README, Development).
+
+## Every release
+
+- [ ] `bash tests/run-checks.sh` → exit 0
+- [ ] Plugin structure validation (plugin-dev validator agent) → pass
+- [ ] Skill review of both `SKILL.md` files (plugin-dev skill-reviewer
+      agent) → blocking findings fixed before the tag
+- [ ] Version identical in `.claude-plugin/plugin.json`, the top
+      CHANGELOG heading, and the tag (CI re-checks the tag on push)
+
+## Smoke tests — from the design spec's validation section
+
+Manual, per model tier. Run each at least once per minor release when
+its surface changed; record honestly — "pending" beats a claimed pass.
+
+| # | Test | Last passed |
+|---|---|---|
+| 1 | Full pipeline end-to-end on a Fable/Opus session: issue → plan → plan review → execution → verification → review gate → merge | v0.4.0 — this repo's own release ran it live (PRs #19–#22) |
+| 2 | Sonnet/Haiku invoking the run command hits the hard stop with three doors; "proceed anyway" recorded in the final report | pending |
+| 3 | Consult mode: a seeded mid-execution deviation fires its trigger and the advisor rules on it before work continues | pending |
+| 4 | No-remote degradation: the plan lands in `PLAN.md`, the merge is a local `--no-ff`, the degrade named in the final report | pending |
+| 5 | Mid-execution kill: a fresh session resumes from the plan comment alone, no hand-written summary | pending |
+| 6 | Triviality hatch: a genuinely trivial edit is declined by the pipeline with the classification announced | pending |
+
+## Release record
+
+| Release | Every-release checks | Smoke tests |
+|---|---|---|
+| (the release PR writes each row when the release actually happens) | | |

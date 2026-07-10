@@ -307,3 +307,26 @@ were needed, not license to skip them.
 - Refusal condition: a rejection-driven follow-up that skips the plan
   or the review gate, or a deferring PR that auto-closes its issue,
   reproduces the failure being corrected.
+
+## A bad merge reverts first
+
+When a merged change breaks production or must come off the default
+branch now, the default is revert-first, fix-forward second:
+
+- **Expedited revert path:** issue (one line — what broke, which
+  merge) → revert PR (`git revert` of the squash commit) → Stage 4
+  evidence → review gate → merge. No plan gate: the revert's goal and
+  content are fully specified by the commit it inverts.
+- The expedited path applies only to a **clean revert**: `git revert`
+  applies without conflict AND reintroduces no symbol the tree no
+  longer defines or references. Anything else is a real change — full
+  pipeline.
+- **Fix-forward instead** only when the revert is not clean or data
+  has already migrated — justified in the issue, not assumed.
+- The real fix re-enters as a full pipeline run (Post-merge rejection,
+  above), linking the revert commit from its issue.
+
+- Refusal condition: an outage "hotfix" that skips the review gate,
+  and a full plan cycle demanded before reverting a breaking merge,
+  are the same mistake in opposite directions — the expedited path
+  exists so neither happens.

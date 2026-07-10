@@ -213,6 +213,8 @@ holding the identical bar:
 
 **Subjective-goal hold applies unchanged:** on a perceptual goal (visual fidelity, "looks like X"), a merging verdict — `ship`, or `fix-then-ship` once its fixes are re-verified — readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance; every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
 
+**Lifecycle tail applies unchanged:** versioned repos record under Unreleased in the same PR, a release is its own task (`${CLAUDE_PLUGIN_ROOT}/references/releasing.md`), a bad merge reverts first (`pipeline.md`), and a `reject`, rework-cap escalation, post-merge rejection, or non-converging hold files a post-mortem record on the triggering issue (`${CLAUDE_PLUGIN_ROOT}/references/post-mortem.md`).
+
 **Precondition refusal still holds:** a non-GREEN diff gets an instant
 refusal naming the missing evidence, not a review.
 

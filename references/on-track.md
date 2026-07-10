@@ -70,7 +70,10 @@ To hand off:
    record its next check as `command → expected result`
    (`pipeline.md`, plan-comment lifecycle).
 3. Tell the user to start a fresh session. It resumes from the
-   issue/PR state (or `PLAN.md`), not from a hand-written summary.
+   issue/PR state (or `PLAN.md`) via the Resume path (`pipeline.md`,
+   Resume — the receiving side), not from a hand-written summary. On
+   resume the branch's commit log outranks the comment — the update in
+   step 2 makes the reconcile cheap, not optional.
 
 - Refusal condition: a handoff without an updated plan comment (or
   `PLAN.md`) is not a clean handoff — the resume point doesn't exist

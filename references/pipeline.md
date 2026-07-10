@@ -127,6 +127,41 @@ not decoration.
   `fix-then-ship` verdict (see the mapping below) — never before the
   review gate.
 
+## Resume — the receiving side
+
+Intake creates durable state; resume reads it back. When the request
+names an existing issue, PR, or branch — or the repo already holds an
+in-flight branch whose plan comment covers this task (`gh pr list
+--state open`, `git branch --list '<n>-*'`) — adopt that state instead
+of re-running intake:
+
+1. The model gate still runs — the resuming session's model may differ
+   from the one that started the work. The creed is recited once per
+   session, resumed runs included.
+2. Intake steps 2–4 are replaced by adoption: fetch, check out the
+   existing branch (or its worktree), and read the plan comment — it
+   is the checklist of record.
+3. **Reconcile before trusting it: the branch's commit log outranks
+   the comment.** A session can die between a commit and the comment's
+   update, so diff the ticked items against
+   `git log <default-branch>..HEAD` first — tick what the commits
+   prove done, append the missing evidence, then enter at the first
+   genuinely open item.
+4. An approved plan whose content is unchanged is not re-reviewed on
+   resume; a plan the resuming session changes re-enters the plan
+   review gate before execution continues.
+5. A review outcome recorded on the comment but not yet acted on (see
+   the plan-comment lifecycle) is applied before any new work — its
+   findings fixed or its rework path taken, exactly as if the verdict
+   had just arrived.
+
+Intake creates new state only when no prior state exists — no issue,
+no branch, no plan comment.
+
+- Refusal condition: re-running intake over discoverable in-flight
+  state files a duplicate issue and PR for half-finished work — the
+  split-brain the durable state exists to prevent.
+
 ## Scout before you plan
 
 A plan written against surfaces the lead has not read is guesswork
@@ -209,7 +244,8 @@ edit.
 |---|---|
 | Stage 2.5 oracle verdict = `approve` | Post the plan as an issue comment headed "Implementation plan": the stages as a `- [ ]` task list, each item named (never numbered by pipeline stage), each carrying its done-check as `command → expected result`; design decisions with their reasons; long coordination detail folded into `<details>`. Mirror a link to it in the draft PR description. |
 | Every stage completion, Stage 3 onward | Tick the finished item's checkbox and append its evidence as `command → result`. Status words for anything not checkbox-shaped: done / in progress / blocked. |
-| Mid-pipeline handoff | Comment reflects state at the moment of handoff; a fresh session reads it to resume — no hand-written summary needed. |
+| Stage 5 verdict received (and any plan re-review after it) | Before acting on the verdict, append the outcome in team voice — what the review found, in one line, and the running round count ("code review round 2 of 2: two findings, fixing"). Rework and revise caps survive a handoff only when the comment carries the count. |
+| Mid-pipeline handoff | Comment reflects state at the moment of handoff; a fresh session resumes via the Resume path above — the branch's commit log outranks the comment, so the resuming session reconciles first. |
 
 - Commit SHAs cited in the comment stop resolving on the default
   branch after a squash-merge — cite them as PR-linked references (the

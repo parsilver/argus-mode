@@ -318,9 +318,9 @@ branch now, the default is revert-first, fix-forward second:
   evidence → review gate → merge. No plan gate: the revert's goal and
   content are fully specified by the commit it inverts.
 - The expedited path applies only to a **clean revert**: `git revert`
-  applies without conflict AND reintroduces no symbol the tree no
-  longer defines or references. Anything else is a real change — full
-  pipeline.
+  applies without conflict, reintroduces no symbol the tree no longer
+  defines or references, and removes no symbol the remaining tree
+  still references. Anything else is a real change — full pipeline.
 - **Fix-forward instead** only when the revert is not clean or data
   has already migrated — justified in the issue, not assumed.
 - The real fix re-enters as a full pipeline run (Post-merge rejection,

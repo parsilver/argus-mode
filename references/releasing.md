@@ -16,9 +16,9 @@ comparison (plugins, packages), an unrecorded merged change is
 invisible until somebody notices; the Unreleased section is what makes
 batching deliberate instead of accidental.
 
-- Refusal condition: a shipped-behavior PR merged without its
-  changelog line is silent release debt — the review gate treats it
-  like a missing test.
+- Refusal condition: merging a shipped-behavior PR without its
+  changelog line is silent release debt — treat it like merging over a
+  missing test.
 
 ## The release task
 

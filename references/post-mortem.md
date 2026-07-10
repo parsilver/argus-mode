@@ -26,7 +26,9 @@ that lands on git:
 - **What it missed** — the defect or mismatch that surfaced later.
 - **Which check should have caught it** — the plan-review item, review
   dimension, or stage check that came closest — or "none exists",
-  which is itself the finding.
+  which is itself the finding. Named as a dev would on the target
+  repo's issue (content-vs-narration, `git-conventions.md`): "the
+  design review's docs check" reads; internal numbering does not.
 - **Proposed change** — the rule that would have caught it, stated
   concretely, and surfaced to the user in the final report. Changing
   the pipeline is the user's call — a proposal is never auto-filed

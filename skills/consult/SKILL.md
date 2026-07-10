@@ -129,13 +129,17 @@ reference is unreachable:
 10. **Docs stay truthful** — a public-API or behavior change names the
     docs it updates, or states none mention the surface (checked).
 
-**Precondition refusal:** a plan with no failable checks, or no test list
-for an implementation stage, gets an instant `revise` naming the missing
-precondition — the rest of the rubric is not attempted on an unreviewable
-plan.
+**Precondition refusal:** a plan with no failable checks, no test list
+for an implementation stage, or no verbatim copy of the issue's
+acceptance criteria attached, gets an instant `revise` naming the
+missing precondition — the rest of the rubric is not attempted on an
+unreviewable plan.
 
-Spawn `argus-oracle` with the plan, the task statement, relevant repo
-context, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md`
+Spawn `argus-oracle` with the plan, the task statement, **the issue's
+acceptance criteria verbatim** (the oracle cannot fetch GitHub
+content; in degraded modes, the criteria text from `PLAN.md` or the
+PR description), relevant repo context, and a pointer to
+`${CLAUDE_PLUGIN_ROOT}/references/verification.md`
 as the rubric's source of truth — the identical gate `/argus-mode:run`
 runs, with one binding difference:
 
@@ -144,7 +148,11 @@ runs, with one binding difference:
 | `revise` verdict | may be overridden with an explicit user-visible justification | **no lead override** (the user still decides at the two-cycle escalation) |
 | Revise-cycle cap | two, then escalate to the user | same: two, then escalate to the user (board Status → Blocked while waiting, when a board exists) |
 
-The lead **must** apply the oracle's verdict. On `approve`, the plan
+The lead **must** apply the oracle's verdict — and a response lacking
+exactly one verdict from the set is **no verdict**, never rounded to
+approval: re-spawn once with a close-with-one-verdict instruction,
+then treat the agent as unavailable (`verification.md`, Malformed or
+missing verdicts — applies at every checkpoint). On `approve`, the plan
 becomes durable exactly as in `/argus-mode:run`: post it as an issue
 comment — or the degraded location from `pipeline.md`'s degradation table
 (`PLAN.md` with no remote; the PR description when only issues are
@@ -179,9 +187,16 @@ substitute for checking a, b, and c. A confidently wrong small model feels
 no uncertainty; the three mechanical triggers catch what the feeling won't.
 
 On any trigger: stop, state the deviation/new-dependency/failure in one
-sentence, spawn `argus-oracle` with the plan, the stage in question, and
-what's proposed. Apply its verdict before continuing — same as checkpoint
-1, no override path.
+sentence, spawn `argus-oracle` with the goal (the task statement), the
+plan, the stage in question, and
+what's proposed — for trigger (c), that is the oracle's debugging
+arbitration: attach the diagnose loop's ledger and expect one directive
+back (next falsification step, plan amendment, or escalate). Apply its
+verdict before continuing — same as checkpoint 1, no override path.
+**Cap:** the same trigger firing a third time on the same stage stops
+execution and escalates to the user with both positions (board →
+Blocked while waiting) — the same bound the plan-review and rework
+cycles carry.
 
 A red failable check also starts the diagnose loop in
 `${CLAUDE_PLUGIN_ROOT}/references/debugging.md` (or the `debug-mantra`
@@ -227,7 +242,10 @@ an independent review. `argus-oracle` performs the final review instead,
 holding the identical bar:
 
 - Same 6 dimensions: correctness, readability (docblocks, intent-revealing
-  names), architecture fit, pattern justification, test quality, security.
+  names), architecture fit, pattern justification, test quality (tests
+  that can actually fail — on a rebuild or redesign, an old
+  markup-coupled suite staying green needs an explicit plan-level
+  justification), security.
 - Same operating rules: end-to-end tracing beyond the diff, no
   rubber-stamps ("LGTM" is not an output — report what was traced and
   checked), every finding cites `file:line`, report format is
@@ -239,7 +257,7 @@ holding the identical bar:
 |---|---|
 | `ship` | merge |
 | `fix-then-ship` | fix the findings, re-run Stage 4, merge — no fresh review required |
-| `rework` | return to Stage 3 (or Stage 2 if the plan is implicated); fresh Stage 5 review mandatory after; capped at two rework cycles, then escalate to the user (board → Blocked while waiting) |
+| `rework` | return to Stage 3 (or Stage 2 if the plan is implicated — the revised plan re-enters the checkpoint-1 review before execution resumes); fresh Stage 5 review mandatory after; capped at two rework cycles, then escalate to the user (board → Blocked while waiting) |
 | `reject` | stop; do not merge; report the oracle's reason to the user |
 
 **Subjective-goal hold applies unchanged:** on a perceptual goal (visual fidelity, "looks like X"), a merging verdict — `ship`, or `fix-then-ship` once its fixes are re-verified — readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance; every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).
@@ -251,15 +269,21 @@ refusal naming the missing evidence, not a review.
 
 **Evidence handling is the one structural difference from
 `/argus-mode:run`:** the review brief must carry, verbatim —
-1. **the diff itself** (patch text, or changed-file list + base ref the
-   oracle can Read against — it has no Bash and cannot run `git diff`),
+1. **the diff itself** — patch text inline, or a patch file written to
+   disk (`git diff <base>...HEAD > <absolute path>.patch`) the oracle
+   Reads; never a bare changed-file list with a base ref — the oracle
+   has no Bash, a git ref is not a readable path, and current files
+   alone cannot show it the delta,
 2. the Stage 4 command and its full output,
 3. the **HEAD commit SHA at the moment the Stage 4 command ran**, so
    freshness is checkable instead of taken on the lead's word, and
 4. **the git-artifact text this run produced** — issue body, PR
    description, the current plan comment — so the team-voice check
    (dimension 2) has something to read; the oracle cannot fetch
-   GitHub content itself.
+   GitHub content itself, and
+5. **a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md`
+   as the rubric's source of truth** — the oracle applies the file,
+   not this summary.
 
 The oracle audits that evidence — command, suite scope, freshness,
 artifact voice — rather than re-running the suite itself (unlike

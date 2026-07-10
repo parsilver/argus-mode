@@ -94,11 +94,36 @@ specific rubric item(s) that failed.
 
 ## Precondition refusal
 
-A plan arriving **without failable checks**, or **without a test list**
-for an implementation stage, gets an instant `revise` naming the missing
-precondition — the oracle does not attempt items 1–10 above on a plan it
-cannot actually review. Reviewing a plan with no way to fail is theater;
-name the gap and send it back.
+A plan arriving **without failable checks**, **without a test list**
+for an implementation stage, or **without the issue's acceptance
+criteria attached verbatim** (item 2 has nothing to diff against),
+gets an instant `revise` naming the missing precondition — the oracle
+does not attempt items 1–10 above on a plan it cannot actually review.
+Reviewing a plan with no way to fail is theater; name the gap and send
+it back.
+
+## Malformed or missing verdicts
+
+Every gate closes with exactly one verdict from its defined set —
+`approve`/`revise` at the plan review, `ship`/`fix-then-ship`/
+`rework`/`reject` at the delivery review. A gate response carrying
+anything else — no verdict, two verdicts, or a hedge between them
+("mostly fine, but…") — is **no verdict**, never rounded to the
+nearest approval:
+
+1. Re-spawn the gate once, same brief, plus one added line: "Close
+   with exactly one verdict from {…}."
+2. A second malformed response, or a spawn that dies outright, means
+   the agent is unavailable for this gate: apply the already-defined
+   announced degrade (the inline gate from the agent-availability
+   check) and name it in the final report.
+
+Cycle caps count well-formed verdicts only — a malformed response
+neither consumes nor resets a revise/rework cycle.
+
+- Refusal condition: reading a hedged review as an approval is the
+  gate passing without issuing a verdict — the self-grade the gates
+  exist to prevent.
 
 ## Reviewer operating rules
 

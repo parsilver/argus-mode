@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Gate-brief contracts, seven fixes (`agents/argus-oracle.md`,
+  `agents/argus-reviewer.md`, `references/verification.md`,
+  `references/pipeline.md`, both skills): the plan-review brief must
+  attach the issue's acceptance criteria verbatim (precondition
+  refusal extended — the criteria diff in rubric item 2 was
+  unexecutable without them); the delivery-review brief carries the
+  verification.md source-of-truth pointer and both review agents gain
+  the rebuild/markup-coupled-suite clause in test quality; a plan
+  changed after approval is re-gated (rework-to-plan re-enters the
+  plan review; run mode gains a deviation rule); the "proceed anyway"
+  model-gate override routes the delivery review to the pinned-opus
+  oracle instead of the inherit-tier reviewer; a malformed or missing
+  gate verdict has a defined disposition (one re-spawn, then the
+  announced agent-unavailable degrade — hedges never round to
+  approval); the consult mid-execution checkpoint maps to the oracle's
+  debugging-arbitration duty and gains a third-firing escalation cap;
+  and the changed-file-list-plus-base-ref evidence form is replaced by
+  patch text or an on-disk patch file the no-Bash oracle can actually
+  Read. (#40)
 - Parallel fan-out working-tree model (`references/delegation.md`,
   `agents/argus-implementer.md`, `references/pipeline.md`,
   `skills/run/SKILL.md`): shared-tree fan-out with quiesced-tree

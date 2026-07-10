@@ -102,7 +102,10 @@ file sets, a quiesced tree at verification time, and serialized
 commits.
 
 - **Implementers never commit.** `argus-implementer` edits files and
-  reports back the diff plus its check's output — nothing more.
+  reports back its per-file changes (the report contract's
+  files-changed list) plus its check's output — nothing more. A raw
+  `git diff` of the whole tree is not the report: mid-wave it carries
+  sibling slices' edits.
 - **Parallel fan-out only across disjoint file sets.** Two executors
   never mutate the same file. "Mutate" includes command side effects —
   lockfiles, snapshot directories, generated artifacts — not just
@@ -116,16 +119,22 @@ commits.
   sibling's half-finished edits sit in the tree can go falsely RED (a
   sibling's syntax error) or falsely GREEN (a sibling's edit masking
   the failure). Dispatch a wave, wait for every executor to return,
-  then verify and commit the slices one at a time.
+  then verify and commit the slices one at a time. Check output an
+  executor reports from mid-wave is advisory for the same reason — the
+  run that counts is the lead's, on the quiesced tree.
 - **The lead verifies scope, then the check, then commits.** For each
-  returned slice: run `git status` and diff the tree's mutation set
-  against the union of every brief's file scope — a mutated file
-  outside every scope is an undeclared overlap: stop, serialize the
-  remaining slices, and re-verify both affected slices sequentially.
-  Then run the slice's failable check against its acceptance criteria.
-  Only after it passes does the lead commit that slice's files —
-  atomic, tree GREEN after every commit, Conventional Commits format
-  per `git-conventions.md`.
+  returned slice, two scope checks before its failable check: (1) the
+  report's files-changed list stays inside that slice's own briefed
+  scope — a file outside its own scope is a collision signal even
+  when it sits inside another brief's scope; (2) the tree's
+  `git status` mutation set stays inside the union of every brief's
+  scope — a file outside every scope is an undeclared mutation. On
+  either signal: stop accepting, verify this wave's not-yet-verified
+  slices one at a time, and re-execute sequentially, on a clean tree,
+  any slice whose mutations cannot be cleanly attributed. Only after
+  the scope checks and the slice's failable check pass does the lead
+  commit that slice's files — atomic, tree GREEN after every commit,
+  Conventional Commits format per `git-conventions.md`.
 - **Commits are serialized.** One slice verified and committed before the
   next is accepted — never batch-accept multiple unverified slices.
 - A cheaper executor is less reliable by construction — the lead's

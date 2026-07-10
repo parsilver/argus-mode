@@ -128,7 +128,7 @@ Verdict is structured: `approve` or `revise` + reasons.
 
 - The lead verifies every delegated slice against its acceptance criteria before accepting it — a cheaper executor is less reliable by construction.
 - **Implementers never commit.** They edit files and report; the lead verifies each slice, then commits it (serialized, Conventional Commits).
-- Parallel fan-out is allowed only across **disjoint file sets** — two executors never mutate the same file, command side effects (lockfiles, snapshots, generated artifacts) included. The lead verifies and commits only on a quiesced tree — after every in-flight executor has returned — checking `git status` against the union of briefed scopes first (`delegation.md`, isolation model).
+- Parallel fan-out is allowed only across **disjoint file sets** — two executors never mutate the same file, command side effects (lockfiles, snapshots, generated artifacts) included. The lead verifies and commits only on a quiesced tree — after every in-flight executor has returned — first checking each report's files-changed list against its own brief's scope, then `git status` against the union of all scopes (`delegation.md`, isolation model).
 - The lead never delegates: architecture decisions, debugging, the review gate, verification sign-off, merge, or security-sensitive edits.
 - All implementation is TDD: red → green → **refactor**. The refactor leg is a real, planned step — not an afterthought.
 

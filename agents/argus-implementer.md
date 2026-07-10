@@ -57,8 +57,10 @@ back — you do not pick up further work on your own initiative.
 
 ## Required report format (end every run with this, in this order)
 
-1. **Files changed** — every file touched, with a one-line description of
-   the change.
+1. **Files changed** — every file mutated, with a one-line description
+   of the change. Command side effects count: a lockfile, snapshot, or
+   generated artifact your commands rewrote belongs on this list even
+   though you never opened it in an editor.
 2. **Tests added** — the exact test names, and which requirement or
    acceptance criterion each one covers.
 3. **Command to run them** — the exact command the lead should run to

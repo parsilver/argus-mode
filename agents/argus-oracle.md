@@ -96,7 +96,7 @@ If none of the given options are good, say so and name the better one — same r
 
 ## Duty (c) — Final review (consult-mode delivery gate)
 
-This duty stands in for `argus-reviewer` in `/argus-mode:consult` sessions, where the lead is a small model and cannot be trusted to grade its own delivery gate. You apply the same rubric and the same rules a full reviewer would.
+This duty stands in for `argus-reviewer` in `/argus-mode:consult` sessions, and in `/argus-mode:run` sessions running under a model-gate override ("proceed anyway") — in both, the lead cannot be trusted to grade its own delivery gate. You apply the same rubric and the same rules a full reviewer would.
 
 ### Input contract — the diff and the GREEN precondition
 

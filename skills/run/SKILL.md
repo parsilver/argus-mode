@@ -103,7 +103,7 @@ Spawn `argus-oracle` (or, if unavailable, apply this rubric inline per the Agent
 9. Do copied licensed assets carry their license basis and a visibility guard?
 10. Docs stay truthful — the plan names the docs a public-API or behavior change updates, or states none mention the surface (checked, not assumed).
 
-**Precondition refusal:** a plan arriving without failable checks, or without a test list for an implementation stage, gets an instant `revise` naming the missing precondition — do not attempt a full review of an unreviewable plan.
+**Precondition refusal:** a plan arriving without failable checks, without a test list for an implementation stage, or without the issue's acceptance criteria attached verbatim, gets an instant `revise` naming the missing precondition — do not attempt a full review of an unreviewable plan.
 
 Verdict is structured: `approve` or `revise` + reasons. A response lacking exactly one verdict from the set is **no verdict** — re-spawn once with a close-with-one-verdict instruction; a second malformed response or a dead spawn means the agent is unavailable for this gate (`verification.md`, Malformed or missing verdicts — applies at every gate, Stage 5 included).
 

@@ -129,10 +129,11 @@ reference is unreachable:
 10. **Docs stay truthful** — a public-API or behavior change names the
     docs it updates, or states none mention the surface (checked).
 
-**Precondition refusal:** a plan with no failable checks, or no test list
-for an implementation stage, gets an instant `revise` naming the missing
-precondition — the rest of the rubric is not attempted on an unreviewable
-plan.
+**Precondition refusal:** a plan with no failable checks, no test list
+for an implementation stage, or no verbatim copy of the issue's
+acceptance criteria attached, gets an instant `revise` naming the
+missing precondition — the rest of the rubric is not attempted on an
+unreviewable plan.
 
 Spawn `argus-oracle` with the plan, the task statement, **the issue's
 acceptance criteria verbatim** (the oracle cannot fetch GitHub
@@ -186,7 +187,8 @@ substitute for checking a, b, and c. A confidently wrong small model feels
 no uncertainty; the three mechanical triggers catch what the feeling won't.
 
 On any trigger: stop, state the deviation/new-dependency/failure in one
-sentence, spawn `argus-oracle` with the plan, the stage in question, and
+sentence, spawn `argus-oracle` with the goal (the task statement), the
+plan, the stage in question, and
 what's proposed — for trigger (c), that is the oracle's debugging
 arbitration: attach the diagnose loop's ledger and expect one directive
 back (next falsification step, plan amendment, or escalate). Apply its
@@ -240,7 +242,10 @@ an independent review. `argus-oracle` performs the final review instead,
 holding the identical bar:
 
 - Same 6 dimensions: correctness, readability (docblocks, intent-revealing
-  names), architecture fit, pattern justification, test quality, security.
+  names), architecture fit, pattern justification, test quality (tests
+  that can actually fail — on a rebuild or redesign, an old
+  markup-coupled suite staying green needs an explicit plan-level
+  justification), security.
 - Same operating rules: end-to-end tracing beyond the diff, no
   rubber-stamps ("LGTM" is not an output — report what was traced and
   checked), every finding cites `file:line`, report format is
@@ -275,7 +280,10 @@ refusal naming the missing evidence, not a review.
 4. **the git-artifact text this run produced** — issue body, PR
    description, the current plan comment — so the team-voice check
    (dimension 2) has something to read; the oracle cannot fetch
-   GitHub content itself.
+   GitHub content itself, and
+5. **a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md`
+   as the rubric's source of truth** — the oracle applies the file,
+   not this summary.
 
 The oracle audits that evidence — command, suite scope, freshness,
 artifact voice — rather than re-running the suite itself (unlike

@@ -68,9 +68,9 @@ then the read-only-work route (non-trivial lookups skip the git intake
 entirely — plan, oracle review, explore, report per the route's report
 contract; its landing rule decides where findings live, chat or a
 `question` issue, except a finding exposing a vulnerability in a public
-repo which never lands on a public issue), the ambiguity gate (a new capability with unstated
-requirements gets clarified with the requester before the issue is
-written), the git intake (issue with its
+repo which never lands on a public issue), the ambiguity gate (a new
+capability with unstated requirements gets clarified with the requester
+before the issue is written), the git intake (issue with its
 fields filled and added to the repo's project board when one exists →
 branch/worktree → draft PR), and the full degradation table. Once the triviality check clears
 and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`

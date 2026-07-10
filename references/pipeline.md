@@ -196,6 +196,10 @@ decompose instead of proceeding as one PR:
   (GraphQL `addSubIssue`); a task list of issue links in the parent
   body otherwise — with its own branch and PR, sized to review.
 - Slices merge serially; the tree is releasable after every merge.
+  Sub-issue branches may be *developed* in parallel, but before each
+  serial merge the branch is updated onto the current default branch
+  (rebase or merge) and its verification suite re-runs there — a green
+  obtained on a stale base is not merge evidence.
 - The parent closes only when its checklist is complete — never by a
   PR that leaves items unmet.
 

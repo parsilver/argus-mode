@@ -92,17 +92,42 @@ writes a line.
 
 ## Isolation model
 
+The working-tree model, stated once: **shared-tree fan-out with
+quiesced-tree verification.** Executors run in the session's single
+working tree — subagents inherit the session's working directory, so
+per-executor checkouts don't exist, and per-slice worktree plumbing
+would add branch-and-merge machinery the serialized commit rule below
+already provides. Isolation therefore comes from three rules: disjoint
+file sets, a quiesced tree at verification time, and serialized
+commits.
+
 - **Implementers never commit.** `argus-implementer` edits files and
   reports back the diff plus its check's output — nothing more.
-- **The lead verifies, then commits.** For each returned slice, the lead
-  runs the slice's failable check against its acceptance criteria itself.
-  Only after it passes does the lead commit it — atomic, tree GREEN after
-  every commit, Conventional Commits format per `git-conventions.md`.
+- **Parallel fan-out only across disjoint file sets.** Two executors
+  never mutate the same file. "Mutate" includes command side effects —
+  lockfiles, snapshot directories, generated artifacts — not just
+  deliberate edits; two slices whose commands could rewrite the same
+  artifact are not disjoint. If two slices might touch the same file,
+  run them sequentially instead. At most three implementers in flight
+  at once — past that, the lead's verification queue is the
+  bottleneck, not executor throughput.
+- **Verification happens on a quiesced tree.** The lead verifies and
+  commits only when no executor is in flight — a check run while a
+  sibling's half-finished edits sit in the tree can go falsely RED (a
+  sibling's syntax error) or falsely GREEN (a sibling's edit masking
+  the failure). Dispatch a wave, wait for every executor to return,
+  then verify and commit the slices one at a time.
+- **The lead verifies scope, then the check, then commits.** For each
+  returned slice: run `git status` and diff the tree's mutation set
+  against the union of every brief's file scope — a mutated file
+  outside every scope is an undeclared overlap: stop, serialize the
+  remaining slices, and re-verify both affected slices sequentially.
+  Then run the slice's failable check against its acceptance criteria.
+  Only after it passes does the lead commit that slice's files —
+  atomic, tree GREEN after every commit, Conventional Commits format
+  per `git-conventions.md`.
 - **Commits are serialized.** One slice verified and committed before the
   next is accepted — never batch-accept multiple unverified slices.
-- **Parallel fan-out only across disjoint file sets.** Two executors never
-  mutate the same file or share a working tree concurrently. If two
-  slices might touch the same file, run them sequentially instead.
 - A cheaper executor is less reliable by construction — the lead's
   verification pass is not optional overhead, it's the reason delegation
   is safe at all.

@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Parallel fan-out working-tree model (`references/delegation.md`,
+  `agents/argus-implementer.md`, `references/pipeline.md`,
+  `skills/run/SKILL.md`): shared-tree fan-out with quiesced-tree
+  verification — the disjoint-file-set rule now covers command side
+  effects (lockfiles, snapshots, generated artifacts), the lead
+  verifies and commits only with no executor in flight after a
+  `git status` cross-check against the union of briefed scopes, at
+  most three implementers run concurrently, and decomposed sub-issue
+  branches are updated onto the current default branch and re-verified
+  before each serial merge. (#39)
 - Resume path (`references/pipeline.md`, "Resume — the receiving
   side"; both skills; `references/on-track.md`): a request naming an
   existing issue, PR, or branch — or an in-flight branch whose plan

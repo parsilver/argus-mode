@@ -9,7 +9,7 @@ The `${CLAUDE_PLUGIN_ROOT}/references/` files are the source of truth: on
 any conflict between a summary in this file and a reference file, the
 reference wins.
 
-**Cost, up front:** a medium task pays the git ceremony (issue + branch/worktree + draft PR), at least one `argus-oracle` (opus) plan-review run — more on revise cycles — and an `argus-reviewer` review-gate run. Do **not** invoke this for a trivial lookup or anything the Stage 1 triviality hatch covers (≤3 changed lines AND one file AND no behavior change — a bugfix never qualifies) — handle those directly instead.
+**Cost, up front:** a medium task pays the git ceremony (issue + branch/worktree + draft PR), at least one `argus-oracle` (opus) plan-review run — more on revise cycles — and an `argus-reviewer` review-gate run. Do **not** invoke this for a trivial lookup or anything the Stage 1 triviality hatch covers (≤3 changed lines AND one file AND no public-API or behavior change AND no new test warranted — a bugfix never qualifies) — handle those directly instead.
 
 ## Agent availability check
 
@@ -84,23 +84,24 @@ A check that cannot fail ("looks good", "review the code") is not a check — re
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` and `${CLAUDE_PLUGIN_ROOT}/references/quality.md` now.**
 
-Spawn `argus-oracle` (or, if unavailable, apply this rubric inline per the Agent availability check above) with the plan, the task statement, and relevant repo context. Review order:
+Spawn `argus-oracle` (or, if unavailable, apply this rubric inline per the Agent availability check above) with the plan, the task statement, relevant repo context, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth. Review order:
 
-1. **Simpler-alternative pass (mandatory, first):** should this work exist at all? Is there a smaller or more elegant route to the same goal — doing nothing, reusing something that already exists, a 10%-of-the-risk change that solves 90% of the goal, or a different layer?
-2. Do these stages actually reach the stated goal?
+1. **Simpler-alternative pass (mandatory, first):** should this work exist at all? Is there a smaller or more elegant route to the same goal — doing nothing, reusing something that already exists, a 10%-of-the-risk change that solves 90% of the goal, or a different layer? On parity/fidelity goals the default inverts: reuse is the risk, and each trim states the visible delta it leaves.
+2. Do these stages actually reach the stated goal? Diff each plan decision against the issue's acceptance criteria — a negation is a `revise` — and against the plan header's `Scouted:` record.
 3. Is every failable check real (can it go RED)?
 4. Is a test list present before each implementation stage?
 5. Does the chosen architecture hold under `quality.md`?
 6. Is any stage delegating a decision that belongs to the lead (architecture, debugging, review, merge)?
 7. Does the domain-skill routing match the surfaces the task touches?
-8. Is the plan right-sized for review, or does it need decomposition (`pipeline.md`)?
+8. Is the plan right-sized for review, or does it need decomposition (`pipeline.md`) — barring the unavoidable-size justification `git-conventions.md` permits?
 9. Do copied licensed assets carry their license basis and a visibility guard?
+10. Docs stay truthful — the plan names the docs a public-API or behavior change updates, or states none mention the surface (checked, not assumed).
 
 **Precondition refusal:** a plan arriving without failable checks, or without a test list for an implementation stage, gets an instant `revise` naming the missing precondition — do not attempt a full review of an unreviewable plan.
 
 Verdict is structured: `approve` or `revise` + reasons.
 
-- `revise` → update the plan, resubmit. Cap: **two revise cycles.** On a third disagreement, present both positions (the plan and the oracle's reasons) to the user, proceed per their call, and note it in the final report.
+- `revise` → update the plan, resubmit. Cap: **two revise cycles.** On a third disagreement, present both positions (the plan and the oracle's reasons) to the user, proceed per their call, and note it in the final report — board Status → Blocked while waiting, when a board exists.
 - A `revise` may be overridden only with an explicit, user-visible justification.
 - The oracle always runs at its pinned `opus` tier, regardless of the lead's model.
 
@@ -129,7 +130,7 @@ Verdict is structured: `approve` or `revise` + reasons.
 
 - Caught writing implementation code before its test exists → stop, return to the plan's test list.
 - Caught claiming progress without running a check → stop, run the stage's failable check.
-- Caught re-running the same failing command a third time → stop, change approach or ask the user.
+- About to re-run the same failing command a third time → stop, change approach or ask the user.
 
 ### Between every stage
 
@@ -172,7 +173,7 @@ Review dimensions (rubric shared with `quality.md`):
 |---|---|
 | `ship` | Merge. |
 | `fix-then-ship` | Fix the findings, re-run Stage 4, merge. No fresh review required. |
-| `rework` | Return to Stage 3 (or Stage 2 if the plan is implicated). A fresh Stage 5 review is mandatory afterward. Cap: two rework cycles, then escalate to the user. |
+| `rework` | Return to Stage 3 (or Stage 2 if the plan is implicated). A fresh Stage 5 review is mandatory afterward. Cap: two rework cycles, then escalate to the user (board → Blocked while waiting). |
 | `reject` | Stop. Do not merge. Report the reviewer's reason to the user. |
 
 **Subjective-goal hold:** when the goal is perceptual (visual fidelity to a reference, "looks like X"), a merging verdict — `ship`, or `fix-then-ship` once its fixes are re-verified — readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance; every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).

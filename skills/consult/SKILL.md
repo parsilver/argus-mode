@@ -6,7 +6,7 @@ description: The argus-mode pipeline for Sonnet/Haiku leads — the small model 
 # /argus-mode:consult — small-model lead + oracle checkpoints
 
 Runs the same disciplined pipeline as `/argus-mode:run` for a Sonnet/Haiku
-lead: the small model does all reading, writing, and testing; a pinned-`opus`
+lead: the small model leads all execution; a pinned-`opus`
 `argus-oracle` gates the plan, arbitrates architecture mid-execution, and
 performs the final review. Three oracle checkpoint **types**; two always
 fire (plan review, final review), the mid-execution one fires whenever its
@@ -67,7 +67,9 @@ trivial; read-only lookups are trivial if answerable from one file),
 then the read-only-work route (non-trivial lookups skip the git intake
 entirely — plan, explore, report per the route's report contract; its
 landing rule decides where findings live, chat or a `question`-labeled
-issue), the git intake (issue with its
+issue), the ambiguity gate (a new capability with unstated
+requirements gets clarified with the requester before the issue is
+written), the git intake (issue with its
 fields filled and added to the repo's project board when one exists →
 branch/worktree → draft PR), and the full degradation table. Once the triviality check clears
 and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
@@ -101,14 +103,15 @@ rubric: the mandatory simpler-alternative pass first, the goal-backward
 review, and instant precondition refusal on a plan with no failable checks
 or no test list.
 
-Spawn `argus-oracle` with the plan, the task statement, and relevant repo
-context — the identical gate `/argus-mode:run` runs, with one binding
-difference:
+Spawn `argus-oracle` with the plan, the task statement, relevant repo
+context, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md`
+as the rubric's source of truth — the identical gate `/argus-mode:run`
+runs, with one binding difference:
 
 | | `/argus-mode:run` | `/argus-mode:consult` |
 |---|---|---|
 | `revise` verdict | may be overridden with an explicit user-visible justification | **no lead override** (the user still decides at the two-cycle escalation) |
-| Revise-cycle cap | two, then escalate to the user | same: two, then escalate to the user |
+| Revise-cycle cap | two, then escalate to the user | same: two, then escalate to the user (board Status → Blocked while waiting, when a board exists) |
 
 The lead **must** apply the oracle's verdict. On `approve`, the plan
 becomes durable exactly as in `/argus-mode:run`: post it as an issue
@@ -205,7 +208,7 @@ holding the identical bar:
 |---|---|
 | `ship` | merge |
 | `fix-then-ship` | fix the findings, re-run Stage 4, merge — no fresh review required |
-| `rework` | return to Stage 3 (or Stage 2 if the plan is implicated); fresh Stage 5 review mandatory after; capped at two rework cycles, then escalate to the user |
+| `rework` | return to Stage 3 (or Stage 2 if the plan is implicated); fresh Stage 5 review mandatory after; capped at two rework cycles, then escalate to the user (board → Blocked while waiting) |
 | `reject` | stop; do not merge; report the oracle's reason to the user |
 
 **Subjective-goal hold applies unchanged:** on a perceptual goal (visual fidelity, "looks like X"), a merging verdict — `ship`, or `fix-then-ship` once its fixes are re-verified — readies the PR and posts the comparison evidence, but the merge waits for the user's explicit acceptance; every rejection cycle re-runs Stage 4 and this gate before the next ask (`pipeline.md`, Subjective goals).

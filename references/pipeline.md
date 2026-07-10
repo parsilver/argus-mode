@@ -65,6 +65,20 @@ and name the degrade in the report.
   on later, delivered only as chat prose, evaporates with the session
   — the landing rule is part of delivering, not an optional extra.
 
+## Ambiguous ask — clarify before the issue
+
+Acceptance criteria are the contract every later gate checks against —
+inventing them for a vague ask makes the criteria-negation check
+validate the author's own framing. When the request is a new
+capability whose acceptance criteria cannot be derived from what the
+user actually said: ask targeted questions, or present two or three
+shaped options, before the issue is written. Record the answers in the
+issue's Context section — the criteria then trace to the requester,
+not to the pipeline's guess.
+
+- Refusal condition: an issue authored for an ambiguous ask without a
+  recorded clarification is self-made framing wearing a contract.
+
 ## Stage 1 — Git intake
 
 Run these four steps, in order, when the project is a git repo. (No repo,

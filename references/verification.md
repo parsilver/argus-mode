@@ -83,6 +83,11 @@ for the two that skip the rest of the rubric entirely when missing.
    repo visibility (private-only assets flagged before any visibility
    change). Provenance language stays neutral — "licensed Fuse v21.1.0
    assets", not a narration of the copying.
+10. **Docs stay truthful.** A plan whose diff touches public API or
+    user-visible behavior names the docs and examples it updates — or
+    states "no doc mentions this surface", checked against the repo's
+    docs, not assumed. A README the diff will contradict is a defect
+    the plan must already own.
 
 Verdict is structured: `approve`, or `revise` with reasons tied to the
 specific rubric item(s) that failed.
@@ -91,7 +96,7 @@ specific rubric item(s) that failed.
 
 A plan arriving **without failable checks**, or **without a test list**
 for an implementation stage, gets an instant `revise` naming the missing
-precondition — the oracle does not attempt items 1–9 above on a plan it
+precondition — the oracle does not attempt items 1–10 above on a plan it
 cannot actually review. Reviewing a plan with no way to fail is theater;
 name the gap and send it back.
 
@@ -129,7 +134,10 @@ Checked on every review, every time — not opted into per task:
    machine-local path on any git artifact the run produced (issue, PR,
    comment) violates `git-conventions.md`'s team voice and is a
    dimension-2 finding, exactly like filler prose — the lexicon check
-   in `git-conventions.md` is the mechanical probe for it.
+   in `git-conventions.md` is the mechanical probe for it. Repo
+   documentation is in scope the same way: grep the docs for the
+   changed surface — a README or doc example contradicted by the diff
+   is a dimension-2 finding.
 3. **Architecture fit.** Boundaries respected; single responsibility held.
 4. **Pattern justification.** Every pattern in the diff earns its
    complexity — a pattern applied without a stated reason is unjustified

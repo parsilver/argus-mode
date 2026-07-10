@@ -295,10 +295,12 @@ evidence it can't trust.
 On `ship` / `fix-then-ship`: update the PR description's "How it was
 verified" section with the Stage 4 command and its result — PR text in
 the team voice per `git-conventions.md` — flip the draft PR to ready,
-merge — issue auto-closes (degraded modes: local `git merge --no-ff`
-per `pipeline.md`). Set the board Status to Done on merge, when a
-board exists. Final report to the user: what shipped, evidence,
-anything skipped and why — same shape as `/argus-mode:run`.
+merge — issue auto-closes (degraded modes per `pipeline.md`'s table —
+a local `git merge --no-ff` only when no remote exists at all). Set
+the board Status to Done on merge, when a board exists, then run the
+terminal-outcome cleanup (`pipeline.md`): remove the run's worktree,
+delete the merged branch. Final report to the user: what shipped,
+evidence, anything skipped and why — same shape as `/argus-mode:run`.
 
 ## What this costs
 

@@ -44,13 +44,23 @@ else
   }')
   while IFS= read -r branch; do
     [ -n "$branch" ] || continue
-    bhits=$(grep -icE "$branch" tests/fixtures/dirty.md || true)
+    bhits=$(grep -icE -e "$branch" tests/fixtures/dirty.md || true)
     if [ "${bhits:-0}" -ge 1 ]; then
       note "lexicon branch '$branch' flags the dirty fixture ($bhits hits)"
     else
       err "lexicon branch '$branch' has zero hits on the dirty fixture"
     fi
   done <<< "$branches"
+  # The per-branch loop can't see a branch that was deleted from the
+  # shipped pattern — the fixture side anchors that direction: every
+  # seeded dirty line (headings exempt) must still be flagged by the
+  # aggregate pattern, so deleting a branch orphans its line and fails.
+  orphans=$(grep -vE '^[[:space:]]*$|^#' tests/fixtures/dirty.md | grep -ivcE "$pattern" || true)
+  if [ "${orphans:-0}" -eq 0 ]; then
+    note "every seeded dirty line is flagged by the aggregate pattern"
+  else
+    err "lexicon: $orphans seeded dirty line(s) no longer flagged — was a pattern branch deleted? $(grep -vE '^[[:space:]]*$|^#' tests/fixtures/dirty.md | grep -ivE "$pattern")"
+  fi
   clean=$(grep -icE "$pattern" tests/fixtures/clean.md || true)
   if [ "${clean:-0}" -eq 0 ]; then note "lexicon passes the clean fixture (0 hits)"; else err "lexicon: expected 0 hits on clean fixture, got ${clean:-0}: $(grep -inE "$pattern" tests/fixtures/clean.md)"; fi
 fi

@@ -14,6 +14,11 @@
 #   base-ref defaults to origin/main. Compares base-ref...HEAD (the
 #   same three-dot range the CI job uses) against the current worktree,
 #   which is assumed to be checked out at HEAD.
+#
+# Deliberately strict on bundling: a shipped-file PR whose CHANGELOG
+# edits touch released sections or the preamble fails, even when a
+# valid Unreleased entry is also present — released notes don't change
+# as a side effect of shipping new work; split those edits out.
 set -uo pipefail
 
 base_ref="${1:-origin/main}"
@@ -84,6 +89,34 @@ violations=$(git diff -U0 "$base_ref"...HEAD -- "$changelog_file" | awk -v start
 if [ -n "$violations" ]; then
   printf '::error::changelog-gate: added CHANGELOG.md lines fall outside the Unreleased section (lines %s-%s):\n%s\n' \
     "$unreleased_start" "$unreleased_end" "$violations"
+  exit 1
+fi
+
+# A deletion-only or link-only CHANGELOG touch records nothing — at
+# least one real content line must be added inside the Unreleased span
+# before the success message may claim an entry exists.
+added_in_span=$(git diff -U0 "$base_ref"...HEAD -- "$changelog_file" | awk -v start="$unreleased_start" -v end="$unreleased_end" '
+  /^@@ / {
+    match($0, /\+[0-9]+(,[0-9]+)?/)
+    spec = substr($0, RSTART + 1, RLENGTH - 1)
+    split(spec, parts, ",")
+    newline = parts[1] + 0
+    next
+  }
+  /^\+\+\+/ { next }
+  /^---/   { next }
+  /^\+/ {
+    content = substr($0, 2)
+    if (content !~ /^\[[^]]+\]: / && content ~ /[^[:space:]]/ && newline >= start && newline <= end) count++
+    newline++
+    next
+  }
+  /^-/ { next }
+  END { print count + 0 }
+')
+
+if [ "${added_in_span:-0}" -eq 0 ]; then
+  printf '::error::changelog-gate: shipped files changed but no entry line was added inside the Unreleased section — a deletion-only or link-only %s change records nothing\n' "$changelog_file"
   exit 1
 fi
 

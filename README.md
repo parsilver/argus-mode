@@ -1,5 +1,7 @@
 # Argus Mode
 
+[![ci](https://github.com/parsilver/argus-mode/actions/workflows/ci.yml/badge.svg)](https://github.com/parsilver/argus-mode/actions/workflows/ci.yml)
+
 A Claude Code plugin that packages a disciplined, staged engineering workflow as
 reusable skills and agents. Like Argus Panoptes — the hundred-eyed giant — every
 stage of work is watched by an independent verification eye: an independent
@@ -48,7 +50,7 @@ against a stale snapshot and reports "already installed".
 |---|---|---|
 | Fable, Opus | `/argus-mode:run` | Full pipeline. `argus-reviewer` runs at `inherit` tier — an opus-tier review gate. |
 | Sonnet, Haiku | `/argus-mode:consult` | Same pipeline, executed by the cheap model, with mandatory `argus-oracle` (opus) checkpoints at plan review, execution triggers, and final review. |
-| Sonnet, Haiku | `/argus-mode:run` | Hard stop. Three doors offered: switch model and re-run, run `/argus-mode:consult` immediately in the same turn, or explicitly say "proceed anyway" to run with reduced guarantees (recorded in the final report). |
+| Sonnet, Haiku | `/argus-mode:run` | Hard stop. Three doors offered: switch model and re-run, run `/argus-mode:consult` immediately in the same turn, or explicitly say "proceed anyway" to run with reduced guarantees (recorded in the final report). Tasks that clear the triviality hatch are handled directly, without the model gate. |
 | Fable, Opus | `/argus-mode:consult` | Reverse gate: announces the redirect and runs `/argus-mode:run` directly in the same turn — no stop, no retyping. |
 
 ## The pipeline
@@ -94,6 +96,14 @@ a development dependency of this repo, not a runtime one — it is used to valid
 (`plugin-dev:plugin-validator`) and to review both `SKILL.md` files for
 triggering and clarity (`plugin-dev:skill-reviewer`) before every tagged
 release. End users installing `argus-mode` do not need it.
+
+CI (`.github/workflows/ci.yml`) enforces the repo invariants on every
+PR — shipped-file changes carry a changelog entry, the manifest version
+stays consistent with the changelog, the README lists every skill and
+agent, and `tests/run-checks.sh` proves the lexicon check and reference
+cross-links against fixtures. `RELEASE-CHECKLIST.md` records the manual
+smoke tests per release. Run the checks locally with
+`bash tests/run-checks.sh`.
 
 ## License
 

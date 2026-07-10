@@ -1,0 +1,65 @@
+name: Bug report
+description: Behavior differs from what the skills or references say
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version
+      description: From `.claude-plugin/plugin.json` or `claude plugin list`
+    validations:
+      required: true
+  - type: dropdown
+    id: model
+    attributes:
+      label: Session model
+      description: Behavior forks on the model matrix — this is the first triage question
+      options:
+        - Fable
+        - Opus
+        - Sonnet
+        - Haiku
+        - other
+    validations:
+      required: true
+  - type: dropdown
+    id: command
+    attributes:
+      label: Command invoked
+      options:
+        - "/argus-mode:run"
+        - "/argus-mode:consult"
+        - other / none
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Install path
+      description: Skills-only installs run without the agents and degrade differently
+      options:
+        - Claude Code plugin (marketplace)
+        - skills-only (npx skills add)
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+      description: One line each
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Numbered, minimal, exact prompts or commands
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Verbatim output — never paraphrased
+    validations:
+      required: true

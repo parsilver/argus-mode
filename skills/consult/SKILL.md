@@ -80,7 +80,7 @@ and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
 and recite the creed verbatim, once — never before the check, never again
 mid-pipeline. Nothing about intake changes in consult mode — same escape
 hatch, same re-entry rule, same degraded forms when there's no repo, no
-remote, or no `gh`.
+remote, no `gh`, or no push rights (fork flow).
 
 ## Stage 2 — Plan
 
@@ -155,8 +155,9 @@ then treat the agent as unavailable (`verification.md`, Malformed or
 missing verdicts — applies at every checkpoint). On `approve`, the plan
 becomes durable exactly as in `/argus-mode:run`: post it as an issue
 comment — or the degraded location from `pipeline.md`'s degradation table
-(`PLAN.md` with no remote; the PR description when only issues are
-unavailable) — mirror a link in the draft PR, and update it at every
+(`PLAN.md` committed on the branch when the platform can't host the
+comment — no remote, or no `gh`; the PR description when only issues
+are unavailable) — mirror a link in the draft PR, and update it at every
 stage completion. The comment is a git artifact: team voice per
 `git-conventions.md`, lexicon check before every post and edit.
 
@@ -295,10 +296,12 @@ evidence it can't trust.
 On `ship` / `fix-then-ship`: update the PR description's "How it was
 verified" section with the Stage 4 command and its result — PR text in
 the team voice per `git-conventions.md` — flip the draft PR to ready,
-merge — issue auto-closes (degraded modes: local `git merge --no-ff`
-per `pipeline.md`). Set the board Status to Done on merge, when a
-board exists. Final report to the user: what shipped, evidence,
-anything skipped and why — same shape as `/argus-mode:run`.
+merge — issue auto-closes (degraded modes per `pipeline.md`'s table —
+a local `git merge --no-ff` only when no remote exists at all). Set
+the board Status to Done on merge, when a board exists, then run the
+terminal-outcome cleanup (`pipeline.md`): remove the run's worktree,
+delete the merged branch. Final report to the user: what shipped,
+evidence, anything skipped and why — same shape as `/argus-mode:run`.
 
 ## What this costs
 

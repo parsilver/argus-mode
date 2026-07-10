@@ -24,6 +24,11 @@ the pipeline"), handle it directly, stop. No creed, no ceremony.
 **Re-entry rule:** if the "trivial" edit turns out to need a second edit,
 a second file, or its first check fails → stop, announce the
 reclassification, and enter the full pipeline at the git intake below.
+The rule survives the commit: a hatch edit that fails **after** being
+committed or pushed re-enters the full pipeline the same way, and a
+broken commit it left on the default branch is reverted first ("A bad
+merge reverts first", below) — the hatch never leaves a red default
+branch as someone else's problem.
 
 - Refusal condition: the hatch is not a bypass valve — a borderline task
   classified trivial without announcing the classification is an
@@ -270,13 +275,38 @@ report.
 | Condition | Issue / PR | Plan lives in | Reviewer scope | Merge semantics |
 |---|---|---|---|---|
 | No git repo | Offer `git init`; if declined, skip the git layer for every stage | The final report | Files created/modified this session | N/A — deliver = the final report |
-| Git repo, no GitHub remote (or no `gh` CLI) | Local branch only; skip issue and PR | `PLAN.md` in the worktree | `git diff <default-branch>...HEAD` | Local `git merge --no-ff` into the default branch, after the review gate |
+| Git repo, no remote at all | Local branch only; skip issue and PR | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | Local `git merge --no-ff` into the default branch, after the review gate — remove `PLAN.md` in a final commit on the branch first, so run state never lands on the default branch |
+| Remote exists, `gh` CLI missing | Skip issue and PR (no API access); push the branch to the remote | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | **Never merge locally while a remote exists** — the local default branch would diverge from origin and the next intake's fast-forward breaks. Deliver the pushed branch and its compare link, named in the final report; opening and merging the PR is the user's step. Push rejected (no rights) → deliver the branch locally (`git bundle` or patch file, or the user pushes), named the same way |
+| Remote exists, no push rights (fork / OSS contribution) | Issue on upstream when creatable, else skip and note; `gh repo fork --remote`, branch pushed to the fork | Issue comment as usual (PR description when no upstream issue) | Normal — PR diff | Cross-fork draft PR, readied after the review gate; merging belongs to the maintainer — deliver = the ready PR, named in the final report |
 | Issues disabled on the repo, or no permission to create them | Branch + PR, no issue | Plan comment moves to the PR description (no issue thread to host it) | Normal — PR diff | Normal — merge the PR; note the missing issue in the final report |
 | User opts out ("no issue for this one") | Honor it: branch + PR, no issue | Plan comment moves to the PR description | Normal — PR diff | Normal — merge the PR; note the opt-out in the final report |
 | No Projects v2 board, or the token lacks the project scope (`project` in `gh auth status`) | Normal issue/PR flow | Issue comment as usual | Normal — PR diff | Normal — board sync skipped, named in the final report |
 
 - Refusal condition: a degraded form that isn't named in the final
   report is an undisclosed degrade, not a permitted one.
+
+## Terminal-outcome cleanup
+
+A run's last artifact is a clean tree. At every terminal outcome —
+merge, `reject`, or an abandonment the user confirms — remove what the
+run created and no longer needs, and name it in the final report:
+
+- a worktree created at intake is removed (`git worktree remove`);
+- the local branch is deleted after its merge (the remote branch per
+  the repo's delete-on-merge setting); an abandoned branch is deleted
+  locally and on the remote once the user confirms the abandonment;
+- on `reject`, remove the worktree but **keep the branch** — it holds
+  the rejected work the user was just pointed at (and, degraded, the
+  post-mortem record); deleting it is the user's call, never the
+  run's.
+
+An unmerged branch under an open escalation or hold stays — cleanup
+applies to terminal outcomes, not pauses.
+
+- Refusal condition: a merged run that leaves its worktree and branch
+  behind turns the next intake's "other work in flight" check into a
+  false positive — cleanup is part of delivering, not housekeeping to
+  skip.
 
 ## Stage 5 — Verdict → action mapping
 

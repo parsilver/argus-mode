@@ -58,8 +58,8 @@ Count signals, don't estimate remaining context by feel:
 
 The pipeline is resumable by construction: the issue, the draft PR, and
 the plan comment posted at Stage 2.5 already hold the durable state
-(`pipeline.md`). Degraded mode (no GitHub remote, or no `gh`): the
-equivalent state lives in `PLAN.md` in the worktree.
+(`pipeline.md`). Degraded modes (no remote at all, or `gh` missing):
+the equivalent state lives in `PLAN.md`, committed on the branch.
 
 To hand off:
 

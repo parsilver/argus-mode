@@ -66,7 +66,7 @@ the issue is written (`pipeline.md`, Ambiguous ask).
 3. Branch via `gh issue develop <n>` (or `git switch -c`). Use an isolated worktree when the tree is dirty or other work is in flight; a clean solo checkout may branch in place.
 4. Empty bootstrap commit, open a **draft** PR with `Closes #<n>` immediately.
 
-Every degraded form — no git repo, git repo but no GitHub remote/`gh`, issues disabled, or user opt-out — is defined in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.
+Every degraded form — no git repo, no remote at all, remote without `gh`, remote without push rights (fork flow), issues disabled, or user opt-out — is defined in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.
 
 ## Stage 2 — Plan
 
@@ -111,7 +111,7 @@ Verdict is structured: `approve` or `revise` + reasons. A response lacking exact
 - A `revise` may be overridden only with an explicit, user-visible justification.
 - The oracle always runs at its pinned `opus` tier, regardless of the lead's model.
 
-**On `approve`, the plan becomes durable:** post the plan as an issue comment and mirror the link in the draft PR — or the degraded location from `pipeline.md`'s table (`PLAN.md` with no remote; the PR description when only issues are unavailable). The comment is a git artifact: written in the team voice per `git-conventions.md` (headed "Implementation plan", named checkbox items, `command → result` evidence) — run the lexicon check before posting and before every edit. This comment is the exact resume point — update it at every stage boundary from here on.
+**On `approve`, the plan becomes durable:** post the plan as an issue comment and mirror the link in the draft PR — or the degraded location from `pipeline.md`'s table (`PLAN.md` committed on the branch when the platform can't host the comment — no remote, or no `gh`; the PR description when only issues are unavailable). The comment is a git artifact: written in the team voice per `git-conventions.md` (headed "Implementation plan", named checkbox items, `command → result` evidence) — run the lexicon check before posting and before every edit. This comment is the exact resume point — update it at every stage boundary from here on.
 
 ## Stage 3 — Execute
 
@@ -190,7 +190,7 @@ Review dimensions (rubric shared with `quality.md`):
 
 **Lifecycle tail:** on a repo that versions, record the change under Unreleased in the same PR and treat a release as its own task (`${CLAUDE_PLUGIN_ROOT}/references/releasing.md`). A bad merge reverts first via the expedited path (`pipeline.md`). A `reject`, a rework-cap escalation, a post-merge rejection, or a non-converging hold files a post-mortem record on the triggering issue (`${CLAUDE_PLUGIN_ROOT}/references/post-mortem.md`).
 
-On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. Set the board Status to Done on merge, when a board exists. (Degraded modes: local `git merge --no-ff` into the default branch per `pipeline.md`.)
+On merge: update the PR description's "How it was verified" section with the Stage 4 command and its result — PR text in the team voice per `git-conventions.md` — flip the draft PR to ready, merge — the issue auto-closes. Set the board Status to Done on merge, when a board exists, then run the terminal-outcome cleanup (`pipeline.md`): remove the run's worktree, delete the merged branch. (Degraded modes per `pipeline.md`'s table — a local `git merge --no-ff` only when no remote exists at all; a pushed branch + compare link when the remote lacks `gh`; a ready cross-fork PR when push rights are absent.)
 
 ### Deliver
 

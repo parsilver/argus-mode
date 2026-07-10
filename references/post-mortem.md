@@ -34,6 +34,11 @@ that lands on git:
   the pipeline is the user's call — a proposal is never auto-filed
   anywhere else.
 
+Degraded modes follow the pipeline's degradation table: issues
+unavailable → the record lands in the PR description; no remote → a
+section in `PLAN.md` on the branch; no repo → the final report
+carries it. The landing spot degrades; the record never does.
+
 - Refusal condition: a triggering event closed without its record is a
   gate miss the next run inherits — filing the record is part of
   resolving the event, not an optional epilogue.

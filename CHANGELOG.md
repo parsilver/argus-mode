@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Degradation and lifecycle rows (`references/pipeline.md`,
+  `references/post-mortem.md`, both skills): the no-remote row splits
+  — "remote exists, `gh` missing" now pushes the branch and delivers
+  the compare link instead of merging locally into a default branch
+  that would diverge from origin; a new "remote exists, no push
+  rights" row defines the fork / cross-fork-PR flow; terminal
+  outcomes get a cleanup rule (worktrees removed; branches deleted on
+  merge or confirmed abandonment, kept on reject — the rejected work
+  is the user's to dispose of); the triviality re-entry rule survives
+  the commit (a hatch edit failing after commit/push re-enters the
+  pipeline, reverting a broken default-branch commit first); and
+  post-mortem records get degraded landing spots. (#41)
 - Gate-brief contracts, seven fixes (`agents/argus-oracle.md`,
   `agents/argus-reviewer.md`, `references/verification.md`,
   `references/pipeline.md`, both skills): the plan-review brief must

@@ -57,11 +57,11 @@ Open a fresh session and check three things:
    opens with the model gate or a triviality classification — never
    "unknown skill".
 
-A first real run produces, in order: a GitHub issue, a plan posted as
-an issue comment, commits on a numbered branch under a draft PR, a
-code review, a merge. A session that jumps straight to editing files
-with no issue and no plan comment is running without the skill —
-see below.
+A first real run produces, in order: a GitHub issue, a draft PR opened
+empty on a numbered branch, a plan posted as an issue comment,
+implementation commits under that PR, a code review, a merge. A
+session that jumps straight to editing files with no issue and no plan
+comment is running without the skill — see below.
 
 ### Troubleshooting
 

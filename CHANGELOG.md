@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-11
+
 ### Added
 
 - Diagram convention (`references/git-conventions.md`, both skills):
@@ -34,6 +36,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- One blocking finding from this release's skill review: both skills'
+  intake summaries compressed the issue-metadata judgment-value rule
+  to "only when derivable", which licenses inferring a team's
+  priority/size/iteration from the work on skills-only installs where
+  the summary is the operative rule; both now read "only when the
+  requester stated them — never inferred from the work", matching
+  `references/pipeline.md`. Eight non-blocking findings are tracked in
+  #62. (#60)
 - Issue-metadata contract corrected against the live APIs
   (`references/pipeline.md`, both skills): the type row's GraphQL
   fallback is `updateIssueIssueType` (was `updateIssue`, a different
@@ -401,7 +411,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Self-hosted marketplace (`.claude-plugin/marketplace.json`) enabling
   `/plugin marketplace add parsilver/argus-mode`.
 
-[Unreleased]: https://github.com/parsilver/argus-mode/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/parsilver/argus-mode/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/parsilver/argus-mode/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/parsilver/argus-mode/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/parsilver/argus-mode/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/parsilver/argus-mode/compare/v0.4.0...v0.5.0

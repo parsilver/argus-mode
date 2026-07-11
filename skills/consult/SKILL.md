@@ -78,7 +78,7 @@ repo which never lands on a public issue), the ambiguity gate (a new
 capability with unstated requirements gets clarified with the requester
 before the issue is written), the git intake (issue with every
 metadata dimension the repo has filled per the Issue metadata contract
-— type, labels, milestone, board fields, relationships; judgment
+— type, labels, milestone, Projects fields, relationships; judgment
 values only when derivable; attribution metadata never created or
 reused — and added to the repo's project board when one exists →
 branch/worktree → draft PR), the Resume path (a request naming an

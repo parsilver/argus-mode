@@ -62,7 +62,7 @@ the issue is written (`pipeline.md`, Ambiguous ask).
 **Resume first (`pipeline.md`, Resume — the receiving side):** when the request names an existing issue, PR, or branch — or an in-flight branch whose plan comment already covers this task — adopt that state instead of creating new artifacts: reconcile the plan comment against the branch's commit log (the log outranks the comment), apply any recorded-but-unapplied review outcome, and enter at the first open item. The steps below create state only when none exists:
 
 1. `git fetch origin`, fast-forward the default branch.
-2. `gh issue create` describing the work — filling every metadata dimension the repo actually has per `pipeline.md`'s Issue metadata contract (type, labels, milestone, Projects fields, relationships — discover, then apply; judgment values only when derivable; attribution metadata never created or reused) and adding the issue to the repo's project board when one exists (`pipeline.md`, Project-board sync).
+2. `gh issue create` describing the work — filling every metadata dimension the repo actually has per `pipeline.md`'s Issue metadata contract (type, labels, milestone, Projects fields, relationships — discover, then apply; judgment values (priority, size, iteration) only when the requester stated them — never inferred from the work; attribution metadata never created or reused) and adding the issue to the repo's project board when one exists (`pipeline.md`, Project-board sync).
 3. Branch via `gh issue develop <n>` (or `git switch -c`). Use an isolated worktree when the tree is dirty or other work is in flight; a clean solo checkout may branch in place.
 4. Empty bootstrap commit, open a **draft** PR with `Closes #<n>` immediately.
 

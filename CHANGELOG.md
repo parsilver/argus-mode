@@ -36,6 +36,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- One blocking finding from this release's skill review: both skills'
+  intake summaries compressed the issue-metadata judgment-value rule
+  to "only when derivable", which licenses inferring a team's
+  priority/size/iteration from the work on skills-only installs where
+  the summary is the operative rule; both now read "only when the
+  requester stated them — never inferred from the work", matching
+  `references/pipeline.md`. Eight non-blocking findings are tracked in
+  #62. (#60)
 - Issue-metadata contract corrected against the live APIs
   (`references/pipeline.md`, both skills): the type row's GraphQL
   fallback is `updateIssueIssueType` (was `updateIssue`, a different

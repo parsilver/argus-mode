@@ -79,8 +79,9 @@ capability with unstated requirements gets clarified with the requester
 before the issue is written), the git intake (issue with every
 metadata dimension the repo has filled per the Issue metadata contract
 — type, labels, milestone, Projects fields, relationships; judgment
-values only when derivable; attribution metadata never created or
-reused — and added to the repo's project board when one exists →
+values (priority, size, iteration) only when the requester stated
+them, never inferred from the work; attribution metadata never created
+or reused — and added to the repo's project board when one exists →
 branch/worktree → draft PR), the Resume path (a request naming an
 existing issue, PR, or branch adopts the in-flight state instead of
 re-running intake — the branch's commit log outranks the plan comment,

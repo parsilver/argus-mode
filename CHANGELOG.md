@@ -24,6 +24,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Issue-metadata contract corrected against the live APIs
+  (`references/pipeline.md`, both skills): the type row's GraphQL
+  fallback is `updateIssueIssueType` (was `updateIssue`, a different
+  mutation that takes no type id); its Discover cell now probes
+  `repository.issueTypes` (null → the repo has no types, an
+  organization-level feature, so user-owned repos always take the named
+  degrade); and the relationships row names the live dependency
+  mutations `addBlockedBy` / `removeBlockedBy` (`issueId`,
+  `blockingIssueId`). Verified against gh 2.95.0 and GitHub GraphQL.
+  (#56)
 - Ten wording and contract clarifications from the v0.6.0 skill review
   (both skills; `references/verification.md`): decision-shaped gates
   join the malformed-outcome ladder; the mid-execution cap defines

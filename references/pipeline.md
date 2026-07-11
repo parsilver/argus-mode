@@ -101,16 +101,9 @@ not decoration.
 2. Create a GitHub issue describing the work: `gh issue create` — title
    and description per `git-conventions.md` (failable acceptance
    criteria; bugs carry expected/actual, repro steps, verbatim
-   evidence). Fill the fields the repo actually has — discover, then
-   apply; never invent:
-   - Labels: `gh label list` first; map the work's Conventional
-     Commits type onto existing labels (feat → enhancement,
-     fix → bug, docs → documentation). No match → skip; create a
-     label only on the user's ask.
-   - Milestone: assign when an open milestone clearly covers the work.
-   - Issue type (Bug / Feature / Task): set it when the repo has
-     types enabled.
-   - Project: per Project-board sync below.
+   evidence). Fill every metadata dimension the repo actually has —
+   the Issue metadata contract below: discover, then apply; never
+   invent.
 3. Branch — named `<issue-number>-<short-kebab-slug>`:
    - `gh issue develop <n>` (or `git switch -c` if `gh issue develop`
      isn't available).
@@ -131,6 +124,35 @@ not decoration.
 - The PR flips from draft to ready only at Stage 5, on a `ship` or
   `fix-then-ship` verdict (see the mapping below) — never before the
   review gate.
+
+## Issue metadata — fill what the repo has, invent nothing
+
+One discovery pass at intake, five dimensions. Fill each by meaning; a
+dimension the repo doesn't have, or a value that isn't derivable, is
+left empty and named once in the final report — never a silent skip.
+
+The boundary: a value is filled when it is **derivable** from the work
+itself or from the requester's words. Type, labels, and relationships
+follow from the work; a milestone is assigned when an open one clearly
+covers it. Judgment values — priority, size, iteration — are filled
+only when the requester stated them or the issue text carries them;
+the pipeline never invents a team's judgment call, because an empty
+field reads as unset while a guessed one reads as decided.
+
+| Dimension | Discover | Apply |
+|---|---|---|
+| Labels | `gh label list` | Map the work's Conventional Commits type onto existing labels (feat → enhancement, fix → bug, docs → documentation). No match → skip; create a label only on the user's ask. |
+| Milestone | `gh api repos/<owner>/<repo>/milestones` | Assign when an open milestone clearly covers the work; otherwise leave empty. |
+| Issue type | Does the repo have types enabled? Try `gh issue create --type` / `gh issue edit` (newer `gh` versions); fall back to GraphQL `updateIssue` with the type id | Set Bug / Feature / Task by the work's nature; neither mechanism available → named degrade. |
+| Projects fields | The board per Project-board sync below; `gh project field-list` for its fields | Status follows the sync table — its mechanics live there, not here. Other fields fill only under the derivable boundary above; fields and options are never created. |
+| Relationships | Native sub-issues (GraphQL `addSubIssue`); issue dependencies where the host supports them | Decomposition slices land as native sub-issues of the parent. Serially merged sub-issues carry blocked-by dependency links when supported — slice N+1 blocked by slice N; unsupported → the ordering stays in the parent checklist and the degrade is named. |
+
+- Attribution metadata is banned the same way attribution prose is
+  (`git-conventions.md`, team voice): a label, milestone, or field
+  value crediting a tool is never created and never reused.
+- Refusal condition: a dimension skipped without being named in the
+  final report is a silent skip — the contract's one job is making
+  every gap visible.
 
 ## Resume — the receiving side
 
@@ -200,7 +222,9 @@ decompose instead of proceeding as one PR:
 - Each slice becomes a sub-issue — native sub-issues where available
   (GraphQL `addSubIssue`); a task list of issue links in the parent
   body otherwise — with its own branch and PR, sized to review.
-- Slices merge serially; the tree is releasable after every merge.
+- Slices merge serially — with blocked-by dependency links between
+  consecutive slices per the Issue metadata contract above, where the
+  host supports them — and the tree is releasable after every merge.
   Sub-issue branches may be *developed* in parallel, but before each
   serial merge the branch is updated onto the current default branch
   (rebase or merge) and its verification suite re-runs there — a green

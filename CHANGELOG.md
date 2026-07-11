@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Issue-metadata contract (`references/pipeline.md`, both skills):
+  intake's field bullets become one titled contract covering type,
+  labels, milestone, Projects fields, and relationships — each with
+  its discovery command, filled by meaning under a derivable-only
+  boundary (judgment values like priority, size, and iteration only
+  when the requester stated them), with every skipped dimension named
+  in the final report; serially merged sub-issues carry blocked-by
+  dependency links where the host supports them. The no-attribution
+  rule (`references/git-conventions.md`) now covers metadata: labels,
+  milestones, and field values crediting a tool are never created and
+  never reused — one already planted in a repo is reported, not
+  adopted. (#54)
+
 ### Fixed
 
 - Ten wording and contract clarifications from the v0.6.0 skill review

@@ -23,13 +23,13 @@ Before Stage 0, check whether `argus-oracle`, `argus-explorer`, `argus-implement
 
 ## Stage 0 — Model gate
 
-Check the session's model ID (system prompt: "You are powered by the model named …"). Accepted: the ID contains `fable` or `opus` as a substring — a substring match, not a prefix whitelist. The substring is a deliberate trade: every future model whose ID carries a top-tier token passes without a skill update, and a future top-tier model named something else entirely hard-stops into the three doors below — for unrecognized names the gate fails toward asking, not toward passing.
+Check the session's model ID (system prompt: "You are powered by the model named …"). Accepted: the ID contains `fable` or `opus` as a substring — a case-insensitive substring match on the exact model ID (not the display name), not a prefix whitelist. The substring is a deliberate trade: every future model whose ID carries a top-tier token passes without a skill update, and a future top-tier model named something else entirely hard-stops into the three doors below — for unrecognized names the gate fails toward asking, not toward passing.
 
 Not accepted → **hard stop**. Present exactly these three doors; do not proceed on any other outcome:
 
 1. Switch model (`/model`) and re-run this skill.
-2. Continue under the consult pipeline instead — offer this; on the user's yes, read `${CLAUDE_PLUGIN_ROOT}/skills/consult/SKILL.md` and follow it in that same turn, carrying the user's original request over so nothing is retyped.
-3. User explicitly replies "proceed anyway" → run on the current model with reduced guarantees. Record the override and the user's stated reason in the final report. Under this override, Stage 5 routes to `argus-oracle` (final-review duty, consult evidence brief: diff as patch text or an on-disk patch file, verbatim Stage 4 command and output, run-time HEAD SHA, produced git-artifact text, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth) instead of `argus-reviewer` — the reviewer's `model: inherit` would grade the gate at the overriding lead's own tier. Record the substitution in the final report.
+2. Continue under the consult pipeline instead — offer this; on the user's yes, read `${CLAUDE_PLUGIN_ROOT}/skills/consult/SKILL.md` and follow it in that same turn, carrying the user's original request over so nothing is retyped. When that path is unreachable (skills-only install), invoke the installed consult skill by name instead — the redirect is to the skill, not the file.
+3. User explicitly replies "proceed anyway" → run on the current model with reduced guarantees. Record the override and the user's stated reason in the final report. Under this override, Stage 5 routes to `argus-oracle` (final-review duty, consult evidence brief: diff as patch text or an on-disk patch file — written outside the repo tree, in the session's scratch directory, or removed before any later commit — verbatim Stage 4 command and output, run-time HEAD SHA, produced git-artifact text, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth) instead of `argus-reviewer` — the reviewer's `model: inherit` would grade the gate at the overriding lead's own tier. Record the substitution in the final report.
 
 Never warn-and-continue past a failed gate silently.
 
@@ -59,14 +59,14 @@ the issue is written (`pipeline.md`, Ambiguous ask).
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` and `${CLAUDE_PLUGIN_ROOT}/references/git-conventions.md` now** — pipeline.md is the flow (follow it exactly, including its degradation rules); git-conventions.md is the naming and message standard every artifact below follows.
 
-**Resume first (`pipeline.md`, Resume — the receiving side):** when the request names an existing issue, PR, or branch — or an in-flight branch with a plan comment already covers this task — adopt that state instead of creating new artifacts: reconcile the plan comment against the branch's commit log (the log outranks the comment), apply any recorded-but-unapplied review outcome, and enter at the first open item. The steps below create state only when none exists:
+**Resume first (`pipeline.md`, Resume — the receiving side):** when the request names an existing issue, PR, or branch — or an in-flight branch whose plan comment already covers this task — adopt that state instead of creating new artifacts: reconcile the plan comment against the branch's commit log (the log outranks the comment), apply any recorded-but-unapplied review outcome, and enter at the first open item. The steps below create state only when none exists:
 
 1. `git fetch origin`, fast-forward the default branch.
 2. `gh issue create` describing the work — filling the fields the repo actually has (labels/milestone/type: discover, then apply) and adding the issue to the repo's project board when one exists (`pipeline.md`, Project-board sync).
 3. Branch via `gh issue develop <n>` (or `git switch -c`). Use an isolated worktree when the tree is dirty or other work is in flight; a clean solo checkout may branch in place.
 4. Empty bootstrap commit, open a **draft** PR with `Closes #<n>` immediately.
 
-Every degraded form — no git repo, no remote at all, remote without `gh`, remote without push rights (fork flow), issues disabled, or user opt-out — is defined in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.
+Every degraded form — no git repo, no remote at all, remote without `gh`, remote without push rights (fork flow), issues disabled, missing project board, or user opt-out — is defined in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.
 
 ## Stage 2 — Plan
 

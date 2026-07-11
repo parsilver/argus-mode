@@ -1,6 +1,6 @@
 ---
 name: consult
-description: The argus-mode pipeline for Sonnet/Haiku leads — the small model executes while a pinned-opus oracle gates the plan, arbitrates architecture, and performs the final review. Trigger when the user invokes /argus-mode:consult or asks for the argus pipeline on a smaller model. Not for trivial lookups or edits the triviality hatch covers.
+description: The argus-mode pipeline for Sonnet/Haiku leads — the small model executes while a pinned-opus oracle gates the plan, arbitrates architecture, and performs the final review. Trigger when the user invokes /argus-mode:consult, asks for the argus pipeline on a smaller model, or when the argus pipeline is requested in a session running on a non-Fable/Opus model. Not for trivial lookups or edits the triviality hatch covers.
 ---
 
 # /argus-mode:consult — small-model lead + oracle checkpoints
@@ -46,7 +46,8 @@ spawnable agents. If `argus-oracle` is unavailable:
 
 Check the session model exactly as `/argus-mode:run` Stage 0 does — the
 system prompt's "You are powered by the model named …" / model ID,
-substring match on the tier token (not a prefix whitelist). An unknown
+a case-insensitive substring match for the tier token in the exact
+model ID (not the display name, not a prefix whitelist). An unknown
 future model name fails toward consult, the safe direction: the oracle
 checkpoints stay on.
 
@@ -54,8 +55,11 @@ checkpoints stay on.
   this session. Announce the redirect in one line, then **read
   `${CLAUDE_PLUGIN_ROOT}/skills/run/SKILL.md` and follow it in full —
   from its agent-availability check onward — in this same turn**; no
-  stop, no re-ask, no retyping. The user asked for the workflow; which
-  skill name got them there is an implementation detail.
+  stop, no re-ask, no retyping. When that path is unreachable
+  (skills-only install), invoke the installed run skill by name
+  instead — the redirect is to the skill, not the file. The user asked
+  for the workflow; which skill name got them there is an
+  implementation detail.
 - Otherwise (Sonnet, Haiku, or any other non-Fable/Opus tier) → this is
   the right skill. Continue below.
 
@@ -205,7 +209,9 @@ breaks.
 **Cap:** the same trigger firing a third time on the same stage stops
 execution and escalates to the user with both positions (board →
 Blocked while waiting) — the same bound the plan-review and rework
-cycles carry.
+cycles carry. After a directive, each further failure of the same
+stage's check counts as the trigger firing again — the cap counts
+firings per stage, never fresh pairs of failures.
 
 A red failable check also starts the diagnose loop in
 `${CLAUDE_PLUGIN_ROOT}/references/debugging.md` (or the `debug-mantra`
@@ -235,6 +241,10 @@ One consult-specific requirement: **capture the exact command and its
 full output verbatim.** Checkpoint 3 hands this to the oracle instead of
 letting it re-run the suite — a paraphrased "tests passed" is not evidence
 the oracle can audit.
+
+A red check here is a failable-check failure for checkpoint purposes:
+the first-failure ledger rule and the failed-twice trigger apply
+unchanged — the verification stage is not a trigger-free zone.
 
 ## Stage 5 — Review & deliver (checkpoint 3 of 3)
 
@@ -280,9 +290,11 @@ refusal naming the missing evidence, not a review.
 `/argus-mode:run`:** the review brief must carry, verbatim —
 1. **the diff itself** — patch text inline, or a patch file written to
    disk (`git diff <base>...HEAD > <absolute path>.patch`) the oracle
-   Reads; never a bare changed-file list with a base ref — the oracle
-   has no Bash, a git ref is not a readable path, and current files
-   alone cannot show it the delta,
+   Reads; the file lives outside the repo tree (the session's scratch
+   directory) or is removed before any later commit, so it never rides
+   into the PR; never a bare changed-file list with a base ref — the
+   oracle has no Bash, a git ref is not a readable path, and current
+   files alone cannot show it the delta,
 2. the Stage 4 command and its full output,
 3. the **HEAD commit SHA at the moment the Stage 4 command ran**, so
    freshness is checkable instead of taken on the lead's word, and
@@ -314,9 +326,9 @@ evidence, anything skipped and why — same shape as `/argus-mode:run`.
 ## What this costs
 
 `/argus-mode:consult` is the cheap-**execution** path, not a cheap path.
-Three mandatory oracle checkpoints — plan review, potentially several
-mid-execution consults, and the final review — run at the pinned `opus`
-tier regardless of what the lead costs. On a task with real architectural
+Two always-on oracle checkpoints — plan review and the final review —
+plus mid-execution consults, mandatory whenever their triggers fire,
+all run at the pinned `opus` tier regardless of what the lead costs. On a task with real architectural
 ambiguity or a rocky execution (checkpoint 2 firing more than once), this
 pipeline can cost **more** in tokens and wall-clock than a plain
 Sonnet/Haiku session doing the same work with no gates — that is the

@@ -121,6 +121,12 @@ nearest approval:
 Cycle caps count well-formed verdicts only — a malformed response
 neither consumes nor resets a revise/rework cycle.
 
+The same ladder binds gates whose contract returns **one decision**
+rather than a verdict from a set — architecture consultation and
+debugging arbitration: a menu handed back, or a hedge between
+options, is no decision. Re-spawn once with "return exactly one
+decision"; a second miss means the agent is unavailable.
+
 - Refusal condition: reading a hedged review as an approval is the
   gate passing without issuing a verdict — the self-grade the gates
   exist to prevent.

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Ten wording and contract clarifications from the v0.6.0 skill review
+  (both skills; `references/verification.md`): decision-shaped gates
+  join the malformed-outcome ladder; the mid-execution cap defines
+  re-firing after a directive; "two always-on checkpoints" replaces
+  the three-vs-two wording; the run degraded-form list names the
+  missing-board case; patch files live outside the repo tree; the
+  resume-first sentence reads one way; the model gate is a
+  case-insensitive match on the exact model ID; cross-skill redirects
+  fall back to invoking the sibling skill by name on skills-only
+  installs; consult's trigger description covers the plain
+  small-model phrasing; and consult's verification stage states that
+  the ledger rule and failed-twice trigger apply to its red checks.
+  (#52)
+
 ## [0.6.0] - 2026-07-11
 
 ### Added

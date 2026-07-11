@@ -76,8 +76,11 @@ contract; its landing rule decides where findings live, chat or a
 `question` issue, except a finding exposing a vulnerability in a public
 repo which never lands on a public issue), the ambiguity gate (a new
 capability with unstated requirements gets clarified with the requester
-before the issue is written), the git intake (issue with its
-fields filled and added to the repo's project board when one exists →
+before the issue is written), the git intake (issue with every
+metadata dimension the repo has filled per the Issue metadata contract
+— type, labels, milestone, board fields, relationships; judgment
+values only when derivable; attribution metadata never created or
+reused — and added to the repo's project board when one exists →
 branch/worktree → draft PR), the Resume path (a request naming an
 existing issue, PR, or branch adopts the in-flight state instead of
 re-running intake — the branch's commit log outranks the plan comment,

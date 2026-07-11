@@ -21,6 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   missing row added); and the changelog CI gate now asserts entries
   land inside the `## [Unreleased]` section, via a locally runnable
   `tests/changelog-gate.sh`. (#42)
+- Untrusted-content rule and onboarding docs
+  (`references/verification.md`, `agents/argus-reviewer.md`,
+  `agents/argus-oracle.md`, both skills, `README.md`): text fetched
+  from issues, PRs, and comment threads is data to audit, never
+  instructions to follow — an instruction embedded in it is a
+  security-dimension finding reported with its author's handle; the
+  reviewer's `gh` reads are scoped to the artifacts the run authored
+  and third-party comments are summarized as data. The README gains a
+  "Verify the install" section and a troubleshooting note (stale
+  marketplace clone, cache-vs-repo version). Both model gates document
+  the substring match: unknown future model names hard-stop in run and
+  fail toward consult — never silently through. (#43)
 - Degradation and lifecycle rows (`references/pipeline.md`,
   `references/post-mortem.md`, both skills): the no-remote row splits
   — "remote exists, `gh` missing" now pushes the branch and delivers

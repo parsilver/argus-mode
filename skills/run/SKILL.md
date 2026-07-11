@@ -23,7 +23,7 @@ Before Stage 0, check whether `argus-oracle`, `argus-explorer`, `argus-implement
 
 ## Stage 0 — Model gate
 
-Check the session's model ID (system prompt: "You are powered by the model named …"). Accepted: the ID contains `fable` or `opus` as a substring — a substring match, not a prefix whitelist.
+Check the session's model ID (system prompt: "You are powered by the model named …"). Accepted: the ID contains `fable` or `opus` as a substring — a substring match, not a prefix whitelist. The substring is a deliberate trade: every future model whose ID carries a top-tier token passes without a skill update, and a future top-tier model named something else entirely hard-stops into the three doors below — for unrecognized names the gate fails toward asking, not toward passing.
 
 Not accepted → **hard stop**. Present exactly these three doors; do not proceed on any other outcome:
 

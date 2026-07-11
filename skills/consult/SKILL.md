@@ -46,7 +46,9 @@ spawnable agents. If `argus-oracle` is unavailable:
 
 Check the session model exactly as `/argus-mode:run` Stage 0 does — the
 system prompt's "You are powered by the model named …" / model ID,
-substring match on the tier token (not a prefix whitelist).
+substring match on the tier token (not a prefix whitelist). An unknown
+future model name fails toward consult, the safe direction: the oracle
+checkpoints stay on.
 
 - Model ID contains `fable` or `opus` → this is the **wrong** skill for
   this session. Announce the redirect in one line, then **read

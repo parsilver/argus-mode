@@ -44,6 +44,41 @@ field in `plugin.json`, and the installer reads your **local marketplace
 clone** — always update the marketplace first, or the installer compares
 against a stale snapshot and reports "already installed".
 
+## Verify the install
+
+Open a fresh session and check three things:
+
+1. Type `/argus-mode:` — both commands (`run`, `consult`) appear in the
+   completion list.
+2. The four agents (`argus-oracle`, `argus-explorer`,
+   `argus-implementer`, `argus-reviewer`) appear in the session's
+   available-agents list.
+3. Invoke `/argus-mode:run` with a small real task. A healthy install
+   opens with the model gate or a triviality classification — never
+   "unknown skill".
+
+A first real run produces, in order: a GitHub issue, a plan posted as
+an issue comment, commits on a numbered branch under a draft PR, a
+code review, a merge. A session that jumps straight to editing files
+with no issue and no plan comment is running without the skill —
+see below.
+
+### Troubleshooting
+
+- **Commands missing after an update** — the installer compares
+  against your local marketplace clone. Run the two update commands
+  above in that order, then restart the session. Updating the plugin
+  before the marketplace reports "already installed" against a stale
+  snapshot.
+- **Skills present, agents missing** — that is a skills-only install
+  (`npx skills add`). The gates run inline and weaker, as the Install
+  section describes. Install as a Claude Code plugin to get the
+  agents.
+- **The session behaves like an older version** — the plugin cache
+  pins whatever version it installed (`~/.claude/plugins/cache/...`).
+  Compare the version it reports against `plugin.json` on this repo's
+  `main`; the fix is the same marketplace-then-plugin update pair.
+
 ## Model matrix
 
 | Session model | Command | What you get |

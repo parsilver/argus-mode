@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Diagram convention (`references/git-conventions.md`, both skills):
+  Mermaid diagrams are allowed on git artifacts under an
+  illustrate-don't-govern rule — the text stays the source of truth
+  (GitHub Projects and the mobile apps don't render Mermaid, and the
+  repo's checks grep text); stable diagram types only (flowchart,
+  sequence, state), no click interactivity (stripped by GitHub's
+  sandbox) and no custom themes; team voice applies to diagram labels.
+  Platform behavior verified 2026-07-11 against GitHub's documentation
+  and changelog (renderer at Mermaid 11.15.0, no deprecation signals).
+  (#58)
 - Issue-metadata contract (`references/pipeline.md`, both skills):
   intake's field bullets become one titled contract covering type,
   labels, milestone, Projects fields, and relationships — each with

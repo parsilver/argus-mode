@@ -43,6 +43,42 @@ fi
 
 [ -f "$changelog_file" ] || { printf '::error::changelog-gate: %s not found at HEAD\n' "$changelog_file"; exit 1; }
 
+# Release mode. A release PR bumps the manifest version and adds the
+# matching "## [<version>]" heading in the same diff — the roll-up
+# moves entry lines out of the Unreleased span by design, so the
+# placement assertions below cannot apply to it. Detection is
+# content-based (both facts must appear in this diff), never a label
+# or branch name. Release-mode assertions: the Unreleased heading
+# stays first (kept empty between releases) and the new version
+# heading sits directly second, equal to the new manifest version.
+# A version bump with an untouched CHANGELOG never reaches this block
+# — the changed-file check above already failed it.
+manifest_file=".claude-plugin/plugin.json"
+if command -v jq >/dev/null 2>&1 && [ -f "$manifest_file" ]; then
+  merge_base=$(git merge-base "$base_ref" HEAD 2>/dev/null || echo "$base_ref")
+  old_version=$(git show "$merge_base:$manifest_file" 2>/dev/null | jq -r .version 2>/dev/null)
+  new_version=$(jq -r .version "$manifest_file" 2>/dev/null)
+  if [ -n "$new_version" ] && [ "$new_version" != "null" ] && [ "$old_version" != "$new_version" ] \
+    && git diff -U0 "$base_ref"...HEAD -- "$changelog_file" | grep -q "^+## \[$new_version\]"; then
+    headings=$(grep -m2 '^## \[' "$changelog_file")
+    first=$(printf '%s\n' "$headings" | sed -n 1p)
+    second=$(printf '%s\n' "$headings" | sed -n 2p)
+    if [ "$first" != "## [Unreleased]" ]; then
+      printf '::error::changelog-gate (release mode): first "## [" heading is "%s", not "## [Unreleased]" — keep the empty Unreleased heading above the new version section\n' "${first:-<none>}"
+      exit 1
+    fi
+    case "$second" in
+      "## [$new_version]"*) ;;
+      *)
+        printf '::error::changelog-gate (release mode): second heading is "%s" — expected "## [%s] - <date>" directly under Unreleased\n' "${second:-<none>}" "$new_version"
+        exit 1
+        ;;
+    esac
+    echo "changelog-placement gate satisfied (release mode): Unreleased rolled up into ## [$new_version] with the manifest bumped to match"
+    exit 0
+  fi
+fi
+
 # (a) HEAD's first top-level "## [" heading must be Unreleased. A change
 # that lands under any other heading was appended to an already-released
 # section instead of staged for the next one.

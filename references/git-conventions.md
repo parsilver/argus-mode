@@ -159,6 +159,32 @@ a repo audience is pasting a shell transcript into a design doc.
   an ad-copy docblock, and grounds to rewrite the artifact before it
   ships.
 
+## Diagrams on git artifacts
+
+GitHub renders Mermaid fenced blocks natively in issues, PRs, comments,
+discussions, wikis, and Markdown files. A small diagram is welcome on
+any git artifact where a flow is easier seen than read — under the same
+discipline as everything else in this file:
+
+- **Illustrate, don't govern.** The text is the source of truth: every
+  contract, checklist, and acceptance criterion lives in prose that
+  checks can grep. A diagram restates what the text already says —
+  never carries something the text doesn't. Not every surface renders
+  Mermaid (GitHub Projects and the mobile apps show raw source), and
+  tooling reads artifacts as text, so content that lives only in a
+  diagram is invisible exactly where it matters.
+- **Stable types only.** GitHub's deployed renderer trails Mermaid
+  releases by months — keep to flowchart, sequence, and state
+  diagrams. No click or callback interactivity — GitHub's sandbox
+  strips it — and no custom themes.
+- **Team voice applies inside the diagram.** Node labels, edge labels,
+  and titles are artifact text like any other — the lexicon check
+  covers the whole artifact, diagram source included.
+- Refusal condition: a git artifact whose acceptance criteria, plan
+  items, or any other load-bearing content exist only inside a diagram
+  has hidden them from the checks and from every non-rendering surface
+  — move the content to text and let the diagram restate it.
+
 ## Decision records
 
 A decision the plan marks as load-bearing beyond its own PR — an

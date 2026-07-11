@@ -16,8 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   repo's checks grep text); stable diagram types only (flowchart,
   sequence, state), no click interactivity (stripped by GitHub's
   sandbox) and no custom themes; team voice applies to diagram labels.
-  Grounded in a docs/changelog pass verified 2026-07-11 (renderer at
-  Mermaid 11.15.0, no deprecation signals). (#58)
+  Platform behavior verified 2026-07-11 against GitHub's documentation
+  and changelog (renderer at Mermaid 11.15.0, no deprecation signals).
+  (#58)
 - Issue-metadata contract (`references/pipeline.md`, both skills):
   intake's field bullets become one titled contract covering type,
   labels, milestone, Projects fields, and relationships — each with

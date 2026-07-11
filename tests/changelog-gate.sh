@@ -58,11 +58,17 @@ if command -v jq >/dev/null 2>&1 && [ -f "$manifest_file" ]; then
   merge_base=$(git merge-base "$base_ref" HEAD 2>/dev/null || echo "$base_ref")
   old_version=$(git show "$merge_base:$manifest_file" 2>/dev/null | jq -r .version 2>/dev/null)
   new_version=$(jq -r .version "$manifest_file" 2>/dev/null)
+  new_version_re=$(printf '%s' "$new_version" | sed 's/[][\.^$*+?(){}|]/\\&/g')
   if [ -n "$new_version" ] && [ "$new_version" != "null" ] && [ "$old_version" != "$new_version" ] \
-    && git diff -U0 "$base_ref"...HEAD -- "$changelog_file" | grep -q "^+## \[$new_version\]"; then
-    headings=$(grep -m2 '^## \[' "$changelog_file")
-    first=$(printf '%s\n' "$headings" | sed -n 1p)
-    second=$(printf '%s\n' "$headings" | sed -n 2p)
+    && git diff -U0 "$base_ref"...HEAD -- "$changelog_file" | grep -q "^+## \[$new_version_re\]"; then
+    total_lines=$(wc -l < "$changelog_file")
+    heading_lines=$(grep -n '^## \[' "$changelog_file" | cut -d: -f1)
+    h1=$(printf '%s\n' "$heading_lines" | sed -n 1p)
+    h2=$(printf '%s\n' "$heading_lines" | sed -n 2p)
+    h3=$(printf '%s\n' "$heading_lines" | sed -n 3p)
+    [ -n "$h3" ] || h3=$((total_lines + 1))
+    first=$(sed -n "${h1}p" "$changelog_file")
+    second=$(sed -n "${h2:-0}p" "$changelog_file")
     if [ "$first" != "## [Unreleased]" ]; then
       printf '::error::changelog-gate (release mode): first "## [" heading is "%s", not "## [Unreleased]" — keep the empty Unreleased heading above the new version section\n' "${first:-<none>}"
       exit 1
@@ -74,6 +80,48 @@ if command -v jq >/dev/null 2>&1 && [ -f "$manifest_file" ]; then
         exit 1
         ;;
     esac
+    # The Unreleased heading must actually be empty: a content line left
+    # between the two headings is a stranded entry that silently defers
+    # to the release after this one.
+    leftover=$(sed -n "$((h1 + 1)),$((h2 - 1))p" "$changelog_file" | grep -c '[^[:space:]]' || true)
+    if [ "${leftover:-0}" -ne 0 ]; then
+      printf '::error::changelog-gate (release mode): %s content line(s) remain under ## [Unreleased] — the roll-up must leave it empty\n' "$leftover"
+      exit 1
+    fi
+    # The new version's section must actually hold content — a release
+    # that rolls up nothing records nothing. Checked against the file,
+    # not the diff: a pure roll-up displaces the entry lines without
+    # marking them as additions, so only the section's final state is
+    # reliable evidence.
+    section_content=$(sed -n "$((h2 + 1)),$((h3 - 1))p" "$changelog_file" | grep -c '[^[:space:]]' || true)
+    if [ "${section_content:-0}" -eq 0 ]; then
+      printf '::error::changelog-gate (release mode): the ## [%s] section is empty — nothing was rolled up\n' "$new_version"
+      exit 1
+    fi
+    # Previously released sections stay untouched: added content lines
+    # at or below the first prior-release heading rewrite history.
+    outside=$(git diff -U0 "$base_ref"...HEAD -- "$changelog_file" | awk -v limit="$h3" '
+      /^@@ / {
+        match($0, /\+[0-9]+(,[0-9]+)?/)
+        spec = substr($0, RSTART + 1, RLENGTH - 1)
+        split(spec, parts, ",")
+        newline = parts[1] + 0
+        next
+      }
+      /^\+\+\+/ { next }
+      /^---/   { next }
+      /^\+/ {
+        content = substr($0, 2)
+        if (content !~ /^\[[^]]+\]: / && content ~ /[^[:space:]]/ && newline >= limit) print newline ": " content
+        newline++
+        next
+      }
+      /^-/ { next }
+    ')
+    if [ -n "$outside" ]; then
+      printf '::error::changelog-gate (release mode): added lines touch previously released sections (line %s onward):\n%s\n' "$h3" "$outside"
+      exit 1
+    fi
     echo "changelog-placement gate satisfied (release mode): Unreleased rolled up into ## [$new_version] with the manifest bumped to match"
     exit 0
   fi

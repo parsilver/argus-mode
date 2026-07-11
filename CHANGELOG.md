@@ -9,17 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.0] - 2026-07-11
 
-### Fixed
-
-- Two blocking findings from this release's skill review: the
-  model-gate override's evidence brief now carries the rubric
-  source-of-truth pointer (its fifth item, matching the consult
-  contract it borrows), and a consult mid-execution deviation approval
-  is recorded as a plan-comment amendment before execution continues —
-  the comment must describe the plan actually being executed or the
-  resume contract breaks. Ten non-blocking findings are tracked in
-  #52. (#50)
-
 ### Added
 
 - Self-check blind spots closed (development surface, not shipped to
@@ -97,6 +86,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   before new work. The plan-comment lifecycle now records every
   review-gate outcome and its round count, so rework/revise caps
   survive a handoff. (#38)
+
+### Fixed
+
+- Two blocking findings from this release's skill review: the
+  model-gate override's evidence brief now carries the rubric
+  source-of-truth pointer (its fifth item, matching the consult
+  contract it borrows), and a consult mid-execution deviation approval
+  is recorded as a plan-comment amendment before execution continues —
+  the comment must describe the plan actually being executed or the
+  resume contract breaks. Ten non-blocking findings are tracked in
+  #52. (#50)
 
 ## [0.5.1] - 2026-07-10
 

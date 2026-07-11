@@ -143,9 +143,9 @@ field reads as unset while a guessed one reads as decided.
 |---|---|---|
 | Labels | `gh label list` | Map the work's Conventional Commits type onto existing labels (feat → enhancement, fix → bug, docs → documentation). No match → skip; create a label only on the user's ask. |
 | Milestone | `gh api repos/<owner>/<repo>/milestones` | Assign when an open milestone clearly covers the work; otherwise leave empty. |
-| Issue type | Does the repo have types enabled? Try `gh issue create --type` / `gh issue edit` (newer `gh` versions); fall back to GraphQL `updateIssue` with the type id | Set Bug / Feature / Task by the work's nature; neither mechanism available → named degrade. |
+| Issue type | Probe `repository.issueTypes` via GraphQL; null means the repo has no types — an organization-level feature, so user-owned repos always return null and take the named degrade. | Set Bug / Feature / Task by the work's nature: `gh issue create --type` / `gh issue edit --type` (recent `gh`, verified on 2.95.0), or GraphQL `updateIssueIssueType` with the type id; neither available → named degrade. |
 | Projects fields | The board per Project-board sync below; `gh project field-list` for its fields | Status follows the sync table — its mechanics live there, not here. Other fields fill only under the derivable boundary above; fields and options are never created. |
-| Relationships | Native sub-issues (GraphQL `addSubIssue`); issue dependencies where the host supports them | Decomposition slices land as native sub-issues of the parent. Serially merged sub-issues carry blocked-by dependency links when supported — slice N+1 blocked by slice N; unsupported → the ordering stays in the parent checklist and the degrade is named. |
+| Relationships | Native sub-issues via GraphQL `addSubIssue`; issue dependencies via GraphQL `addBlockedBy` / `removeBlockedBy` (`issueId`, `blockingIssueId`) | Decomposition slices land as native sub-issues of the parent. Serially merged sub-issues carry blocked-by dependency links when supported — slice N+1 blocked by slice N; unsupported → the ordering stays in the parent checklist and the degrade is named. |
 
 - Attribution metadata is banned the same way attribution prose is
   (`git-conventions.md`, team voice): a label, milestone, or field

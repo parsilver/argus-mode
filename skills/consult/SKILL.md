@@ -196,6 +196,12 @@ what's proposed — for trigger (c), that is the oracle's debugging
 arbitration: attach the diagnose loop's ledger and expect one directive
 back (next falsification step, plan amendment, or escalate). Apply its
 verdict before continuing — same as checkpoint 1, no override path.
+An approved deviation is recorded as a plan-comment amendment (team
+voice, lexicon check before the edit) before execution continues —
+the checkpoint consult stands in for the checkpoint-1 re-review that
+`/argus-mode:run`'s deviation rule requires, and the comment must
+describe the plan actually being executed or the resume contract
+breaks.
 **Cap:** the same trigger firing a third time on the same stage stops
 execution and escalates to the user with both positions (board →
 Blocked while waiting) — the same bound the plan-review and rework

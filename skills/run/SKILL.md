@@ -29,7 +29,7 @@ Not accepted → **hard stop**. Present exactly these three doors; do not procee
 
 1. Switch model (`/model`) and re-run this skill.
 2. Continue under the consult pipeline instead — offer this; on the user's yes, read `${CLAUDE_PLUGIN_ROOT}/skills/consult/SKILL.md` and follow it in that same turn, carrying the user's original request over so nothing is retyped.
-3. User explicitly replies "proceed anyway" → run on the current model with reduced guarantees. Record the override and the user's stated reason in the final report. Under this override, Stage 5 routes to `argus-oracle` (final-review duty, consult evidence brief: diff as patch text or an on-disk patch file, verbatim Stage 4 command and output, run-time HEAD SHA, produced git-artifact text) instead of `argus-reviewer` — the reviewer's `model: inherit` would grade the gate at the overriding lead's own tier. Record the substitution in the final report.
+3. User explicitly replies "proceed anyway" → run on the current model with reduced guarantees. Record the override and the user's stated reason in the final report. Under this override, Stage 5 routes to `argus-oracle` (final-review duty, consult evidence brief: diff as patch text or an on-disk patch file, verbatim Stage 4 command and output, run-time HEAD SHA, produced git-artifact text, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth) instead of `argus-reviewer` — the reviewer's `model: inherit` would grade the gate at the overriding lead's own tier. Record the substitution in the final report.
 
 Never warn-and-continue past a failed gate silently.
 

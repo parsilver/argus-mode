@@ -97,7 +97,7 @@ for the two that skip the rest of the rubric entirely when missing.
     criteria (item 2) and from the docs the diff touches (item 10). A
     brief that omits the pointer without the "none exists — checked" note
     is itself a plain `revise` asking for it — this is not a precondition refusal,
-    since the file is derivable and the reviewer can find it, and the
+    since the file is derivable and the oracle can find it, and the
     refusal set stays narrow.
 
 Verdict is structured: `approve`, or `revise` with reasons tied to the

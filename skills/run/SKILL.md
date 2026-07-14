@@ -84,6 +84,8 @@ A check that cannot fail ("looks good", "review the code") is not a check — re
 
 **Scout before you plan** (`pipeline.md`): surfaces not read this session get their reconnaissance questions answered first — direct reads or `argus-explorer` — and the plan header records a `Scouted:` line; the oracle checks the plan against it.
 
+**Cost line:** the plan header also carries a per-run cost line — order-of-magnitude, naming the pipeline path (read-only route, full pipeline, or full pipeline plus fan-out) and which model tier pays each expensive step (the plan review, execution, the review gate). It is session-side output, surfaced when the plan is presented and never written into the plan comment (`git-conventions.md`, team voice) — not a git-artifact line. The plan-review gate checks it exists (rubric item 12).
+
 **Planned-file overlap check** (`pipeline.md`): once the plan names its file set and before it goes to the plan-review gate, cross-check that set against every in-flight PR's changed files (`gh pr diff <n> --name-only`); on a planned-file overlap, name the files and the PR and ask the user to sequence or proceed — announce-and-ask, not a gate, so no plan-review rubric item is added. No remote or no `gh` degrades to `git worktree list` plus the local branch inventory, or a named skip. The cross-check stays with the lead — the plan-review reviewer cannot fetch a PR's changed-file list.
 
 **Decomposition test:** a plan past ~5 implementation stages, an expected diff beyond the reviewable bar, or multiple independently shippable outcomes splits into a parent issue with sub-issues — one branch and PR each, merged serially (`pipeline.md`, Decomposition). The oracle checks this at the gate.
@@ -107,6 +109,7 @@ Spawn `argus-oracle` (or, if unavailable, apply this rubric inline per the Agent
 9. Do copied licensed assets carry their license basis and a visibility guard?
 10. Docs stay truthful — the plan names the docs a public-API or behavior change updates, or states none mention the surface (checked, not assumed).
 11. Repo conventions respected — the brief points at the target repo's conventions file (`CLAUDE.md` or equivalent) by absolute path, or states none exists (checked); a plan decision that negates an invariant written there is a `revise` naming the invariant, checked against the file, not assumed. These are the *target* repo's own rules, distinct from the issue's criteria (item 2) and the docs the diff touches (item 10). A missing-but-derivable pointer is itself a plain `revise`, not a precondition refusal.
+12. Cost line present — the plan header carries a per-run cost line (defined at Stage 2) naming the pipeline path and which model tier pays each expensive step, session-side and never written into the plan comment; its absence is a `revise`, not a precondition refusal.
 
 **Precondition refusal:** a plan arriving without failable checks, without a test list for an implementation stage, or without the issue's acceptance criteria attached verbatim, gets an instant `revise` naming the missing precondition — do not attempt a full review of an unreviewable plan.
 

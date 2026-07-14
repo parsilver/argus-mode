@@ -111,6 +111,14 @@ for the two that skip the rest of the rubric entirely when missing.
     is itself a plain `revise` asking for it — this is not a precondition refusal,
     since the file is derivable and the oracle can find it, and the
     refusal set stays narrow.
+12. **Cost line present.** The plan header carries a per-run cost line:
+    order-of-magnitude, naming the pipeline path (read-only route, full
+    pipeline, or full pipeline plus fan-out) and
+    which model tier pays each expensive step — the plan review,
+    execution, and the review gate. It is session-side output, surfaced
+    when the plan is presented and never written into the plan comment
+    (`git-conventions.md`, team voice); its absence is a `revise` asking
+    for it, not a precondition refusal.
 
 Verdict is structured: `approve`, or `revise` with reasons tied to the
 specific rubric item(s) that failed.
@@ -121,7 +129,7 @@ A plan arriving **without failable checks**, **without a test list**
 for an implementation stage, or **without the issue's acceptance
 criteria attached verbatim** (item 2 has nothing to diff against),
 gets an instant `revise` naming the missing precondition — the oracle
-does not attempt items 1–11 above on a plan it cannot actually review.
+does not attempt items 1–12 above on a plan it cannot actually review.
 Reviewing a plan with no way to fail is theater; name the gap and send
 it back.
 

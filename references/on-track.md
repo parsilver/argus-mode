@@ -59,6 +59,24 @@ Count signals, don't estimate remaining context by feel:
   proposal. This overrides the "two or more" count; one authoritative
   warning is sufficient on its own.
 
+## Stated budget
+
+When the request states a budget — a token or cost ceiling, an effort
+cap, a "keep this quick," a spend limit — track consumption against it
+and treat roughly 80 percent as the action line. At ~80% of the stated
+budget, stop and either escalate to the user or hand off (the clean
+handoff below); never continue silently. Revise and rework cycles are
+the usual reason a run nears the ceiling — a run that has already burned
+most of a stated budget on gate cycles does not spend the remainder on
+another; it reports where it stands and asks. Loop-engineering's
+degrade-to-report-only is deliberately replaced with escalation here, to
+hold the same never-silently-degrade contract the rest of the pipeline
+keeps.
+
+- Refusal condition: crossing ~80% of a stated budget and continuing
+  without escalating or handing off is a silent degrade — the contract
+  the whole pipeline holds forbids it.
+
 ## Clean handoff
 
 The pipeline is resumable by construction: the issue, the draft PR, and

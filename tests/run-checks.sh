@@ -361,5 +361,37 @@ grep -q "sensitive-paths list" agents/argus-oracle.md && note "oracle dimension-
 grep -q "sensitive path" skills/run/SKILL.md && note "run skill names the sensitive-path hold trigger" || err "run skill missing the sensitive-path hold trigger"
 grep -q "sensitive path" skills/consult/SKILL.md && note "consult skill names the sensitive-path hold trigger" || err "consult skill missing the sensitive-path hold trigger"
 
+# 16. Per-run cost line + stated-budget threshold (issue #71). The plan header
+#     gains a session-side cost line (order-of-magnitude, the pipeline path and
+#     which model tier pays each expensive step; never written into the plan
+#     comment), a new plan-review item "Cost line present" checks it exists —
+#     added to references/verification.md and mirrored in both skills and
+#     agents/argus-oracle.md's Duty-a list — and references/on-track.md gains a
+#     "Stated budget" section forcing escalate-or-hand-off at ~80% of a stated
+#     budget. Adding the numbered review item bumps check 6's rubric parity
+#     11 -> 12, which also stales two prose self-counts (the verification.md
+#     precondition sentence and the consult review-order count); those are
+#     edited AND guarded here with grep-new-present / grep-old-absent pairs
+#     (check 6 counts list items, not prose, so it cannot see a stale count).
+#     Each assertion greps a contiguous single-line phrase, written before the
+#     doctrine so it fails first (RED) and passes once the text lands. The
+#     old-absent greps err-when-present so they too are RED until the edit lands.
+grep -q "Cost line present" references/verification.md && note "verification.md rubric carries the cost-line item" || err "verification.md rubric missing the cost-line item"
+grep -q "Cost line present" skills/run/SKILL.md && note "run skill Stage 2.5 carries the cost-line rubric item" || err "run skill Stage 2.5 missing the cost-line rubric item"
+grep -q "Cost line present" skills/consult/SKILL.md && note "consult skill Stage 2.5 carries the cost-line rubric item" || err "consult skill Stage 2.5 missing the cost-line rubric item"
+grep -q "Cost line present" agents/argus-oracle.md && note "oracle Duty-a list carries the cost-line rubric item" || err "oracle Duty-a list missing the cost-line rubric item"
+grep -q "which model tier pays each expensive step" references/verification.md && note "verification.md cost-line item names the model-tier detail" || err "verification.md cost-line item missing the model-tier detail"
+grep -q "per-run cost line" skills/run/SKILL.md && note "run skill Stage 2 defines the per-run cost line" || err "run skill Stage 2 missing the per-run cost-line definition"
+grep -q "per-run cost line" skills/consult/SKILL.md && note "consult skill Stage 2 defines the per-run cost line" || err "consult skill Stage 2 missing the per-run cost-line definition"
+grep -q "never written into the plan comment" skills/run/SKILL.md && note "run skill marks the cost line session-side" || err "run skill missing the cost-line session-side rule"
+grep -q "never written into the plan comment" skills/consult/SKILL.md && note "consult skill marks the cost line session-side" || err "consult skill missing the cost-line session-side rule"
+grep -q "## Stated budget" references/on-track.md && note "on-track.md carries the stated-budget section" || err "on-track.md missing the stated-budget section"
+grep -q "roughly 80 percent" references/on-track.md && note "on-track.md sets the ~80% budget threshold" || err "on-track.md missing the ~80% budget threshold"
+grep -q "never continue silently" references/on-track.md && note "on-track.md forces escalate-or-hand-off, never silent" || err "on-track.md missing the never-continue-silently refusal"
+grep -q "items 1–12" references/verification.md && note "verification.md precondition sentence updated to items 1–12" || err "verification.md precondition sentence not updated to items 1–12"
+grep -q "items 1–11 above" references/verification.md && err "verification.md still carries the stale 'items 1–11 above' count" || note "verification.md dropped the stale 'items 1–11 above' count"
+grep -q "twelve-item review order" skills/consult/SKILL.md && note "consult review-order count updated to twelve-item" || err "consult review-order count not updated to twelve-item"
+grep -q "eleven-item review order" skills/consult/SKILL.md && err "consult still carries the stale 'eleven-item review order' count" || note "consult dropped the stale 'eleven-item review order' count"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Verify-to-CI parity and a flake-classification rule
+  (`references/verification.md`, `references/quality.md`,
+  `references/debugging.md`, `agents/argus-reviewer.md`,
+  `agents/argus-oracle.md`, both skills): the verify stage's full-suite
+  evidence — and the reviewer's suite re-run — now names the CI job and
+  command it mirrors, including the install path (a clean install, not a
+  warm local cache), discovered from `.github/workflows` or the repo's
+  documented commands; a mismatch or a repo with no CI config to mirror is
+  a named degradation in the final report, never silent, and it binds the
+  full-suite evidence rather than every per-slice check. A
+  flake-classification rule forbids reaching green by disabling a test,
+  raising a timeout, or a blind re-run without a root cause, and requires a
+  red-then-green rerun be disclosed in the verify evidence, not counted as
+  plain green. The rule reconciles with the debugging loop — nondeterminism
+  in code the diff touches is a debugging event, a pre-existing flake
+  unrelated to the diff is quarantined and escalated to the user, never
+  silently fixed in scope — mirrors into both review agents' dimension-5
+  rows and refusal conditions so the small-model and override delivery gate
+  is not weaker than the full one, and carries a writer-bar mirror in the
+  quality doctrine's TDD principle. (#69)
 - Repo-conventions plan-review check (`references/verification.md`,
   `agents/argus-oracle.md`, both skills): the plan-review gate now reads
   the target repo's own conventions file (its `CLAUDE.md` or equivalent)

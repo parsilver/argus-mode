@@ -55,6 +55,22 @@ ruled in or out.
 - When in doubt, design the single experiment whose outcome makes the
   answer certain, and run that next instead of churning on adjacent runs.
 
+## Flakes and nondeterminism
+
+A flaky failure — red then green on re-run with no code change — is
+triaged before it is fixed, never silenced by disabling the test,
+raising a timeout, or a blind re-run to green.
+
+- Nondeterminism in code the diff touches is a debugging event: run the
+  loop above, root-cause it, and the code fix is legitimate once it has
+  survived falsification (step 3). The flake is the failure to reproduce
+  reliably (step 1) — raise its rate before diagnosing.
+- A pre-existing flake unrelated to the diff is quarantined and escalated
+  to the user — never silently fixed inside an unrelated change's scope,
+  and never presented as a plain green. Disclose the red-then-green rerun
+  in the verify evidence (`verification.md`, dimension 5); it is not the
+  current change's job to fix, only to report.
+
 ## Where this loop hands back to the pipeline
 
 - `on-track.md` still governs: the same failing command never runs a

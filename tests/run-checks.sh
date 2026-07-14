@@ -256,5 +256,44 @@ grep -q "absolute path of the target repo's conventions file" skills/run/SKILL.m
 grep -q "Repo conventions respected" skills/consult/SKILL.md && note "consult skill Stage 2.5 carries the repo-conventions rubric item" || err "consult skill Stage 2.5 missing the repo-conventions rubric item"
 grep -q "absolute path of the target repo's conventions file" skills/consult/SKILL.md && note "consult skill spawn brief names the conventions-file pointer" || err "consult skill spawn brief missing the conventions-file pointer"
 
+# 12a. Verify CI-parity doctrine (issue #69). The verify stage's full-suite
+#      evidence — and the reviewer's suite re-run — names the CI job/command and
+#      install path it mirrors, so a warm-cache green isn't mistaken for CI's
+#      clean-install path; a mismatch or a repo with no CI config to mirror is a
+#      named degradation, never silent. Carried in summary by both skills' verify
+#      stage. Each assertion greps a single-line phrase, written before the
+#      doctrine so it fails first (RED) and passes once the text lands.
+grep -q "the install path CI uses" references/verification.md && note "verification.md binds full-suite evidence to CI's install path" || err "verification.md missing the CI-parity install-path clause"
+grep -q "no CI config to mirror" references/verification.md && note "verification.md names the no-CI-config degradation" || err "verification.md missing the no-CI-config degradation"
+grep -q "the install path CI uses" skills/run/SKILL.md && note "run skill Stage 4 carries the CI-parity summary" || err "run skill Stage 4 missing the CI-parity summary"
+grep -q "the install path CI uses" skills/consult/SKILL.md && note "consult skill Stage 4 carries the CI-parity summary" || err "consult skill Stage 4 missing the CI-parity summary"
+
+# 12b. Flake-classification doctrine (issue #69). A flaky test is not a passing
+#      test: never disable a test, raise a timeout, or blind-rerun to green
+#      without a root cause; a red-then-green rerun is disclosed in the verify
+#      evidence, not counted as plain green. The clause lands in dimension 5 and
+#      the reviewer's refusal conditions, reconciles with references/debugging.md
+#      (touched-code nondeterminism is a debugging event; a pre-existing
+#      unrelated flake is quarantined and escalated to the user), carries a
+#      writer-bar mirror in quality.md principle 5, and mirrors into both review
+#      agents' dimension-5 rows AND both agents' refusal conditions (the
+#      refuse-hook token "name the concealed rerun" is unique to the refusal
+#      limb, so deleting it — in either agent — flips the suite RED independently
+#      of the dim-5 rows). All text rides inside existing numbered items and
+#      table rows, so check 6's parity count stays at 6.
+grep -q "blind-rerun to green" references/verification.md && note "verification.md dimension 5 forbids blind-rerun to green" || err "verification.md dimension 5 missing the blind-rerun-to-green rule"
+grep -q "red-then-green rerun" references/verification.md && note "verification.md dimension 5 discloses a red-then-green rerun" || err "verification.md dimension 5 missing the red-then-green disclosure"
+grep -q "blind-rerun to green" references/quality.md && note "quality.md principle 5 carries the flake writer-bar" || err "quality.md principle 5 missing the flake writer-bar"
+grep -q "pre-existing flake" references/debugging.md && note "debugging.md reconciles the pre-existing-flake case" || err "debugging.md missing the pre-existing-flake reconciliation"
+grep -q "quarantined and escalated" references/debugging.md && note "debugging.md quarantines and escalates an unrelated flake" || err "debugging.md missing the quarantine-and-escalate rule"
+grep -q "blind-rerun to green" agents/argus-reviewer.md && note "reviewer dimension-5 row carries the flake clause" || err "reviewer dimension-5 row missing the flake clause"
+grep -q "not counted as plain green" agents/argus-reviewer.md && note "reviewer dimension-5 row disallows counting a rerun as plain green" || err "reviewer dimension-5 row missing the not-plain-green wording"
+grep -q "name the concealed rerun" agents/argus-reviewer.md && note "reviewer refuse-first precondition carries the flake refusal" || err "reviewer refuse-first precondition missing the flake refusal"
+grep -q "blind-rerun to green" agents/argus-oracle.md && note "oracle dimension-5 row carries the flake clause" || err "oracle dimension-5 row missing the flake clause"
+grep -q "not counted as plain green" agents/argus-oracle.md && note "oracle dimension-5 row disallows counting a rerun as plain green" || err "oracle dimension-5 row missing the not-plain-green wording"
+grep -q "name the concealed rerun" agents/argus-oracle.md && note "oracle Duty-c precondition refusal carries the flake refusal" || err "oracle Duty-c precondition refusal missing the flake refusal"
+grep -q "blind-rerun to green" skills/run/SKILL.md && note "run skill carries the flake summary" || err "run skill missing the flake summary"
+grep -q "blind-rerun to green" skills/consult/SKILL.md && note "consult skill carries the flake summary" || err "consult skill missing the flake summary"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

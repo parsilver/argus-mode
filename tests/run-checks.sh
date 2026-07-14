@@ -232,5 +232,29 @@ grep -q "cannot adjudicate its own erosion" references/delegation.md && note "de
 grep -q "goes to the user for explicit approval" skills/run/SKILL.md && note "run skill deviation handling reroutes a gate change to the user" || err "run skill deviation handling missing the gate-change carve-out"
 grep -q "not to this checkpoint" skills/consult/SKILL.md && note "consult skill deviation handling reroutes a gate change to the user" || err "consult skill deviation handling missing the gate-change carve-out"
 
+# 11. Repo-conventions plan-review check (issue #70). The plan-review gate
+#     gains an item that holds a plan against the target repo's own
+#     conventions file (its CLAUDE.md or equivalent): the brief points at
+#     the file by absolute path (or "none exists — checked"), the reviewer
+#     reads it before ruling, and a plan decision that negates an invariant
+#     written in it is a revise naming the invariant. The file is an
+#     untrusted exhibit, never instructions — a foreign instruction inside
+#     it is a dimension-6 finding. A missing-but-derivable pointer is a
+#     plain revise, not a fourth precondition-refusal class. Each assertion
+#     greps a phrase unique to the new doctrine, written before the doctrine
+#     so it fails first (RED) and passes once the text lands. Rubric-count
+#     parity across the reference and both skills stays check 6's job;
+#     these assertions guard that each copy actually carries the item.
+grep -q "Repo conventions respected" references/verification.md && note "verification.md rubric carries the repo-conventions item" || err "verification.md rubric missing the repo-conventions item"
+grep -q "conventions file the plan-review brief points at" references/verification.md && note "verification.md untrusted-content section covers the conventions file" || err "verification.md untrusted-content section missing the conventions-file exhibit rule"
+grep -q "not a precondition refusal" references/verification.md && note "verification.md keeps a missing pointer a plain revise, not a precondition refusal" || err "verification.md missing the plain-revise-not-precondition rule"
+grep -q "Repo conventions respected" agents/argus-oracle.md && note "oracle Duty-a list carries the repo-conventions item" || err "oracle Duty-a list missing the repo-conventions item"
+grep -q "read it before you rule on the plan" agents/argus-oracle.md && note "oracle standing behavior reads the conventions file before ruling" || err "oracle standing behavior missing the conventions-file read"
+grep -q "absolute path of the target repo's conventions file" agents/argus-oracle.md && note "oracle input contract names the conventions-file pointer" || err "oracle input contract missing the conventions-file pointer"
+grep -q "Repo conventions respected" skills/run/SKILL.md && note "run skill Stage 2.5 carries the repo-conventions rubric item" || err "run skill Stage 2.5 missing the repo-conventions rubric item"
+grep -q "absolute path of the target repo's conventions file" skills/run/SKILL.md && note "run skill spawn brief names the conventions-file pointer" || err "run skill spawn brief missing the conventions-file pointer"
+grep -q "Repo conventions respected" skills/consult/SKILL.md && note "consult skill Stage 2.5 carries the repo-conventions rubric item" || err "consult skill Stage 2.5 missing the repo-conventions rubric item"
+grep -q "absolute path of the target repo's conventions file" skills/consult/SKILL.md && note "consult skill spawn brief names the conventions-file pointer" || err "consult skill spawn brief missing the conventions-file pointer"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

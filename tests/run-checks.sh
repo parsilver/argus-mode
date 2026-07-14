@@ -295,5 +295,20 @@ grep -q "name the concealed rerun" agents/argus-oracle.md && note "oracle Duty-c
 grep -q "blind-rerun to green" skills/run/SKILL.md && note "run skill carries the flake summary" || err "run skill missing the flake summary"
 grep -q "blind-rerun to green" skills/consult/SKILL.md && note "consult skill carries the flake summary" || err "consult skill missing the flake summary"
 
+# 13. Machine-level resource caveat (issue #73). Worktrees isolate files, not
+#     the machine — fixed ports, a shared local DB or compose stack, device
+#     simulators, and global caches are shared across sibling executors and
+#     across concurrent runs, so a verify command binding one while other work
+#     is in flight can go falsely green or red across runs. The isolation
+#     model's closing bullet in references/delegation.md states that boundary
+#     and its refusal condition. The doctrine lives only there — both skills
+#     already point at the isolation model, so no skill edit is made (issue
+#     acceptance criterion 3). Each assertion greps a single-line phrase,
+#     written before the doctrine so it fails first (RED) and passes once the
+#     text lands.
+grep -q "boundary is the working tree" references/delegation.md && note "delegation.md isolation model states its working-tree boundary" || err "delegation.md missing the working-tree boundary caveat"
+grep -q "across concurrent runs" references/delegation.md && note "delegation.md caveat covers concurrent runs, not just sibling executors" || err "delegation.md caveat missing the concurrent-run scope"
+grep -q "concurrently mutating is not evidence" references/delegation.md && note "delegation.md carries the concurrent-mutation refusal condition" || err "delegation.md missing the concurrent-mutation refusal condition"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

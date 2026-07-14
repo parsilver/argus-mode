@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sensitive-path user-acceptance gate (`references/verification.md`,
   `references/pipeline.md`, `references/delegation.md`,
   `agents/argus-implementer.md`, `agents/argus-reviewer.md`,
-  `agents/argus-oracle.md`, both skills): a change whose diff touches a
+  `agents/argus-oracle.md`, both skills, `README.md`): a change whose diff touches a
   sensitive path — auth, payments/billing, secrets/`.env`, CI workflow
   files, DB migrations — routes through the existing user-acceptance hold,
   which now carries two triggers (a perceptual goal, or a touched sensitive

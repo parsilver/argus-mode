@@ -16,6 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   evidence. Covers the no-remote local-merge path against the local default
   branch tip. Generalizes a rule the serial sub-issue merges already applied,
   now on every merge — closing a seam two runs sharing one repository hit.
+- Mechanical in-flight probe at intake (`references/pipeline.md`, both
+  skills): whether a run takes its own worktree is decided by three checks —
+  the primary checkout's HEAD is off the default branch, a non-primary
+  worktree exists, or an open draft PR sits on an issue branch — instead of a
+  judgment call. On any hit the run branches from the remote ref in its own
+  worktree and leaves the shared checkout untouched, so a second run started
+  in the same directory can't re-point it. Intake-time worktree cleanup is
+  limited to already-merged branches.
 
 ## [0.7.0] - 2026-07-11
 

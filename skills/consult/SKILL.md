@@ -82,7 +82,11 @@ metadata dimension the repo has filled per the Issue metadata contract
 values (priority, size, iteration) only when the requester stated
 them, never inferred from the work; attribution metadata never created
 or reused — and added to the repo's project board when one exists →
-branch/worktree → draft PR), the Resume path (a request naming an
+branch, taking an isolated worktree when the mechanical in-flight probe
+fires (HEAD off the default branch, a non-primary worktree, or an open
+draft PR on an `<n>-*` branch) and branching from `origin/<default>` so a
+concurrent run never re-points the shared checkout (`pipeline.md`, git
+intake step 3) → draft PR), the Resume path (a request naming an
 existing issue, PR, or branch adopts the in-flight state instead of
 re-running intake — the branch's commit log outranks the plan comment,
 reconcile first), and the full degradation table. Once the triviality check clears

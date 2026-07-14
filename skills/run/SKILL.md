@@ -63,7 +63,7 @@ the issue is written (`pipeline.md`, Ambiguous ask).
 
 1. `git fetch origin`, fast-forward the default branch.
 2. `gh issue create` describing the work — filling every metadata dimension the repo actually has per `pipeline.md`'s Issue metadata contract (type, labels, milestone, Projects fields, relationships — discover, then apply; judgment values (priority, size, iteration) only when the requester stated them — never inferred from the work; attribution metadata never created or reused) and adding the issue to the repo's project board when one exists (`pipeline.md`, Project-board sync).
-3. Branch via `gh issue develop <n>` (or `git switch -c`). Use an isolated worktree when the tree is dirty or other work is in flight; a clean solo checkout may branch in place.
+3. Branch named `<n>-<slug>`. Run the mechanical in-flight probe (`pipeline.md`, git intake step 3): the primary checkout's HEAD off the default branch, a non-primary `git worktree list` entry, or an open draft PR on an `<n>-*` branch → take an isolated worktree branched from `origin/<default>` (`git worktree add <path> -b <n>-slug origin/<default>`) and never `git switch` or fast-forward the primary checkout; no arm hits → a clean solo checkout takes the branch directly via `gh issue develop <n>` (or `git switch -c`). Each arm has a named degrade.
 4. Empty bootstrap commit, open a **draft** PR with `Closes #<n>` immediately.
 
 Every degraded form — no git repo, no remote at all, remote without `gh`, remote without push rights (fork flow), issues disabled, missing project board, or user opt-out — is defined in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.

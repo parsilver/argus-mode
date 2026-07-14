@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Stale-base merge guard (`references/pipeline.md`, both skills): before any
+  merge, the branch's base is confirmed current — fetched, and rebased with
+  the checks re-run when the default branch has moved past the base the work
+  was verified against, so a green obtained on a stale base is never merge
+  evidence. Covers the no-remote local-merge path against the local default
+  branch tip. Generalizes a rule the serial sub-issue merges already applied,
+  now on every merge — closing a seam two runs sharing one repository hit.
+
 ## [0.7.0] - 2026-07-11
 
 ### Added

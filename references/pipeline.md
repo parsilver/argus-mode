@@ -348,6 +348,21 @@ applies to terminal outcomes, not pauses.
 - Refusal condition: merging over a `rework` or `reject` verdict, or
   skipping the fresh Stage 5 review after a `rework` cycle, is not a
   shortcut — it is the review gate failing to gate.
+- **Merge on a fresh base only.** Before any merge — `ship`,
+  `fix-then-ship` after its re-verify, a subjective-goal merge after the
+  user's acceptance, or the degraded local `git merge --no-ff` — confirm the
+  merge base is current, because a concurrent run can advance the default
+  branch between verification and merge. With a remote: `git fetch origin`,
+  and if `origin/<default>` has moved past the commit the Stage 4 evidence
+  was gathered on, update the branch onto `origin/<default>` (rebase or
+  merge, `--force-with-lease` on the re-push) and re-run the Stage 4 suite
+  there — a green obtained on a stale base is not merge evidence, the rule
+  the decomposition serial-merge step already applies (see Decomposition),
+  now on every merge. On the no-remote path there is no `origin`: run the
+  same check against the local default branch tip — a concurrent worktree
+  sharing this `.git` can advance it — and re-verify if it moved. A conflict
+  resolution that changes the reviewed diff re-enters the Stage 5 review; a
+  conflict-free update re-verifies and merges without a fresh review.
 
 ## Subjective goals — the user holds the acceptance ask
 

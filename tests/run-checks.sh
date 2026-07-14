@@ -180,5 +180,15 @@ else
   fi
 fi
 
+# 8. Concurrent-run safety doctrine (issue #64). The stale-base merge guard
+#    and the in-flight intake probe must each be present in the reference
+#    and carried in summary by both skills. Each assertion greps a phrase
+#    unique to the new doctrine, and is written before the doctrine so it
+#    fails first (RED) and passes once the text lands.
+grep -q "merge base is current" references/pipeline.md && note "pipeline.md carries the stale-base merge guard" || err "pipeline.md missing the stale-base merge guard"
+grep -q "local default branch tip" references/pipeline.md && note "pipeline.md merge guard covers the no-remote path" || err "pipeline.md merge guard missing the no-remote path"
+grep -q "merge base is current" skills/run/SKILL.md && note "run skill carries the merge-base freshness summary" || err "run skill missing the merge-base freshness summary"
+grep -q "merge base is current" skills/consult/SKILL.md && note "consult skill carries the merge-base freshness summary" || err "consult skill missing the merge-base freshness summary"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

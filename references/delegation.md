@@ -145,6 +145,14 @@ commits.
   runs, and tool grants cannot block `git commit` while allowing test
   commands. The lead's serialized verify-then-commit pass is the
   mechanical backstop.
+- **The model's boundary is the working tree.** Worktrees isolate files,
+  not the machine — fixed ports, a shared local database or compose stack,
+  device simulators, and global caches are shared across sibling executors
+  and across concurrent runs. A verify command binding one while other work
+  is in flight is announced; on real contention it is parameterized per run
+  (a port or database suffix) or serialized by the user's choice, never
+  silently assumed exclusive. Refusal condition: a green obtained against a
+  resource another run was concurrently mutating is not evidence.
 
 ## What the lead never delegates
 

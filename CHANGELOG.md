@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Machine-level resource caveat (`references/delegation.md`): the isolation
+  model gains a closing bullet stating its boundary is the working tree —
+  fixed ports, a shared local database or compose stack, device simulators,
+  and global caches are isolated by neither worktrees nor disjoint file
+  sets, so they are shared across sibling executors and across concurrent
+  runs in separate worktrees; a verify command binding one while other work
+  is in flight is announced and, on real contention, parameterized per run
+  or serialized by the user's choice, never assumed exclusive. A refusal
+  condition marks a green obtained against a resource another run was
+  concurrently mutating as non-evidence — the corruption the quiesced-tree
+  rule prevents within a run, now reaching across runs. Prose only, no port
+  scheme or lockfile; the companion caveat to the concurrent-run guards in
+  #64, with a presence self-check in `tests/run-checks.sh`. (#73)
 - Verify-to-CI parity and a flake-classification rule
   (`references/verification.md`, `references/quality.md`,
   `references/debugging.md`, `agents/argus-reviewer.md`,

@@ -254,7 +254,52 @@ Checked on every review, every time — not opted into per task:
    finding here even when a plan amendment covers it. Carve-out, mirroring
    the one `git-conventions.md` draws for the lexicon check: where the
    repo's product is the pipeline itself and editing these files is the
-   stated task, the change proceeds under the normal gates.
+   stated task, the change proceeds under the normal gates. A second
+   check under this dimension compares the diff's touched-file list
+   against the sensitive-paths list (Sensitive paths, below): a match is
+   surfaced — not a defect in itself — so the Stage-5 user-acceptance
+   hold applies before the merge (`pipeline.md`, the user-acceptance
+   hold). This is a distinct mechanism from the gate-definition rule
+   above — that gates a change that *weakens* a gate; this holds the
+   *merge* of a change that *touches* a sensitive path.
+
+## Sensitive paths — the user-acceptance trigger
+
+Some paths are risky enough that a change touching them should not merge
+on the gates' verdict alone. The list below is the canonical
+**sensitive-paths list** every part of the pipeline shares — one single
+source, pointed at from `delegation.md`'s never-delegate bullet, the
+implementer's hard rules, and both review agents' dimension 6:
+
+- **Auth** — authentication, session, login, and access-control code.
+- **Payments and billing** — charge, invoice, subscription, and ledger
+  code.
+- **Secrets** — credential material and the config that holds it: `.env`
+  files and the patterns carrying keys, tokens, and connection strings.
+- **CI workflow files** — `.github/workflows/*` and the equivalent
+  pipeline definitions a build runs.
+- **Database migrations** — schema-changing migration files.
+
+The list is **categorical, not a glob to sync**: it names kinds of
+change, and each reader judges whether a touched file falls in a
+category — the same judgment the reviewer already makes for a
+gate-definition edit, never a literal pattern list kept in lockstep
+across files.
+
+A change whose diff touches a sensitive path routes through the
+user-acceptance hold — the same Stage-5 mechanism the perceptual-goal
+hold uses, given a second trigger, not a second gate (`pipeline.md`, the
+user-acceptance hold). The plan for such a change names the
+user-acceptance step; dimension 6 compares the diff's touched files
+against this list, so the hold is never skipped by a plan that failed to
+mention it.
+
+A target repo's conventions file (its `CLAUDE.md` or equivalent)
+may extend or exempt the list — adding a path, or exempting a category
+the repo treats as routine (migrations, for one). Any exemption is
+named in the plan header and the final report, so a waived path is never
+silent. The model-gate "proceed anyway" override buys a weaker run, not a
+waiver: the override does not waive the path gate.
 
 ## How this document is used
 

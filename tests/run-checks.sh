@@ -335,5 +335,31 @@ grep -q "planned-file overlap" skills/run/SKILL.md && note "run skill carries th
 grep -q "announce in-flight work" skills/consult/SKILL.md && note "consult skill carries the in-flight announce summary" || err "consult skill missing the in-flight announce summary"
 grep -q "planned-file overlap" skills/consult/SKILL.md && note "consult skill carries the planned-file overlap summary" || err "consult skill missing the planned-file overlap summary"
 
+# 15. Sensitive-path user-acceptance gate (issue #68). A change whose diff
+#     touches a sensitive path (auth, payments/billing, secrets/.env, CI
+#     workflow files, DB migrations) routes through the existing
+#     user-acceptance hold — the perceptual-goal hold generalized to two
+#     triggers, one hold mechanism, not a new gate. The canonical list lives
+#     in references/verification.md as the single source; delegation.md's
+#     never-delegate bullet, the implementer, and both review agents point at
+#     it; review dimension 6 compares the diff's touched files against it; a
+#     repo's CLAUDE.md may extend or exempt the list, and the model-gate
+#     override does not waive it. No rubric item or dimension is added, so
+#     check 6's parity counts stay at 11 and 6. Each assertion greps a phrase
+#     unique to the doctrine, written before the doctrine so it fails first
+#     (RED) and passes once the text lands.
+grep -q "## Sensitive paths" references/verification.md && note "verification.md carries the canonical sensitive-paths section" || err "verification.md missing the canonical sensitive-paths section"
+grep -q "override does not waive" references/verification.md && note "verification.md states the model-gate override does not waive the path gate" || err "verification.md missing the override-does-not-waive note"
+grep -q "may extend or exempt" references/verification.md && note "verification.md lets a repo's conventions file extend or exempt the list" || err "verification.md missing the extend-or-exempt allowance"
+grep -q "against the sensitive-paths list" references/verification.md && note "verification.md dimension 6 compares touched files against the list" || err "verification.md dimension 6 missing the touched-file comparison"
+grep -q "two triggers" references/pipeline.md && note "pipeline.md generalizes the hold to two triggers" || err "pipeline.md missing the two-trigger hold"
+grep -q "sensitive path" references/pipeline.md && note "pipeline.md names the sensitive-path trigger on the hold" || err "pipeline.md missing the sensitive-path trigger"
+grep -q "sensitive-paths list" references/delegation.md && note "delegation.md never-delegate bullet points at the sensitive-paths list" || err "delegation.md missing the sensitive-paths-list pointer"
+grep -q "categorical STOP" agents/argus-implementer.md && note "implementer hard rules carry the categorical sensitive-path stop" || err "implementer missing the categorical sensitive-path stop"
+grep -q "sensitive-paths list" agents/argus-reviewer.md && note "reviewer dimension-6 row points at the sensitive-paths list" || err "reviewer dimension-6 row missing the sensitive-paths-list pointer"
+grep -q "sensitive-paths list" agents/argus-oracle.md && note "oracle dimension-6 row points at the sensitive-paths list" || err "oracle dimension-6 row missing the sensitive-paths-list pointer"
+grep -q "sensitive path" skills/run/SKILL.md && note "run skill names the sensitive-path hold trigger" || err "run skill missing the sensitive-path hold trigger"
+grep -q "sensitive path" skills/consult/SKILL.md && note "consult skill names the sensitive-path hold trigger" || err "consult skill missing the sensitive-path hold trigger"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

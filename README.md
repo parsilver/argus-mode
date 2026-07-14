@@ -96,7 +96,7 @@ comment is running without the skill — see below.
 4. **Plan review gate** — `argus-oracle` reviews goal-backward, simpler-alternative pass first; verdict `approve` or `revise`.
 5. **Execute** — TDD red → green → refactor, solo or fanned out to `argus-implementer`/`argus-explorer`; the lead verifies and commits every slice.
 6. **Verify** — run the real build/test/lint commands; GREEN evidence required before any "done" claim.
-7. **Review & deliver** — `argus-reviewer` (or the oracle, in consult mode) runs the 6-dimension gate; verdict `ship / fix-then-ship / rework / reject` maps to merge, fix-and-merge, rework, or stop. Subjective/visual goals additionally hold the merge for the user's explicit acceptance of the posted comparison evidence.
+7. **Review & deliver** — `argus-reviewer` (or the oracle, in consult mode) runs the 6-dimension gate; verdict `ship / fix-then-ship / rework / reject` maps to merge, fix-and-merge, rework, or stop. A user-acceptance hold fires on either of two triggers — a subjective/visual goal, or a change whose diff touches a sensitive path (auth, payments/billing, secrets/`.env`, CI workflow files, DB migrations) — readying the PR and posting evidence, then holding the merge for the user's explicit acceptance.
 
 ## Agents
 

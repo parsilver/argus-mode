@@ -230,6 +230,13 @@ Checked on every review, every time — not opted into per task:
    little changed — anti-correlated with the goal; rewriting the specs
    against the new surface is the default, and keeping old specs as a
    constraint needs an explicit justification in the plan.
+   A flaky test is not a passing test: never disable a test, raise a
+   timeout, or blind-rerun to green without a root cause. A
+   red-then-green rerun — a suite that goes red then green on re-run
+   with no code change — is disclosed in the verify evidence, not
+   counted as plain green. Nondeterminism in code the diff touches is a
+   debugging event (`debugging.md`); a pre-existing flake unrelated to
+   the diff is quarantined and escalated, never silently fixed in scope.
 6. **Security.** Injection surfaces, authorization seams, secrets in the
    diff, unsafe defaults — checked on every review, not only on tasks
    labeled "security." Gate-definition edits are a security surface of

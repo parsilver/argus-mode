@@ -269,7 +269,9 @@ including the install path CI uses — a clean dependency install, not a
 warm local cache; a mismatch, or a repo with no CI config to mirror, is a
 named degradation in the final report, never silent (`verification.md`,
 what a failable check is). This binds the full-suite run and the oracle's
-audited suite re-run, not every per-slice check.
+audited suite re-run, not every per-slice check. A red-then-green rerun
+with no code change is disclosed in that evidence, never presented as
+plain green.
 
 One consult-specific requirement: **capture the exact command and its
 full output verbatim.** Checkpoint 3 hands this to the oracle instead of
@@ -298,7 +300,8 @@ holding the identical bar:
   names), architecture fit, pattern justification, test quality (tests
   that can actually fail — on a rebuild or redesign, an old
   markup-coupled suite staying green needs an explicit plan-level
-  justification), security.
+  justification; no reaching green by disabling a test, raising a
+  timeout, or a blind-rerun to green), security.
 - Same operating rules: end-to-end tracing beyond the diff, no
   rubber-stamps ("LGTM" is not an output — report what was traced and
   checked), every finding cites `file:line`, report format is

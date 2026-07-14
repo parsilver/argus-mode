@@ -159,7 +159,7 @@ The marker is session-only — printed here, never posted to GitHub. The plan-co
 
 Run the actual build/test/lint commands and read the output. GREEN evidence is required before any "done / fixed / passing" claim. A red check is reported as red — never merged over, never rationalized away.
 
-The full-suite evidence names which CI job and command it mirrors, including the install path CI uses — a clean dependency install, not a warm local cache; a mismatch, or a repo with no CI config to mirror, is a named degradation in the final report, never silent (`verification.md`, what a failable check is). This binds the full-suite run and the reviewer's suite re-run, not every per-slice check.
+The full-suite evidence names which CI job and command it mirrors, including the install path CI uses — a clean dependency install, not a warm local cache; a mismatch, or a repo with no CI config to mirror, is a named degradation in the final report, never silent (`verification.md`, what a failable check is). This binds the full-suite run and the reviewer's suite re-run, not every per-slice check. A red-then-green rerun with no code change is disclosed in that evidence, never presented as plain green.
 
 A red check that resists one obvious correction is a debugging event, not a retry event: **read `${CLAUDE_PLUGIN_ROOT}/references/debugging.md` now** and run the diagnose loop (reproduce → fail path → falsify → ledger) before any further attempt. If a `debug-mantra` skill is installed in the session, invoke it instead (domain routing, `references/delegation.md`).
 
@@ -175,7 +175,7 @@ Review dimensions (rubric shared with `quality.md`):
 2. **Readability** — docblocks present, truthful, and free of filler prose on all public API; names communicate intent.
 3. **Architecture fit** — boundaries respected; single responsibility.
 4. **Pattern justification** — patterns earn their complexity.
-5. **Test quality** — tests can actually fail; no tautologies.
+5. **Test quality** — tests can actually fail; no tautologies; no reaching green by disabling a test, raising a timeout, or a blind-rerun to green (a red-then-green rerun is disclosed, not counted as plain green).
 6. **Security** — injection surfaces, authz seams, secrets in the diff, unsafe defaults. Checked on every review, not only "security tasks".
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` now** for the reviewer operating rules: end-to-end, not diff-local (trace the call graph through the unchanged code around the diff — bugs hide at the seams); no rubber-stamps ("LGTM" is not an output — report what was traced and what was checked); every finding cites `file:line`; report format per finding is **Finding / Why it matters / Evidence / Suggested change**, ordered by severity.

@@ -46,6 +46,9 @@ code exists; the refactor leg is a planned step, not an afterthought.
 
 - Refusal condition: implementation code written before its test exists
   is a stop-and-return-to-the-test-list event, not a style preference.
+- Refusal condition: green reached by disabling a test, raising a
+  timeout, or a blind-rerun to green is not a real green — a flaky suite
+  is root-caused, not silenced.
 
 ## 6. Secure by default
 

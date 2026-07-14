@@ -96,8 +96,11 @@ commits, issues, and PRs land on shared repos and are read by developers
 with zero session context; the conventions are part of the deliverable,
 not decoration.
 
-1. `git fetch origin`, then fast-forward the default branch to origin —
-   branch off the latest, not a stale local copy.
+1. `git fetch origin`. The branch base is `origin/<default>` — the latest,
+   not a stale local copy. Fast-forward the local default branch to it only
+   when this run branches in place (see the in-flight probe in step 3); when
+   the run takes its own worktree it branches straight off `origin/<default>`
+   and never touches the primary checkout's ref.
 2. Create a GitHub issue describing the work: `gh issue create` — title
    and description per `git-conventions.md` (failable acceptance
    criteria; bugs carry expected/actual, repro steps, verbatim
@@ -105,11 +108,28 @@ not decoration.
    the Issue metadata contract below: discover, then apply; never
    invent.
 3. Branch — named `<issue-number>-<short-kebab-slug>`:
-   - `gh issue develop <n>` (or `git switch -c` if `gh issue develop`
-     isn't available).
-   - Use an isolated git worktree whenever the working tree is dirty OR
-     other work is in flight.
-   - A clean solo checkout may branch in place — no worktree needed.
+   - **In-flight probe — mechanical, not a judgment call.** Other work is in
+     flight when any of these holds: the primary checkout's HEAD is not on
+     the default branch, `git worktree list` shows a non-primary worktree, or
+     `gh pr list --state open` shows a draft PR on an `<n>-*` branch. The
+     HEAD-off-default arm may false-positive on a repo where the user parks
+     on a branch — acceptable, because it fails toward taking a worktree, the
+     safe direction.
+   - **Any arm hits → this run takes its own worktree,** branched off the
+     remote ref: `git worktree add <path> -b <n>-slug origin/<default>`. It
+     never runs `git switch` or a fast-forward inside the primary checkout —
+     a second run that does silently re-points the shared checkout out from
+     under the first, whose next build or commit then lands on the wrong
+     branch. (`git fetch origin <default>:<default>` refuses whenever the
+     default branch is checked out in any worktree, so the local-ref
+     fast-forward in step 1 is only for the no-in-flight case; skip it with a
+     note otherwise — `origin/<default>` is the base regardless.)
+   - **No arm hits → a clean solo checkout** may branch in place with
+     `gh issue develop <n>` (or `git switch -c` if `gh issue develop` isn't
+     available), no worktree needed.
+   - Each arm has a named degrade: no `gh` or no remote skips the draft-PR
+     arm (named in the final report, not silent); the HEAD-off-default and
+     `git worktree list` arms still decide.
 4. Bootstrap the PR immediately, before writing any implementation code:
    - Create an empty bootstrap commit.
    - Open a **draft** PR with `Closes #<n>` on the first line of the
@@ -331,6 +351,11 @@ applies to terminal outcomes, not pauses.
   behind turns the next intake's "other work in flight" check into a
   false positive — cleanup is part of delivering, not housekeeping to
   skip.
+- Intake-time orphan hygiene covers only worktrees whose branches are
+  already merged into the default branch. A non-merged worktree is a live
+  concurrent run the in-flight probe (step 3) is meant to detect — never
+  flagged for cleanup at intake; its removal stays here, on a
+  user-confirmed abandonment.
 
 ## Stage 5 — Verdict → action mapping
 
@@ -348,6 +373,23 @@ applies to terminal outcomes, not pauses.
 - Refusal condition: merging over a `rework` or `reject` verdict, or
   skipping the fresh Stage 5 review after a `rework` cycle, is not a
   shortcut — it is the review gate failing to gate.
+- **Merge on a fresh base only.** Before any merge — `ship`,
+  `fix-then-ship` after its re-verify, a subjective-goal merge after the
+  user's acceptance, or the degraded local `git merge --no-ff` — confirm the
+  merge base is current, because a concurrent run can advance the default
+  branch between verification and merge. With a remote: `git fetch origin`,
+  and if `origin/<default>` has moved past the commit the Stage 4 evidence
+  was gathered on, update the branch onto `origin/<default>` (rebase or
+  merge, `--force-with-lease` on the re-push) and re-run the Stage 4 suite
+  there — a green obtained on a stale base is not merge evidence, the rule
+  the decomposition serial-merge step already applies (see Decomposition),
+  now on every merge. On the no-remote path there is no `origin`: compare
+  against the local default branch tip — a concurrent worktree sharing this
+  `.git` can advance it — and if it moved, update the branch onto that tip
+  (rebase or merge, no `origin` and no force-push) and re-run the Stage 4
+  suite there before merging. A conflict resolution that changes the reviewed
+  diff re-enters the Stage 5 review; a conflict-free update re-verifies and
+  merges without a fresh review.
 
 ## Subjective goals — the user holds the acceptance ask
 

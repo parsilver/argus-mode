@@ -82,7 +82,11 @@ metadata dimension the repo has filled per the Issue metadata contract
 values (priority, size, iteration) only when the requester stated
 them, never inferred from the work; attribution metadata never created
 or reused — and added to the repo's project board when one exists →
-branch/worktree → draft PR), the Resume path (a request naming an
+branch, taking an isolated worktree when the mechanical in-flight probe
+fires (HEAD off the default branch, a non-primary worktree, or an open
+draft PR on an `<n>-*` branch) and branching from `origin/<default>` so a
+concurrent run never re-points the shared checkout (`pipeline.md`, git
+intake step 3) → draft PR), the Resume path (a request naming an
 existing issue, PR, or branch adopts the in-flight state instead of
 re-running intake — the branch's commit log outranks the plan comment,
 reconcile first), and the full degradation table. Once the triviality check clears
@@ -317,8 +321,11 @@ missing artifact text, or stale/ambiguous output is an instant refusal
 naming the gap: the oracle never reviews blind, and never audits
 evidence it can't trust.
 
-On `ship` / `fix-then-ship`: update the PR description's "How it was
-verified" section with the Stage 4 command and its result — PR text in
+On `ship` / `fix-then-ship`: first confirm the merge base is current — per
+`pipeline.md`'s "Merge on a fresh base only", fetch, and if the default
+branch moved past the base the Stage 4 evidence was gathered on, update the
+branch and re-run Stage 4 before merging. Then update the PR description's
+"How it was verified" section with the Stage 4 command and its result — PR text in
 the team voice per `git-conventions.md` — flip the draft PR to ready,
 merge — issue auto-closes (degraded modes per `pipeline.md`'s table —
 a local `git merge --no-ff` only when no remote exists at all). Set

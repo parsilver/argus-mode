@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Per-run cost line and budget escalation threshold
+  (`references/verification.md`, `references/on-track.md`, both skills,
+  `agents/argus-oracle.md`, `README.md`): the plan header now carries a
+  session-side per-run cost line — order-of-magnitude, naming the pipeline
+  path (read-only route, full pipeline, or full pipeline plus fan-out) and
+  which model tier pays each expensive step — surfaced when the plan is
+  presented and never written into the plan comment. A new "Cost line
+  present" item in the plan-review list checks it exists, added to
+  `references/verification.md` and mirrored in both skills and the
+  oracle's copy, so the rubric parity count moves 11 → 12. `on-track.md`
+  gains a "Stated budget" section: when the request states a budget,
+  crossing roughly 80 percent of it forces escalate-or-hand-off rather
+  than silent continuation. The qualitative tier story in the README and
+  skill intros is unchanged and not duplicated into a new reference file;
+  a presence self-check in `tests/run-checks.sh` guards the new item, its
+  copies, the cost-line definition, the budget threshold, and the two
+  review-order counts the parity bump updates. (#71)
 - Sensitive-path user-acceptance gate (`references/verification.md`,
   `references/pipeline.md`, `references/delegation.md`,
   `agents/argus-implementer.md`, `agents/argus-reviewer.md`,

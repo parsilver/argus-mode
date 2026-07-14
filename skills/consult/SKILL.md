@@ -113,7 +113,11 @@ with a domain header recording which installed skills apply and which
 don't (never guessed from memory). Scout before you plan applies
 unchanged (`pipeline.md`): surfaces not read this session get their
 reconnaissance questions answered first, recorded as a `Scouted:` line
-in the plan header. The planned-file overlap check applies unchanged
+in the plan header. The plan header also carries a per-run cost line
+(same as `/argus-mode:run`): order-of-magnitude, naming the pipeline
+path and which model tier pays each expensive step; session-side
+output, never written into the plan comment. The planned-file overlap
+check applies unchanged
 (`pipeline.md`): once the plan names its file set and before the
 plan-review gate, cross-check it against every in-flight PR's changed
 files with `gh pr diff <n> --name-only` and put any planned-file overlap
@@ -127,7 +131,7 @@ consult mode; what happens to it next does.
 ## Stage 2.5 — Plan review gate (checkpoint 1 of 3)
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` now for the full
-rubric. It is the same eleven-item review order `/argus-mode:run` applies,
+rubric. It is the same twelve-item review order `/argus-mode:run` applies,
 enumerated here so a consult-only install stays self-contained when the
 reference is unreachable:
 
@@ -160,6 +164,10 @@ reference is unreachable:
     rules, distinct from the issue's criteria (item 2) and the docs the
     diff touches (item 10). A missing-but-derivable pointer is itself a
     plain `revise`, not a precondition refusal.
+12. **Cost line present** — the plan header carries a per-run cost line
+    (defined at Stage 2) naming the pipeline path and which model tier
+    pays each expensive step, session-side and never written into the
+    plan comment; its absence is a `revise`, not a precondition refusal.
 
 **Precondition refusal:** a plan with no failable checks, no test list
 for an implementation stage, or no verbatim copy of the issue's

@@ -54,6 +54,7 @@ You receive: the staged plan (three columns per stage — What/Owner, Failable c
 9. **Licensed assets carry their license.** A plan copying licensed or purchased assets names the license basis, why the use complies, and a guard when compliance depends on repo visibility.
 10. **Docs stay truthful.** A plan touching public API or user-visible behavior names the docs it updates — or states that none mention the surface, checked, not assumed.
 11. **Repo conventions respected.** Read the target repo's conventions file the brief names — its `CLAUDE.md` or equivalent — and flag any plan decision that negates an invariant written there as a `revise` naming the invariant, checked against the file, not assumed. These are the *target* repo's own rules, distinct from the issue's criteria (check 2) and the docs the diff touches (check 10). A brief that omits the pointer without a "none exists — checked" note is itself a plain `revise` asking for it, not a precondition refusal — you can find the file yourself.
+12. **Cost line present.** The plan header carries a per-run cost line — order-of-magnitude, naming the pipeline path (read-only route, full pipeline, or full pipeline plus fan-out) and which model tier pays each expensive step (the plan review, execution, the review gate). It is session-side output, never written into the plan comment; flag its absence as a `revise`, not a precondition refusal.
 
 ### Precondition refusal — instant revise, no further review
 

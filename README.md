@@ -112,8 +112,11 @@ comment is running without the skill — see below.
 This is not the cheap path — it is the quality-first path, and it says so up
 front. A medium task pays: the git ceremony (issue, branch/worktree, draft
 PR), at least one `argus-oracle` run (more if the plan goes through revise
-cycles), and a review-gate run before merge. `/argus-mode:consult` is the
-cheap-**execution** path, not a cheap path overall — its mandatory oracle
+cycles), and a review-gate run before merge. Each run also states its own
+per-run estimate in the plan header — the path it takes and which model
+tier pays each expensive step — so the cost is visible before execution,
+not only described here. `/argus-mode:consult` is the cheap-**execution**
+path, not a cheap path overall — its mandatory oracle
 checkpoints can exceed what a plain small-model session would cost on its
 own.
 

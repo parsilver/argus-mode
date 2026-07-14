@@ -383,11 +383,13 @@ applies to terminal outcomes, not pauses.
   merge, `--force-with-lease` on the re-push) and re-run the Stage 4 suite
   there — a green obtained on a stale base is not merge evidence, the rule
   the decomposition serial-merge step already applies (see Decomposition),
-  now on every merge. On the no-remote path there is no `origin`: run the
-  same check against the local default branch tip — a concurrent worktree
-  sharing this `.git` can advance it — and re-verify if it moved. A conflict
-  resolution that changes the reviewed diff re-enters the Stage 5 review; a
-  conflict-free update re-verifies and merges without a fresh review.
+  now on every merge. On the no-remote path there is no `origin`: compare
+  against the local default branch tip — a concurrent worktree sharing this
+  `.git` can advance it — and if it moved, update the branch onto that tip
+  (rebase or merge, no `origin` and no force-push) and re-run the Stage 4
+  suite there before merging. A conflict resolution that changes the reviewed
+  diff re-enters the Stage 5 review; a conflict-free update re-verifies and
+  merges without a fresh review.
 
 ## Subjective goals — the user holds the acceptance ask
 

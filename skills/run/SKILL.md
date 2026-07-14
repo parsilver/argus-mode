@@ -66,6 +66,8 @@ the issue is written (`pipeline.md`, Ambiguous ask).
 3. Branch named `<n>-<slug>`. Run the mechanical in-flight probe (`pipeline.md`, git intake step 3): the primary checkout's HEAD off the default branch, a non-primary `git worktree list` entry, or an open draft PR on an `<n>-*` branch → take an isolated worktree branched from `origin/<default>` (`git worktree add <path> -b <n>-slug origin/<default>`) and never `git switch` or fast-forward the primary checkout; no arm hits → a clean solo checkout takes the branch directly via `gh issue develop <n>` (or `git switch -c`). Each arm has a named degrade.
 4. Empty bootstrap commit, open a **draft** PR with `Closes #<n>` immediately.
 
+**Announce in-flight work** (`pipeline.md`, Announce in-flight work at intake): when the step-3 probe or the Resume check finds an open PR or worktree for a task other than this run's, announce in-flight work in-session (`in flight: #12, worktree ../repo-12`) before planning — session-only output, the same treatment as the stage-transition marker, never a git artifact.
+
 Every degraded form — no git repo, no remote at all, remote without `gh`, remote without push rights (fork flow), issues disabled, missing project board, or user opt-out — is defined in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Apply the matching one and **name it in the final report**. Never silently skip a step.
 
 ## Stage 2 — Plan
@@ -81,6 +83,8 @@ Write the plan as a task list, one row per stage, three columns filled for every
 A check that cannot fail ("looks good", "review the code") is not a check — rewrite it before moving on.
 
 **Scout before you plan** (`pipeline.md`): surfaces not read this session get their reconnaissance questions answered first — direct reads or `argus-explorer` — and the plan header records a `Scouted:` line; the oracle checks the plan against it.
+
+**Planned-file overlap check** (`pipeline.md`): once the plan names its file set and before it goes to the plan-review gate, cross-check that set against every in-flight PR's changed files (`gh pr diff <n> --name-only`); on a planned-file overlap, name the files and the PR and ask the user to sequence or proceed — announce-and-ask, not a gate, so no plan-review rubric item is added. No remote or no `gh` degrades to `git worktree list` plus the local branch inventory, or a named skip. The cross-check stays with the lead — the plan-review reviewer cannot fetch a PR's changed-file list.
 
 **Decomposition test:** a plan past ~5 implementation stages, an expected diff beyond the reviewable bar, or multiple independently shippable outcomes splits into a parent issue with sub-issues — one branch and PR each, merged serially (`pipeline.md`, Decomposition). The oracle checks this at the gate.
 

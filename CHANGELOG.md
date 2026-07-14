@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- In-flight announce and planned-file overlap check
+  (`references/pipeline.md`, both skills): the intake in-flight probe already
+  inventories other tasks' open PRs and worktrees to decide
+  worktree-versus-in-place; it now announces that inventory in-session when it
+  holds work for another task (`in flight: #12, worktree ../repo-12`) —
+  session-only output, the same treatment as the stage-transition marker,
+  never a git artifact. At the plan stage, the plan's named file set is
+  cross-checked against every in-flight PR's changed files
+  (`gh pr diff <n> --name-only`) and any overlap is put to the user to
+  sequence or proceed before the plan-review gate — announce-and-ask, not a
+  gate and no plan-review rubric item added, because a plan under-names its
+  files and command side effects never appear, so the signal is too
+  incomplete to gate on. No remote or no `gh` degrades to `git worktree list`
+  plus the local branch inventory, or a named skip; the cross-check stays with
+  the lead, since the plan-review reviewer cannot fetch a PR's changed-file
+  list. A presence self-check in `tests/run-checks.sh` guards the reference
+  and both skills. (#72)
 - Machine-level resource caveat (`references/delegation.md`): the isolation
   model gains a closing bullet stating its boundary is the working tree —
   fixed ports, a shared local database or compose stack, device simulators,

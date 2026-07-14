@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Sensitive-path user-acceptance gate (`references/verification.md`,
+  `references/pipeline.md`, `references/delegation.md`,
+  `agents/argus-implementer.md`, `agents/argus-reviewer.md`,
+  `agents/argus-oracle.md`, both skills): a change whose diff touches a
+  sensitive path — auth, payments/billing, secrets/`.env`, CI workflow
+  files, DB migrations — routes through the existing user-acceptance hold,
+  which now carries two triggers (a perceptual goal, or a touched sensitive
+  path) rather than one, so an auth or CI rewrite cannot merge on the
+  gates' verdict alone. The canonical sensitive-paths list lives in
+  `references/verification.md` as the single source; `delegation.md`'s
+  never-delegate bullet, the implementer's hard rules, and both review
+  agents' dimension 6 point at it. Review dimension 6 compares the diff's
+  touched files against the list and surfaces a match so the hold applies;
+  the implementer gains a categorical stop-and-report; a target repo's
+  `CLAUDE.md` may extend or exempt the list (an exemption named in the plan
+  header and the final report), and the model-gate "proceed anyway"
+  override does not waive it. The list is categorical prose, not a glob to
+  sync, and complements the gate-definition-edit rule rather than
+  duplicating it: that guards a change weakening a gate, this holds the
+  merge of a change touching a sensitive path. No plan-review rubric item
+  and no review dimension is added, so the parity counts stay at 11 and 6;
+  a presence self-check in `tests/run-checks.sh` guards the reference, both
+  skills, and both review agents. (#68)
 - In-flight announce and planned-file overlap check
   (`references/pipeline.md`, both skills): the intake in-flight probe already
   inventories other tasks' open PRs and worktrees to decide

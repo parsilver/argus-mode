@@ -167,7 +167,12 @@ These stay with the lead, always, regardless of how routine they look:
 - **Verification sign-off** — declaring a check GREEN is the lead's claim,
   made against output the lead has read.
 - **Merge** — flipping the PR and merging.
-- **Security-sensitive edits** — auth, secrets, injection-surface code.
+- **Security-sensitive edits** — auth, secrets, injection-surface code,
+  and the rest of the sensitive-paths list (`verification.md`, Sensitive
+  paths, is the single source). A change touching a sensitive path also
+  routes through the user-acceptance hold at merge (`pipeline.md`, the
+  user-acceptance hold) — the lead readies it and waits for the user's
+  yes, never merging on the gates' verdict alone.
 
 ## Gate-definition edits are user-gated, not lead-gated
 

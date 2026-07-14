@@ -432,8 +432,8 @@ applies to terminal outcomes, not pauses.
   skipping the fresh Stage 5 review after a `rework` cycle, is not a
   shortcut — it is the review gate failing to gate.
 - **Merge on a fresh base only.** Before any merge — `ship`,
-  `fix-then-ship` after its re-verify, a subjective-goal merge after the
-  user's acceptance, or the degraded local `git merge --no-ff` — confirm the
+  `fix-then-ship` after its re-verify, a user-acceptance-hold merge after
+  the user's acceptance, or the degraded local `git merge --no-ff` — confirm the
   merge base is current, because a concurrent run can advance the default
   branch between verification and merge. With a remote: `git fetch origin`,
   and if `origin/<default>` has moved past the commit the Stage 4 evidence
@@ -449,16 +449,30 @@ applies to terminal outcomes, not pauses.
   diff re-enters the Stage 5 review; a conflict-free update re-verifies and
   merges without a fresh review.
 
-## Subjective goals — the user holds the acceptance ask
+## The user-acceptance hold — two triggers
 
-When the goal is perceptual — visual fidelity to a reference, look and
-feel, "reads like X" — a merging verdict (`ship`, or `fix-then-ship`
-once its fixes are in and re-verified) readies the PR and posts the
-comparison evidence (per-surface screenshots against the named
-reference, light and dark where schemes exist), but does not merge.
-The merge waits for the user's explicit yes at the acceptance ask: a
-diff-reading review cannot judge what the user will see, and the model
-does not grade "looks right" on the user's behalf.
+Some merges are the user's call, not the gates'. The user-acceptance
+hold is one Stage-5 mechanism with **two triggers**: a merging verdict
+(`ship`, or `fix-then-ship` once its fixes are in and re-verified)
+readies the PR and posts evidence, but does not merge — the merge waits
+for the user's explicit yes at the acceptance ask. It is one hold, not a
+new gate per trigger, and a diff-reading review cannot stand in for the
+user at either.
+
+**Trigger 1 — a perceptual goal.** When the goal is visual fidelity to a
+reference, look and feel, "reads like X", the evidence posted is the
+comparison artifact: per-surface screenshots against the named
+reference, light and dark where schemes exist. The model does not grade
+"looks right" on the user's behalf.
+
+**Trigger 2 — the diff touches a sensitive path.** When the change
+touches a sensitive path — auth, payments/billing, secrets/`.env`, CI
+workflow files, DB migrations, the canonical list in `verification.md`
+(Sensitive paths) — the evidence posted is the readied PR itself: which
+sensitive paths the diff touched, plus the Stage-4 command and its
+output. Dimension 6 surfaces the touched path at the review, and the
+plan for such a change names this user-acceptance step. An auth or CI
+rewrite does not merge on the gates' verdict alone.
 
 - A rejection at the acceptance ask returns the work to Stage 3 on the
   same branch. Each such cycle re-runs Stage 4 and the Stage 5 review
@@ -470,9 +484,13 @@ does not grade "looks right" on the user's behalf.
   new information — is a loop signal (`on-track.md`): stop, lay out
   what each cycle tried and what changed, and ask for direction
   instead of churning.
-- Refusal condition: merging a subjective-goal PR on the reviewer's
-  verdict alone — `ship` or `fix-then-ship` — without the user's
-  acceptance repeats the failure this rule exists to prevent: the gate
+- A sensitive-path exemption declared in the target repo's conventions
+  file (`verification.md`, Sensitive paths) lifts trigger 2 for that
+  path, and is named in the plan header and the final report; the
+  model-gate "proceed anyway" override never lifts it.
+- Refusal condition: merging on the reviewer's verdict alone — `ship` or
+  `fix-then-ship` — when either trigger fired, without the user's
+  acceptance, repeats the failure this rule exists to prevent: the gate
   that mattered would run after the merge.
 
 ## A check that cannot run fails its stage

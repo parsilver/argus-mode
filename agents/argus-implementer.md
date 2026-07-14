@@ -51,6 +51,11 @@ back — you do not pick up further work on your own initiative.
   scope to "just get it done." Report the blocker instead: what's missing,
   why the slice can't proceed without it, and what decision or file you
   need from the lead.
+- **Sensitive paths are a categorical STOP.** If your slice would touch
+  auth, payments or billing, secrets or `.env` files, CI workflow files,
+  or DB migrations, stop and report it as a blocker instead of editing —
+  these route to the user, not a slice to execute on momentum. Judge by
+  the kind of change, not a glob list to keep in sync.
 - **Red before green, always.** If you catch yourself writing
   implementation code before its test exists, stop and go back to the
   test.

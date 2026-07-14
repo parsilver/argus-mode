@@ -3,8 +3,9 @@
 The git/GitHub mechanics shared by both skills: how work enters the repo
 (Stage 1), how the plan stays durable and visible (Stage 2.5 onward), what
 degrades when the platform doesn't cooperate, and how a Stage 5 verdict
-turns into an action. Read this file at Stage 1, apply its scout step
-and decomposition test at Stage 2, and read it again at Stage 5.
+turns into an action. Read this file at Stage 1, apply its scout step,
+planned-file overlap check, and decomposition test at Stage 2, and read it
+again at Stage 5.
 
 ## Stage 1 — Triviality escape hatch (run this first)
 
@@ -145,6 +146,24 @@ not decoration.
   `fix-then-ship` verdict (see the mapping below) — never before the
   review gate.
 
+## Announce in-flight work at intake
+
+The in-flight probe (git intake step 3) and the Resume check both inventory
+the repo's open PRs and worktrees — the probe to decide
+worktree-versus-in-place, Resume to decide adopt-versus-create. When that
+inventory holds work for a task other than this run's — an open PR on
+another issue's branch, or a worktree checked out to one — say so in-session
+before planning, naming what was found: `in flight: #12, worktree ../repo-12`.
+The announcement is session-only output, printed for the user and never
+written to a git artifact — the same treatment as the stage-transition
+marker (`on-track.md`). It is context, not a gate: it neither blocks intake
+nor changes the worktree decision the probe already made, and the plan stage
+turns it into a concrete file check (see the planned-file overlap check).
+
+- Refusal condition: an inventory that surfaced another task's PR or worktree
+  and went unspoken leaves the user to discover the concurrent run at merge
+  time — the announcement is part of intake, not an optional courtesy.
+
 ## Issue metadata — fill what the repo has, invent nothing
 
 One discovery pass at intake, five dimensions. Fill each by meaning; a
@@ -230,6 +249,39 @@ checks the plan against this record (`verification.md`).
 - Refusal condition: a plan header with no `Scouted:` record on a
   surface the lead first opened this run is unreviewable optimism —
   the plan review sends it back.
+
+## Planned-file overlap check
+
+Two concurrent runs on different tasks can plan edits to the same file and
+discover the collision only at merge time — after a plan review and a full
+execution were already spent on the colliding plan. Once the plan names its
+file set (Stage 2) and before it goes to the plan-review gate, cross-check
+that set against every in-flight PR's changed files. For each open PR the
+intake probe found, run
+`gh pr diff <n> --name-only` and intersect its output with the plan's file
+set. On an intersection, name the overlapping files and the PR they belong
+to, and ask the user to sequence the runs or proceed — resolved before the
+plan-review gate runs, not a new gate of its own.
+
+It is **announce-and-ask, not a gate**, and deliberately so: it adds no
+plan-review rubric item and no reviewer duty. The check is best-effort — a
+plan under-names the files it will touch, and command side effects
+(lockfiles, generated artifacts) never appear in a plan's file set — so a
+clean result is not proof of no collision, only the absence of a named one.
+A gate cannot stand on a signal this incomplete; a surfaced overlap the user
+gets to act on can.
+
+- Delegation boundary: the cross-check stays with the lead. The plan-review
+  reviewer cannot fetch GitHub content — an in-flight PR's changed-file list
+  included — so it belongs to the lead at the plan stage, never the
+  plan-review gate.
+- Degradation: no remote or no `gh` means the PR registry is unavailable.
+  Fall back to `git worktree list` plus the local `<n>-*` branch inventory
+  for the in-flight file sets, or skip the overlap check and name the skip
+  in the final report — never a silent skip.
+- Refusal condition: a file overlap the check surfaced and did not put to
+  the user is a silent skip — the whole point of announce-and-ask is that
+  the user, not the pipeline, decides whether to sequence or proceed.
 
 ## Decomposition — the big-work counterpart of the triviality hatch
 

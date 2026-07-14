@@ -310,5 +310,30 @@ grep -q "boundary is the working tree" references/delegation.md && note "delegat
 grep -q "across concurrent runs" references/delegation.md && note "delegation.md caveat covers concurrent runs, not just sibling executors" || err "delegation.md caveat missing the concurrent-run scope"
 grep -q "concurrently mutating is not evidence" references/delegation.md && note "delegation.md carries the concurrent-mutation refusal condition" || err "delegation.md missing the concurrent-mutation refusal condition"
 
+# 14. In-flight announce + planned-file overlap doctrine (issue #72). The
+#     intake probe already inventories other tasks' PRs and worktrees to decide
+#     worktree-vs-in-place; it now also announces that inventory in-session
+#     (session-only, the same treatment as the stage-transition marker, never a
+#     git artifact), and the plan stage cross-checks its named file set against
+#     in-flight PRs' changed files (gh pr diff <n> --name-only), putting any
+#     overlap to the user before the plan-review gate — announce-and-ask, not a
+#     gate (a plan under-names files and command side effects never appear),
+#     with a no-remote/no-gh degradation. Source of truth in
+#     references/pipeline.md, summarised in both skills. Each assertion greps a
+#     phrase unique to the new doctrine, written before the doctrine so it fails
+#     first (RED) and passes once the text lands. The overlap check lands as
+#     Stage-2 (plan) doctrine, not a Stage-2.5 rubric item, so check 6's parity
+#     count stays at 11.
+grep -q "Announce in-flight work at intake" references/pipeline.md && note "pipeline.md carries the in-flight announce section" || err "pipeline.md missing the in-flight announce section"
+grep -q "in flight: #12, worktree ../repo-12" references/pipeline.md && note "pipeline.md carries the in-flight announce example" || err "pipeline.md missing the in-flight announce example"
+grep -q "Planned-file overlap check" references/pipeline.md && note "pipeline.md carries the planned-file overlap section" || err "pipeline.md missing the planned-file overlap section"
+grep -q "gh pr diff <n> --name-only" references/pipeline.md && note "pipeline.md names the overlap cross-check command" || err "pipeline.md missing the overlap cross-check command"
+grep -q "announce-and-ask, not a gate" references/pipeline.md && note "pipeline.md frames the overlap check as announce-and-ask, not a gate" || err "pipeline.md missing the announce-and-ask-not-a-gate framing"
+grep -q "PR registry is unavailable" references/pipeline.md && note "pipeline.md carries the overlap-check degradation" || err "pipeline.md missing the overlap-check degradation"
+grep -q "announce in-flight work" skills/run/SKILL.md && note "run skill carries the in-flight announce summary" || err "run skill missing the in-flight announce summary"
+grep -q "planned-file overlap" skills/run/SKILL.md && note "run skill carries the planned-file overlap summary" || err "run skill missing the planned-file overlap summary"
+grep -q "announce in-flight work" skills/consult/SKILL.md && note "consult skill carries the in-flight announce summary" || err "consult skill missing the in-flight announce summary"
+grep -q "planned-file overlap" skills/consult/SKILL.md && note "consult skill carries the planned-file overlap summary" || err "consult skill missing the planned-file overlap summary"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

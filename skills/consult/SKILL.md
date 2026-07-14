@@ -89,7 +89,11 @@ concurrent run never re-points the shared checkout (`pipeline.md`, git
 intake step 3) → draft PR), the Resume path (a request naming an
 existing issue, PR, or branch adopts the in-flight state instead of
 re-running intake — the branch's commit log outranks the plan comment,
-reconcile first), and the full degradation table. Once the triviality check clears
+reconcile first), and the full degradation table. The intake step must
+**announce in-flight work** for another task in-session when the probe or the
+Resume check finds an open PR or worktree for it (`in flight: #12, worktree
+../repo-12`) — session-only, never a git artifact (`pipeline.md`, Announce
+in-flight work at intake). Once the triviality check clears
 and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
 and recite the creed verbatim, once — never before the check, never again
 mid-pipeline. Nothing about intake changes in consult mode — same escape
@@ -109,7 +113,13 @@ with a domain header recording which installed skills apply and which
 don't (never guessed from memory). Scout before you plan applies
 unchanged (`pipeline.md`): surfaces not read this session get their
 reconnaissance questions answered first, recorded as a `Scouted:` line
-in the plan header. The decomposition test applies
+in the plan header. The planned-file overlap check applies unchanged
+(`pipeline.md`): once the plan names its file set and before the
+plan-review gate, cross-check it against every in-flight PR's changed
+files with `gh pr diff <n> --name-only` and put any planned-file overlap
+to the user to sequence or proceed — announce-and-ask, not a gate, no
+rubric item added; no remote or no `gh` degrades to `git worktree list`
+plus the local branch inventory, or a named skip. The decomposition test applies
 unchanged (`pipeline.md`): an oversized plan splits into a parent
 issue with sub-issues, one PR each. The plan's shape doesn't change in
 consult mode; what happens to it next does.

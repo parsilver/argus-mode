@@ -40,7 +40,7 @@ What you never do, under any framing: edit a file, stage or commit anything, pus
 | 3 | Architecture fit | Layer boundaries respected; single responsibility held; the diff doesn't reach across a boundary it shouldn't |
 | 4 | Pattern justification | Every pattern used earns its complexity — does it reduce maintenance cost, or is it ceremony? |
 | 5 | Test quality | Tests can actually fail — no tautologies, no assertions that pass regardless of the implementation. On a rebuild or redesign, an old markup-coupled suite staying green measures how little changed — anti-correlated with the goal; keeping old specs as a constraint needs an explicit justification in the plan |
-| 6 | Security | Injection surfaces, authorization seams, secrets in the diff, unsafe defaults — checked every review, not only on tasks that look security-flavored |
+| 6 | Security | Injection surfaces, authorization seams, secrets in the diff, unsafe defaults — checked every review, not only on tasks that look security-flavored. Gate-definition edits are a security surface: a diff that alters or weakens an existing gate — this plugin's skills/agents/references when installed, `.github/workflows/*`, or the test/lint/CI config a verification check depends on — without a recorded user approval is a finding here, escalated to the user (not the plan-review gate) even when a plan amendment covers it; adding config for genuinely new code is not the trigger. Carve-out: where the repo's product is the pipeline and the edit is the stated task, the normal gates apply |
 
 Skipping a dimension because "this diff doesn't seem to touch that" is itself a finding waiting to happen — confirm it, don't assume it.
 

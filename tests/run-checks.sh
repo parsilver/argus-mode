@@ -210,5 +210,27 @@ grep -q "attempt count on the plan comment" skills/run/SKILL.md && note "run ski
 grep -q "attempt count on the plan comment" skills/consult/SKILL.md && note "consult skill names the attempt-count record" || err "consult skill missing the attempt-count record"
 grep -q "the check ran twice, same failure" tests/fixtures/clean.md && note "clean fixture guards the attempt example wording" || err "clean fixture missing the attempt example wording"
 
+# 10. Gate-definition edit guard (issue #67). A mid-run edit that alters or
+#     weakens an existing gate — this plugin's own skills/agents/references
+#     when it is installed against another repo, the repo's
+#     .github/workflows/*, or the test/lint/CI config a verification check
+#     depends on — needs explicit user approval and escalates to the user,
+#     not the plan-review gate. Detection lives in review dimension 6
+#     (references/verification.md, mirrored in both review agents);
+#     prevention lives in references/delegation.md and both skills'
+#     deviation handling. Each assertion greps a phrase unique to the
+#     doctrine, written before the doctrine so it fails first (RED) and
+#     passes once the text lands.
+grep -q "Gate-definition edits are a security surface" references/verification.md && note "verification.md dimension 6 carries the gate-definition edit guard" || err "verification.md dimension 6 missing the gate-definition edit guard"
+grep -q "adjudicated by the very gate it weakens" references/verification.md && note "verification.md names the plan-gate self-adjudication loophole" || err "verification.md missing the plan-gate self-adjudication loophole"
+grep -q "adding a test or lint config for genuinely new code" references/verification.md && note "verification.md scopes the trigger to altering an existing gate" || err "verification.md missing the new-config-is-not-the-trigger scoping"
+grep -q "proceeds under the normal gates" references/verification.md && note "verification.md carries the pipeline-is-the-product carve-out" || err "verification.md missing the pipeline-is-the-product carve-out"
+grep -q "Gate-definition edits are a security surface" agents/argus-reviewer.md && note "reviewer dimension-6 row mirrors the gate-definition edit guard" || err "reviewer dimension-6 row missing the gate-definition edit guard"
+grep -q "Gate-definition edits are a security surface" agents/argus-oracle.md && note "oracle dimension-6 row mirrors the gate-definition edit guard" || err "oracle dimension-6 row missing the gate-definition edit guard"
+grep -q "user-gated, not lead-gated" references/delegation.md && note "delegation.md carries the lead-behavior gate-definition rule" || err "delegation.md missing the lead-behavior gate-definition rule"
+grep -q "routes through the plan-review gate" references/delegation.md && note "delegation.md names the user as escalation target, not the plan gate" || err "delegation.md missing the user-not-plan-gate escalation target"
+grep -q "goes to the user for explicit approval" skills/run/SKILL.md && note "run skill deviation handling reroutes a gate change to the user" || err "run skill deviation handling missing the gate-change carve-out"
+grep -q "not to this checkpoint" skills/consult/SKILL.md && note "consult skill deviation handling reroutes a gate change to the user" || err "consult skill deviation handling missing the gate-change carve-out"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

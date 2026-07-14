@@ -195,7 +195,12 @@ of re-running intake:
    update, so diff the ticked items against
    `git log <default-branch>..HEAD` first — tick what the commits
    prove done, append the missing evidence, then enter at the first
-   genuinely open item.
+   genuinely open item. The attempt cap is the one exception, because a
+   failed attempt produces no commit for the log to outrank:
+   adopt the recorded attempt count as-is, never zeroing it as
+   unverifiable. A count that is stale-high only trips the retry bound
+   earlier — the safe direction — so over-adopting costs nothing the
+   escalation does not already permit.
 4. An approved plan whose content is unchanged is not re-reviewed on
    resume; a plan the resuming session changes re-enters the plan
    review gate before execution continues.
@@ -299,7 +304,8 @@ edit.
 |---|---|
 | Stage 2.5 oracle verdict = `approve` | Post the plan as an issue comment headed "Implementation plan": the stages as a `- [ ]` task list, each item named (never numbered by pipeline stage), each carrying its done-check as `command → expected result`; design decisions with their reasons; long coordination detail folded into `<details>`. Mirror a link to it in the draft PR description. |
 | Every stage completion, Stage 3 onward | Tick the finished item's checkbox and append its evidence as `command → result`. Status words for anything not checkbox-shaped: done / in progress / blocked. |
-| Stage 5 verdict received (and any plan re-review after it) | Before acting on the verdict, append the outcome in team voice — what the review found, in one line, and the running round count ("code review round 2 of 2: two findings, fixing"). Rework and revise caps survive a handoff only when the comment carries the count. |
+| A stage's check fails a second time on the same failure (`on-track.md` two-failure signal; `/argus-mode:consult` trigger (c)) | Record the running attempt count and one line per attempt as `command → result`, anchored to the failure — not deferred to the next stage boundary, since a session dying mid-stage never reaches one. Plain prose, lexicon-clean: "the check ran twice, same failure: `<command → result>`". This is the retry bound's durable trace; a resumed run reads it back instead of restarting from zero. |
+| Stage 5 verdict received (and any plan re-review after it) | Before acting on the verdict, append the outcome in team voice — what the review found, in one line, and the running round count ("code review round 2 of 2: two findings, fixing"). Rework and revise caps survive a handoff only when the comment carries the count — the two-failure attempt count the same way (see the retry-bound row above). |
 | Mid-pipeline handoff | Comment reflects state at the moment of handoff; a fresh session resumes via the Resume path above — the branch's commit log outranks the comment, so the resuming session reconciles first. |
 
 - Commit SHAs cited in the comment stop resolving on the default

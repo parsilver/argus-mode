@@ -15,3 +15,5 @@ Stage 2 of the rollout begins Monday; stage 3 depends on the audit.
 Code review found two issues; both fixed and re-verified.
 
 Plan revised once in design review before work started.
+
+Recorded before changing approach: the check ran twice, same failure: bash tests/run-checks.sh exit 1 both runs.

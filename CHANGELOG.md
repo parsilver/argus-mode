@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Durable two-failure attempt cap (`references/pipeline.md`,
+  `references/on-track.md`, `references/debugging.md`, both skills): the
+  running count of same-failure retries is recorded on the plan comment at
+  the second failure — anchored to the failure, not the next stage boundary,
+  since a session dying mid-stage never reaches one — one line per attempt as
+  `command → result`. A new plan-comment lifecycle row carries it alongside
+  the rework/revise round counts, and Resume adopts the recorded count as-is:
+  a failed attempt leaves no commit, so the count is the one datum the commit
+  log cannot verify, and zeroing it on resume would restart the grind the
+  retry bound exists to stop. The recorded phrasing stays plain prose that
+  clears the lexicon check.
 - Stale-base merge guard (`references/pipeline.md`, both skills): before any
   merge, the branch's base is confirmed current — fetched, and rebased with
   the checks re-run when the default branch has moved past the base the work

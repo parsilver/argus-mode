@@ -224,8 +224,11 @@ firings per stage, never fresh pairs of failures.
 A red failable check also starts the diagnose loop in
 `${CLAUDE_PLUGIN_ROOT}/references/debugging.md` (or the `debug-mantra`
 skill when installed) — run it from the **first** failure; when trigger
-(c) fires on the second, bring the loop's ledger to the oracle rather
-than attempting a third run.
+(c) fires on the second, record the running attempt count on the plan comment
+(one line per attempt as `command → result`, so a resumed run reads the
+firings back rather than restarting from zero — `pipeline.md`, plan-comment
+lifecycle) and bring the loop's ledger to the oracle rather than attempting
+a third run.
 
 **Slice acceptance stays mechanical.** The lead runs each slice's failable
 check against its written acceptance criteria and confirms the output —

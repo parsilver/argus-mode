@@ -194,5 +194,21 @@ grep -q "in-flight probe" skills/run/SKILL.md && note "run skill names the in-fl
 grep -q "branch in place" skills/run/SKILL.md && err "run skill still carries the bare judgment-call worktree wording ('branch in place')" || note "run skill dropped the bare judgment-call worktree wording"
 grep -q "in-flight probe" skills/consult/SKILL.md && note "consult skill names the in-flight probe" || err "consult skill missing the in-flight probe"
 
+# 9. Attempt-cap persistence doctrine (issue #66). A run that dies after two
+#    identical failures leaves no commit — a failed attempt produces none — so
+#    the two-failure attempt count is durable only on the plan comment. Each
+#    assertion greps a phrase unique to the new doctrine, written before the
+#    doctrine so it fails first (RED) and passes once the text lands. The
+#    example wording also lands in the clean lexicon fixture (check 1), which
+#    guards that the recorded phrasing stays free of the banned token.
+grep -q "the check ran twice, same failure" references/pipeline.md && note "pipeline.md carries the plain-prose attempt example" || err "pipeline.md missing the plain-prose attempt example"
+grep -q "two-failure attempt count" references/pipeline.md && note "pipeline.md extends the handoff-count sentence to the attempt cap" || err "pipeline.md handoff-count sentence not extended to the attempt cap"
+grep -q "adopt the recorded attempt count" references/pipeline.md && note "pipeline.md Resume adopts the attempt count as recorded" || err "pipeline.md Resume does not adopt the attempt count as recorded"
+grep -q "attempt count on the plan comment" references/on-track.md && note "on-track.md records the attempt count at the second failure" || err "on-track.md missing the attempt-count record"
+grep -q "one line per attempt" references/debugging.md && note "debugging.md records one line per attempt as evidence" || err "debugging.md missing the per-attempt evidence record"
+grep -q "attempt count on the plan comment" skills/run/SKILL.md && note "run skill names the attempt-count record" || err "run skill missing the attempt-count record"
+grep -q "attempt count on the plan comment" skills/consult/SKILL.md && note "consult skill names the attempt-count record" || err "consult skill missing the attempt-count record"
+grep -q "the check ran twice, same failure" tests/fixtures/clean.md && note "clean fixture guards the attempt example wording" || err "clean fixture missing the attempt example wording"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

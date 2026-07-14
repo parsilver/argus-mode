@@ -20,7 +20,12 @@ Break action: stop, state the blocker in one sentence, then take a
 
 - Refusal condition: never run the same failing command a third time.
   Two identical failures mean change approach or ask — a third run is
-  stalling, not diagnosis.
+  stalling, not diagnosis. At that second failure, record the running
+  attempt count on the plan comment — one line per attempt as
+  `command → result` — before changing approach, anchored to the
+  failure rather than the next stage boundary, so the retry bound
+  survives a resume instead of restarting from zero (`pipeline.md`,
+  plan-comment lifecycle).
 
 ## Edit hygiene
 

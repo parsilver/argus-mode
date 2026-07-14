@@ -136,7 +136,7 @@ Verdict is structured: `approve` or `revise` + reasons. A response lacking exact
 
 - Caught writing implementation code before its test exists → stop, return to the plan's test list.
 - Caught claiming progress without running a check → stop, run the stage's failable check.
-- About to re-run the same failing command a third time → stop, change approach or ask the user.
+- About to re-run the same failing command a third time → stop, change approach or ask the user. At the second identical failure, first record the running attempt count on the plan comment (one line per attempt as `command → result`) so the retry bound survives a resume (`pipeline.md`, plan-comment lifecycle).
 
 ### Deviation from the approved plan
 

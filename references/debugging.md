@@ -64,6 +64,9 @@ ruled in or out.
   rule — because a stage's failable check failing twice is checkpoint-2
   trigger (c), and the ledger must already exist when it fires. Bring
   the ledger to `argus-oracle` instead of attempting a third run.
+  Record one line per attempt on the plan comment as `command → result`
+  (`pipeline.md`, plan-comment lifecycle) so a resumed consult arrives
+  with the prior runs as evidence, not evidence-free.
 - The fix, once found, is implementation work: it re-enters the pipeline
   (its test first, then the fix, then Stage 4 evidence). The diagnose
   loop ends at the root cause, not at the merge.

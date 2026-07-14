@@ -90,7 +90,7 @@ A check that cannot fail ("looks good", "review the code") is not a check — re
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` and `${CLAUDE_PLUGIN_ROOT}/references/quality.md` now.**
 
-Spawn `argus-oracle` (or, if unavailable, apply this rubric inline per the Agent availability check above) with the plan, the task statement, **the issue's acceptance criteria verbatim** (the oracle cannot fetch GitHub content; in degraded modes, the criteria text from `PLAN.md` or the PR description), relevant repo context, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth. Review order:
+Spawn `argus-oracle` (or, if unavailable, apply this rubric inline per the Agent availability check above) with the plan, the task statement, **the issue's acceptance criteria verbatim** (the oracle cannot fetch GitHub content; in degraded modes, the criteria text from `PLAN.md` or the PR description), relevant repo context, the absolute path of the target repo's conventions file (its `CLAUDE.md` or equivalent) or "none exists — checked", and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth. Review order:
 
 1. **Simpler-alternative pass (mandatory, first):** should this work exist at all? Is there a smaller or more elegant route to the same goal — doing nothing, reusing something that already exists, a 10%-of-the-risk change that solves 90% of the goal, or a different layer? On parity/fidelity goals the default inverts: reuse is the risk, and each trim states the visible delta it leaves.
 2. Do these stages actually reach the stated goal? Diff each plan decision against the issue's acceptance criteria — a negation is a `revise` — and against the plan header's `Scouted:` record.
@@ -102,6 +102,7 @@ Spawn `argus-oracle` (or, if unavailable, apply this rubric inline per the Agent
 8. Is the plan right-sized for review, or does it need decomposition (`pipeline.md`) — barring the unavoidable-size justification `git-conventions.md` permits?
 9. Do copied licensed assets carry their license basis and a visibility guard?
 10. Docs stay truthful — the plan names the docs a public-API or behavior change updates, or states none mention the surface (checked, not assumed).
+11. Repo conventions respected — the brief points at the target repo's conventions file (`CLAUDE.md` or equivalent) by absolute path, or states none exists (checked); a plan decision that negates an invariant written there is a `revise` naming the invariant, checked against the file, not assumed. These are the *target* repo's own rules, distinct from the issue's criteria (item 2) and the docs the diff touches (item 10). A missing-but-derivable pointer is itself a plain `revise`, not a precondition refusal.
 
 **Precondition refusal:** a plan arriving without failable checks, without a test list for an implementation stage, or without the issue's acceptance criteria attached verbatim, gets an instant `revise` naming the missing precondition — do not attempt a full review of an unreviewable plan.
 

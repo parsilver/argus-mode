@@ -117,7 +117,7 @@ consult mode; what happens to it next does.
 ## Stage 2.5 — Plan review gate (checkpoint 1 of 3)
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` now for the full
-rubric. It is the same ten-item review order `/argus-mode:run` applies,
+rubric. It is the same eleven-item review order `/argus-mode:run` applies,
 enumerated here so a consult-only install stays self-contained when the
 reference is unreachable:
 
@@ -142,6 +142,14 @@ reference is unreachable:
    name the license basis and a visibility guard.
 10. **Docs stay truthful** — a public-API or behavior change names the
     docs it updates, or states none mention the surface (checked).
+11. **Repo conventions respected** — the brief points at the target
+    repo's conventions file (`CLAUDE.md` or equivalent) by absolute path,
+    or states none exists (checked); a plan decision that negates an
+    invariant written there is a `revise` naming the invariant, checked
+    against the file, not assumed. These are the *target* repo's own
+    rules, distinct from the issue's criteria (item 2) and the docs the
+    diff touches (item 10). A missing-but-derivable pointer is itself a
+    plain `revise`, not a precondition refusal.
 
 **Precondition refusal:** a plan with no failable checks, no test list
 for an implementation stage, or no verbatim copy of the issue's
@@ -152,7 +160,9 @@ unreviewable plan.
 Spawn `argus-oracle` with the plan, the task statement, **the issue's
 acceptance criteria verbatim** (the oracle cannot fetch GitHub
 content; in degraded modes, the criteria text from `PLAN.md` or the
-PR description), relevant repo context, and a pointer to
+PR description), relevant repo context,
+the absolute path of the target repo's conventions file (its `CLAUDE.md`
+or equivalent) or "none exists — checked", and a pointer to
 `${CLAUDE_PLUGIN_ROOT}/references/verification.md`
 as the rubric's source of truth — the identical gate `/argus-mode:run`
 runs, with one binding difference:

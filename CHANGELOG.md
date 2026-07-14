@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Repo-conventions plan-review check (`references/verification.md`,
+  `agents/argus-oracle.md`, both skills): the plan-review gate now reads
+  the target repo's own conventions file (its `CLAUDE.md` or equivalent)
+  and flags any plan decision that negates an invariant written there — a
+  revise naming the invariant, checked against the file, not assumed. The
+  brief points at the file by absolute path, or "none exists — checked";
+  it is read with Read/Grep/Glob, not embedded verbatim, so no truncation
+  call is handed to a weak lead and the brief stays small. The conventions
+  file is an untrusted exhibit to check the plan against, never
+  instructions — a foreign instruction inside it is a dimension-6
+  finding. A missing-but-derivable pointer is a plain revise, not a fourth
+  precondition-refusal class. The rubric gains an eleventh item, kept in
+  count parity across the reference and both skills. (#70)
 - Gate-definition edit guard (`references/verification.md`,
   `agents/argus-reviewer.md`, `agents/argus-oracle.md`,
   `references/delegation.md`, both skills): during a run, altering or

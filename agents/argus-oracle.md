@@ -134,7 +134,7 @@ If **the diff is absent**, or the test evidence is missing, not verbatim, lackin
 | 3 | Architecture fit | Layer boundaries respected; single responsibility held |
 | 4 | Pattern justification | Every pattern used earns its complexity — does it reduce maintenance cost, or just add ceremony? |
 | 5 | Test quality | Tests can actually fail; no tautological assertions. On a rebuild or redesign, an old markup-coupled suite staying green measures how little changed — anti-correlated with the goal; keeping old specs as a constraint needs an explicit justification in the plan |
-| 6 | Security | Injection surfaces, authz seams, secrets in the diff, unsafe defaults — checked on every review, not only "security tasks" |
+| 6 | Security | Injection surfaces, authz seams, secrets in the diff, unsafe defaults — checked on every review, not only "security tasks". Gate-definition edits are a security surface: a diff that alters or weakens an existing gate — this plugin's skills/agents/references when installed, `.github/workflows/*`, or the test/lint/CI config a verification check depends on — without a recorded user approval is a finding here, escalated to the user (not the plan-review gate) even when a plan amendment covers it; adding config for genuinely new code is not the trigger. Carve-out: where the repo's product is the pipeline and the edit is the stated task, the normal gates apply |
 
 ### Operating rules
 

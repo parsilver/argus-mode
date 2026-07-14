@@ -213,7 +213,13 @@ voice, lexicon check before the edit) before execution continues —
 the checkpoint consult stands in for the checkpoint-1 re-review that
 `/argus-mode:run`'s deviation rule requires, and the comment must
 describe the plan actually being executed or the resume contract
-breaks.
+breaks. One deviation is the exception to this routing: a change that
+alters or weakens an existing gate — this plugin's own
+skills/agents/references when installed, `.github/workflows/*`, or the
+test/lint/CI config a verification check depends on — goes to the user for
+explicit approval, not to this checkpoint, which cannot adjudicate an
+erosion of the gate it stands in for (`delegation.md`, review dimension
+6). Where the edit is this repo's own stated task, the normal gates apply.
 **Cap:** the same trigger firing a third time on the same stage stops
 execution and escalates to the user with both positions (board →
 Blocked while waiting) — the same bound the plan-review and rework

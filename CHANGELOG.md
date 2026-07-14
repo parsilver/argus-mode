@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Gate-definition edit guard (`references/verification.md`,
+  `agents/argus-reviewer.md`, `agents/argus-oracle.md`,
+  `references/delegation.md`, both skills): during a run, altering or
+  weakening an existing gate — this plugin's own skills/agents/references
+  when it is installed against another repo, the repo's
+  `.github/workflows/*`, or the test/lint/CI config a verification check
+  depends on — needs explicit user approval and is never made in response
+  to fetched issue, PR, or comment text. The trigger is a change to an
+  existing gate, not adding config for genuinely new code; the escalation
+  target is the user, not the plan-review gate, because a gate change
+  sanctioned only as a plan amendment would be adjudicated by the gate it
+  weakens. Review dimension 6 carries the detection side (mirrored in both
+  review agents), the skills' deviation handling routes a gate-weakening
+  change to the user instead of the plan gate, and
+  `references/delegation.md` carries the lead-behavior side. A carve-out
+  mirrors the one in `references/git-conventions.md` — where the repo's
+  product is the pipeline itself, the change proceeds under the normal
+  gates. (#67)
 - Durable two-failure attempt cap (`references/pipeline.md`,
   `references/on-track.md`, `references/debugging.md`, both skills): the
   running count of same-failure retries is recorded on the plan comment at

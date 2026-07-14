@@ -21,6 +21,18 @@ read — not eyeballed, not assumed.
   disagreeing reviewer could point at. "Screenshots exist" is an
   eyeball, not a check; "screenshot of each page against the matching
   reference page, attached to the PR" is one.
+- **Full-suite evidence names the CI it mirrors.** A "the suite passes"
+  claim on the full run — and the reviewer's suite re-run — names the CI
+  job and command it mirrors, and the install path CI uses: a green
+  obtained from a warm local dependency cache is not evidence for CI's
+  clean install path unless the two run the same install. Discover the
+  command from `.github/workflows`, or the repo's documented build and
+  test commands. A local run whose install path differs from CI's, or a
+  repo with no CI config to mirror, is a named degradation in the final
+  report — never a silent one. Reproducing heavy CI locally (matrix
+  builds, containers) is not required: the closest runnable equivalent,
+  explicitly named, is the bar. This binds the full-suite evidence and
+  the reviewer's suite re-run, not every per-slice check.
 - Refusal condition: any claim of "done", "fixed", or "passing" that is
   not backed by a command that was actually run, plus its actual output,
   is rejected on sight — by the lead, the oracle, and the reviewer alike.

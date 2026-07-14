@@ -264,6 +264,13 @@ Same as `/argus-mode:run`: run the actual build/test/lint commands, read
 the output, GREEN evidence required before any "done" claim. A red check
 is reported red — never merged over, never rationalized away.
 
+The full-suite evidence names which CI job and command it mirrors,
+including the install path CI uses — a clean dependency install, not a
+warm local cache; a mismatch, or a repo with no CI config to mirror, is a
+named degradation in the final report, never silent (`verification.md`,
+what a failable check is). This binds the full-suite run and the oracle's
+audited suite re-run, not every per-slice check.
+
 One consult-specific requirement: **capture the exact command and its
 full output verbatim.** Checkpoint 3 hands this to the oracle instead of
 letting it re-run the suite — a paraphrased "tests passed" is not evidence

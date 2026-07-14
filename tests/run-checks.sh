@@ -256,5 +256,17 @@ grep -q "absolute path of the target repo's conventions file" skills/run/SKILL.m
 grep -q "Repo conventions respected" skills/consult/SKILL.md && note "consult skill Stage 2.5 carries the repo-conventions rubric item" || err "consult skill Stage 2.5 missing the repo-conventions rubric item"
 grep -q "absolute path of the target repo's conventions file" skills/consult/SKILL.md && note "consult skill spawn brief names the conventions-file pointer" || err "consult skill spawn brief missing the conventions-file pointer"
 
+# 12a. Verify CI-parity doctrine (issue #69). The verify stage's full-suite
+#      evidence — and the reviewer's suite re-run — names the CI job/command and
+#      install path it mirrors, so a warm-cache green isn't mistaken for CI's
+#      clean-install path; a mismatch or a repo with no CI config to mirror is a
+#      named degradation, never silent. Carried in summary by both skills' verify
+#      stage. Each assertion greps a single-line phrase, written before the
+#      doctrine so it fails first (RED) and passes once the text lands.
+grep -q "the install path CI uses" references/verification.md && note "verification.md binds full-suite evidence to CI's install path" || err "verification.md missing the CI-parity install-path clause"
+grep -q "no CI config to mirror" references/verification.md && note "verification.md names the no-CI-config degradation" || err "verification.md missing the no-CI-config degradation"
+grep -q "the install path CI uses" skills/run/SKILL.md && note "run skill Stage 4 carries the CI-parity summary" || err "run skill Stage 4 missing the CI-parity summary"
+grep -q "the install path CI uses" skills/consult/SKILL.md && note "consult skill Stage 4 carries the CI-parity summary" || err "consult skill Stage 4 missing the CI-parity summary"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

@@ -1,6 +1,6 @@
 ---
 name: run
-description: The argus-mode engineering pipeline for Fable/Opus leads — staged plan with failable checks, independent oracle plan review, TDD execution with delegated agents, 6-dimension review gate before merge. Trigger when the user invokes /argus-mode:run or asks to run the argus pipeline on a task. Not for trivial lookups or edits the triviality hatch covers.
+description: The argus-mode engineering pipeline for Fable/Opus leads — staged plan with failable checks, independent oracle plan review, TDD execution with delegated agents, 6-dimension review gate before merge. Trigger when the user invokes /argus-mode:run, or the argus pipeline is requested in a session running on a Fable or Opus model. Not for trivial lookups or edits the triviality hatch covers.
 ---
 
 # /argus-mode:run — the Argus Mode pipeline
@@ -15,10 +15,10 @@ reference wins.
 
 Before Stage 0, check whether `argus-oracle`, `argus-explorer`, `argus-implementer`, and `argus-reviewer` exist as spawnable agents (true on a Claude Code plugin install; not true on a skills-only install, e.g. `npx skills add`).
 
-- Missing → **announce this to the user now**, plainly. Never degrade silently.
-- Stage 2.5 (oracle gate) and Stage 5 (review gate) then run **inline**, performed by the lead itself, applying the same rubrics from `${CLAUDE_PLUGIN_ROOT}/references/verification.md` and `${CLAUDE_PLUGIN_ROOT}/references/quality.md`.
-- Stage 3 fan-out has no executors either: the lead executes every slice **solo**, in plan order, under the same TDD and verification rules.
-- This is a **weaker gate** — the lead is grading its own work. State this plainly in the Deliver section of the final report.
+- Any missing → **announce this to the user now**, plainly, naming which agents are absent. Never degrade silently.
+- **Scope each degrade to the agent that is actually missing.** No `argus-oracle` → Stage 2.5 (the plan-review gate) runs **inline**; no `argus-reviewer` → Stage 5 (the review gate) runs **inline**; both apply the same rubrics from `${CLAUDE_PLUGIN_ROOT}/references/verification.md` and `${CLAUDE_PLUGIN_ROOT}/references/quality.md`. An agent that is present still runs its own gate — a missing reviewer does not push the plan review inline, and vice versa.
+- No `argus-explorer` / `argus-implementer` → Stage 3 fan-out has no executors: the lead executes every slice **solo**, in plan order, under the same TDD and verification rules.
+- Any gate the lead runs inline is a **weaker gate** — the lead grading its own work. State plainly in the Deliver section of the final report which gates ran inline and why.
 - On a skills-only install `${CLAUDE_PLUGIN_ROOT}` may be unset and the `references/` files unreachable. If a "Read now" target can't be read, run from this file's summaries, announce that too, and treat the references as authoritative the moment they're available again.
 
 ## Stage 0 — Model gate
@@ -29,7 +29,7 @@ Not accepted → **hard stop**. Present exactly these three doors; do not procee
 
 1. Switch model (`/model`) and re-run this skill.
 2. Continue under the consult pipeline instead — offer this; on the user's yes, read `${CLAUDE_PLUGIN_ROOT}/skills/consult/SKILL.md` and follow it in that same turn, carrying the user's original request over so nothing is retyped. When that path is unreachable (skills-only install), invoke the installed consult skill by name instead — the redirect is to the skill, not the file.
-3. User explicitly replies "proceed anyway" → run on the current model with reduced guarantees. Record the override and the user's stated reason in the final report. Under this override, Stage 5 routes to `argus-oracle` (final-review duty, consult evidence brief: diff as patch text or an on-disk patch file — written outside the repo tree, in the session's scratch directory, or removed before any later commit — verbatim Stage 4 command and output, run-time HEAD SHA, produced git-artifact text, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth) instead of `argus-reviewer` — the reviewer's `model: inherit` would grade the gate at the overriding lead's own tier. Record the substitution in the final report.
+3. User explicitly replies "proceed anyway" → run on the current model with reduced guarantees. Record the override and the user's stated reason in the final report. Under this override, Stage 5 routes to `argus-oracle` (final-review duty, consult evidence brief: diff as patch text or an on-disk patch file — written outside the repo tree (the session's scratch directory), or removed before any later commit — verbatim Stage 4 command and output, run-time HEAD SHA, produced git-artifact text, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth) instead of `argus-reviewer` — the reviewer's `model: inherit` would grade the gate at the overriding lead's own tier. Record the substitution in the final report.
 
 Never warn-and-continue past a failed gate silently.
 
@@ -43,9 +43,9 @@ Canonical definition lives in `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md`. Su
 
 Trivial → announce the classification ("this is a trivial edit — skipping the pipeline"), handle it directly, stop. No creed, no ceremony.
 
-**Re-entry rule:** if the "trivial" edit turns out to need a second edit, a second file, or its first check fails → stop, announce the reclassification, re-enter at Stage 1 proper (full pipeline, from git intake). The hatch is not a bypass valve for the pipeline.
+**Re-entry rule:** if the "trivial" edit turns out to need a second edit, a second file, or its first check fails → stop, announce the reclassification, re-enter at Stage 1 proper (full pipeline, from git intake). The hatch is not a bypass valve for the pipeline. The rule survives the commit: a hatch edit that fails after it was committed or pushed re-enters the full pipeline the same way, and a broken commit it left on the default branch is reverted first (`pipeline.md`, re-entry rule).
 
-**Non-trivial read-only work** (analysis or a question needing more than one file) takes `pipeline.md`'s read-only route — plan, oracle review, explore, report. The report follows the route's report contract (question → searched → `file:line`-cited findings → open questions), and its landing rule decides where findings live: chat for one-shot answers, a `question` issue when they feed later work, outlive the session, or hand off mid-run — except a finding exposing a vulnerability in a public repo which never lands on a public issue. It re-enters the git intake the moment it turns into a code change.
+**Non-trivial read-only work** (analysis or a question needing more than one file) — **read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` now** and take its read-only route: plan, oracle review, explore, report. The report follows the route's report contract (question → searched → `file:line`-cited findings → open questions), and its landing rule decides where findings live: chat for one-shot answers, a `question` issue when they feed later work, outlive the session, or hand off mid-run — except a finding exposing a vulnerability in a public repo which never lands on a public issue. Degraded (no repo, no remote, or issues disabled): offer a committed report file, else deliver in chat and name the degrade. It re-enters the git intake the moment it turns into a code change.
 
 ### Pipeline engagement
 
@@ -57,12 +57,12 @@ For a new capability whose acceptance criteria can't be derived from the
 request, the ambiguity gate applies — clarify with the requester before
 the issue is written (`pipeline.md`, Ambiguous ask).
 
-**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` and `${CLAUDE_PLUGIN_ROOT}/references/git-conventions.md` now** — pipeline.md is the flow (follow it exactly, including its degradation rules); git-conventions.md is the naming and message standard every artifact below follows.
+**Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` and `${CLAUDE_PLUGIN_ROOT}/references/git-conventions.md` now** — pipeline.md is the flow (follow it exactly, including its degradation rules); git-conventions.md is the naming, message, prose-style, diagram, and decision-record standard every artifact below follows.
 
 **Resume first (`pipeline.md`, Resume — the receiving side):** when the request names an existing issue, PR, or branch — or an in-flight branch whose plan comment already covers this task — adopt that state instead of creating new artifacts: reconcile the plan comment against the branch's commit log (the log outranks the comment), apply any recorded-but-unapplied review outcome, and enter at the first open item. The steps below create state only when none exists:
 
 1. `git fetch origin`. The base is `origin/<default>`; fast-forward the local default branch only when this run branches in place (per the step-3 in-flight probe) — never when it takes a worktree, which branches straight off `origin/<default>`.
-2. `gh issue create` describing the work — filling every metadata dimension the repo actually has per `pipeline.md`'s Issue metadata contract (type, labels, milestone, Projects fields, relationships — discover, then apply; judgment values (priority, size, iteration) only when the requester stated them — never inferred from the work; attribution metadata never created or reused) and adding the issue to the repo's project board when one exists (`pipeline.md`, Project-board sync).
+2. `gh issue create` describing the work — filling every metadata dimension the repo actually has per `pipeline.md`'s Issue metadata contract (type, labels, milestone, Projects fields, relationships — discover, then apply; judgment values (priority, size, iteration) only when the requester stated them or the issue text carries them — never inferred from the work; attribution metadata never created or reused) and adding the issue to the repo's project board when one exists (`pipeline.md`, Project-board sync).
 3. Branch named `<n>-<slug>`. Run the mechanical in-flight probe (`pipeline.md`, git intake step 3): the primary checkout's HEAD off the default branch, a non-primary `git worktree list` entry, or an open draft PR on an `<n>-*` branch → take an isolated worktree branched from `origin/<default>` (`git worktree add <path> -b <n>-slug origin/<default>`) and never `git switch` or fast-forward the primary checkout; no arm hits → a clean solo checkout takes the branch directly via `gh issue develop <n>` (or `git switch -c`). Each arm has a named degrade.
 4. Empty bootstrap commit, open a **draft** PR with `Closes #<n>` immediately.
 
@@ -174,6 +174,8 @@ A red check that resists one obvious correction is a debugging event, not a retr
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` again now** for the verdict→action mapping and the degraded merge semantics. When a project board exists, set its Status to In Review as this gate begins (`pipeline.md`, Project-board sync).
 
+**Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` now** for the reviewer operating rules: end-to-end, not diff-local (trace the call graph through the unchanged code around the diff — bugs hide at the seams); no rubber-stamps ("LGTM" is not an output — report what was traced and what was checked); every finding cites `file:line`; report format per finding is **Finding / Why it matters / Evidence / Suggested change**, ordered by severity.
+
 Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline per the Agent availability check above; under a Stage 0 "proceed anyway" override, spawn `argus-oracle`'s final-review duty instead — see the model gate). **The brief must attach the verbatim Stage 4 command and its full output** — the reviewer's precondition demands it — **name the issue and PR under review** so the reviewer can read their text with its read-only `gh` grant (dimension 2 covers the artifacts this run produced), **and carry a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth** — the reviewer applies the file, not this summary. **Precondition refusal:** the reviewer refuses a diff whose test suite is not shown GREEN — it returns immediately naming the missing precondition.
 
 Review dimensions (rubric shared with `quality.md`):
@@ -184,8 +186,6 @@ Review dimensions (rubric shared with `quality.md`):
 4. **Pattern justification** — patterns earn their complexity.
 5. **Test quality** — tests can actually fail; no tautologies; no reaching green by disabling a test, raising a timeout, or a blind-rerun to green (a red-then-green rerun is disclosed, not counted as plain green).
 6. **Security** — injection surfaces, authz seams, secrets in the diff, unsafe defaults. Checked on every review, not only "security tasks".
-
-**Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` now** for the reviewer operating rules: end-to-end, not diff-local (trace the call graph through the unchanged code around the diff — bugs hide at the seams); no rubber-stamps ("LGTM" is not an output — report what was traced and what was checked); every finding cites `file:line`; report format per finding is **Finding / Why it matters / Evidence / Suggested change**, ordered by severity.
 
 **Verdict → action mapping (exact):**
 

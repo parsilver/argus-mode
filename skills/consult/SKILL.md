@@ -23,18 +23,20 @@ reference wins.
 
 Skills-only installs (e.g. `npx skills add`) ship no agents. Check that
 `argus-oracle`, `argus-explorer`, and `argus-implementer` exist as
-spawnable agents. If `argus-oracle` is unavailable:
+spawnable agents, and scope each degrade to the agent that is missing:
 
-- **Announce it to the user now**, plainly — not in the final report
-  alone. In consult mode this degrade is severe: a small lead grading its
-  own work is exactly what the oracle exists to prevent. Offer the user
-  the choice before proceeding: switch to a Fable/Opus session (or a full
-  plugin install), or explicitly accept inline gates.
-- On acceptance, run each checkpoint **inline** — same rubric, same
-  precondition refusal, same verdict set — and state in the final report
-  that every gate ran inline, not via an independent agent.
-- Missing executors degrade the same way as in `/argus-mode:run`: Stage 3
-  fan-out has no agents, so the lead executes every slice **solo**, in
+- **`argus-oracle` unavailable** → **announce it to the user now**,
+  plainly — not in the final report alone. In consult mode this degrade
+  is severe: a small lead grading its own work is exactly what the oracle
+  exists to prevent. Offer the user the choice before proceeding: switch
+  to a Fable/Opus session (or a full plugin install), or explicitly
+  accept inline checkpoints. On acceptance, run each checkpoint **inline**
+  — same rubric, same precondition refusal, same verdict set — and state
+  in the final report that every gate ran inline, not via an independent
+  agent.
+- **`argus-explorer` / `argus-implementer` unavailable** — this fires
+  independent of the oracle, even when the oracle is present: Stage 3
+  fan-out has no executors, so the lead executes every slice **solo**, in
   plan order, under the same TDD and verification rules — announced, not
   silent.
 - On a skills-only install `${CLAUDE_PLUGIN_ROOT}` may be unset and the
@@ -65,40 +67,47 @@ checkpoints stay on.
 
 ## Stage 1 — Intake
 
-Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` now — it opens with
-the canonical triviality escape hatch (apply it first; trivial → announce,
-handle directly, stop — summary: ≤3 changed lines AND one file AND no
-public-API/behavior change AND no new test warranted; a bugfix is never
-trivial; read-only lookups are trivial if answerable from one file),
-then the read-only-work route (non-trivial lookups skip the git intake
-entirely — plan, oracle review, explore, report per the route's report
-contract; its landing rule decides where findings live, chat or a
-`question` issue, except a finding exposing a vulnerability in a public
-repo which never lands on a public issue), the ambiguity gate (a new
-capability with unstated requirements gets clarified with the requester
-before the issue is written), the git intake (issue with every
-metadata dimension the repo has filled per the Issue metadata contract
-— type, labels, milestone, Projects fields, relationships; judgment
-values (priority, size, iteration) only when the requester stated
-them, never inferred from the work; attribution metadata never created
-or reused — and added to the repo's project board when one exists →
-branch, taking an isolated worktree when the mechanical in-flight probe
-fires (HEAD off the default branch, a non-primary worktree, or an open
-draft PR on an `<n>-*` branch) and branching from `origin/<default>` so a
-concurrent run never re-points the shared checkout (`pipeline.md`, git
-intake step 3) → draft PR), the Resume path (a request naming an
-existing issue, PR, or branch adopts the in-flight state instead of
-re-running intake — the branch's commit log outranks the plan comment,
-reconcile first), and the full degradation table. The intake step must
-**announce in-flight work** for another task in-session when the probe or the
-Resume check finds an open PR or worktree for it (`in flight: #12, worktree
-../repo-12`) — session-only, never a git artifact (`pipeline.md`, Announce
-in-flight work at intake). Once the triviality check clears
-and the pipeline engages, read `${CLAUDE_PLUGIN_ROOT}/references/creed.md`
-and recite the creed verbatim, once — never before the check, never again
-mid-pipeline. Nothing about intake changes in consult mode — same escape
-hatch, same re-entry rule, same degraded forms when there's no repo, no
-remote, no `gh`, or no push rights (fork flow).
+Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` now — nothing about
+intake changes in consult mode, so this is the same flow `/argus-mode:run`
+runs, in pipeline.md's section order:
+
+- **Triviality escape hatch (apply first):** trivial → announce, handle
+  directly, stop — ≤3 changed lines AND one file AND no public-API/behavior
+  change AND no new test warranted; a bugfix is never trivial; read-only
+  lookups are trivial if answerable from one file. The re-entry rule
+  survives the commit (`pipeline.md`, re-entry rule).
+- **Read-only route** (non-trivial lookups): skip the git intake entirely
+  — plan, oracle review, explore, report per the route's report contract;
+  its landing rule decides where findings live (chat, or a `question`
+  issue), except a finding exposing a vulnerability in a public repo, which
+  never lands on a public issue.
+- **Ambiguity gate:** a new capability with unstated requirements gets
+  clarified with the requester before the issue is written.
+- **Git intake:** an issue with every metadata dimension the repo has
+  filled per the Issue metadata contract — type, labels, milestone,
+  Projects fields, relationships; judgment values (priority, size,
+  iteration) only when the requester stated them, or the issue text carries them,
+  never inferred from the work; attribution metadata never created or
+  reused — added to the repo's project board when one exists → branch,
+  taking an isolated worktree when the mechanical in-flight probe fires
+  (HEAD off the default branch, a non-primary worktree, or an open draft PR
+  on an `<n>-*` branch) and branching from `origin/<default>` so a
+  concurrent run never re-points the shared checkout (`pipeline.md`, git
+  intake step 3) → draft PR.
+- **In-flight work:** the intake step must announce in-flight work for
+  another task in-session when the probe or the Resume check finds an open
+  PR or worktree for it (`in flight: #12, worktree ../repo-12`) —
+  session-only, never a git artifact (`pipeline.md`, Announce in-flight
+  work at intake).
+- **Resume path:** a request naming an existing issue, PR, or branch adopts
+  the in-flight state instead of re-running intake — the branch's commit
+  log outranks the plan comment, reconcile first.
+- **Degradation:** the full degradation table covers no repo, no remote, no
+  `gh`, or no push rights (fork flow) — apply the matching form and name it.
+
+Once the triviality check clears and the pipeline engages, read
+`${CLAUDE_PLUGIN_ROOT}/references/creed.md` and recite the creed verbatim,
+once — never before the check, never again mid-pipeline.
 
 ## Stage 2 — Plan
 

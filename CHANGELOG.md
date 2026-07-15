@@ -157,6 +157,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   in the same directory can't re-point it. Intake-time worktree cleanup is
   limited to already-merged branches.
 
+### Changed
+
+- Skill-summary alignment with the reference files (`skills/run/SKILL.md`,
+  `skills/consult/SKILL.md`): the nine non-blocking findings from the v0.7.0
+  skill review — the run trigger's model qualifier, the triviality
+  re-entry's commit-survival clause, the read-only route's own read
+  instruction and degraded report-file offer, per-agent scoping of the
+  availability degrades in both skills, the widened `git-conventions.md`
+  pointer, the two-alternative patch-file wording, the delivery-stage read
+  moved above the review spawn, the "or the issue text carries them"
+  judgment-value branch in both skills, and the consult intake restructured
+  into bullets in the reference's section order. Summary wording only; no
+  reference-file behavior change. A self-check guards each alignment. (#62)
+
 ## [0.7.0] - 2026-07-11
 
 ### Added

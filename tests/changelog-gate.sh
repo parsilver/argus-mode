@@ -98,6 +98,27 @@ if command -v jq >/dev/null 2>&1 && [ -f "$manifest_file" ]; then
       printf '::error::changelog-gate (release mode): the ## [%s] section is empty — nothing was rolled up\n' "$new_version"
       exit 1
     fi
+    # Every entry that left the Unreleased span must arrive verbatim in the
+    # new version's section. The checks above confirm Unreleased is empty and
+    # the new section holds something — not that the something is what left
+    # Unreleased. A roll-up that drops or rewords one of several entries
+    # empties Unreleased and fills the new section, passing every structural
+    # check while silently losing the entry. Compare the set of content lines
+    # under Unreleased at the base against the set now under the new heading
+    # (blank lines and link-reference definitions excluded from both); any
+    # base-Unreleased line missing downstream is a dropped or altered entry.
+    entry_set() { grep -vE '^[[:space:]]*$|^\[[^]]+\]: ' | sort -u; }
+    base_unreleased=$(git show "$merge_base:$changelog_file" 2>/dev/null | awk '
+      /^## \[Unreleased\]/ { in_span = 1; next }
+      in_span && /^## \[/  { exit }
+      in_span              { print }
+    ')
+    new_section=$(sed -n "$((h2 + 1)),$((h3 - 1))p" "$changelog_file")
+    dropped=$(comm -23 <(printf '%s\n' "$base_unreleased" | entry_set) <(printf '%s\n' "$new_section" | entry_set))
+    if [ -n "$dropped" ]; then
+      printf '::error::changelog-gate (release mode): entries left ## [Unreleased] but are missing from the ## [%s] section — a roll-up moves entries verbatim, it does not drop or reword them:\n%s\n' "$new_version" "$dropped"
+      exit 1
+    fi
     # Previously released sections stay untouched: added content lines
     # at or below the first prior-release heading rewrite history.
     outside=$(git diff -U0 "$base_ref"...HEAD -- "$changelog_file" | awk -v limit="$h3" '

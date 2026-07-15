@@ -439,5 +439,33 @@ grep -qF -- "repo tree, in the session's scratch directory" skills/run/SKILL.md 
 grep -q "or the issue text carries them" skills/run/SKILL.md && note "run judgment-value summary carries the second branch (item 9)" || err "run judgment-value summary missing the second branch (item 9)"
 grep -q "or the issue text carries them" skills/consult/SKILL.md && note "consult judgment-value summary carries the second branch (item 9)" || err "consult judgment-value summary missing the second branch (item 9)"
 
+# 19. Diagram-skill routing doctrine (issue #87). Domain-skill routing is
+#     table-driven in references/delegation.md and recorded a step after
+#     issues are composed, so a diagram-rendering skill was never picked up
+#     when composing a git artifact. A row in the routing table names the
+#     skill; a delegation note keeps rendering and delivery undelegated (the
+#     raster delivery is a commit) and briefs an image-producing slice with
+#     an absolute-path command; and references/git-conventions.md's diagram
+#     section (read at intake) gains the route-through-the-skill guidance,
+#     raster sequencing on the orphan assets branch, the private-repo
+#     no-raster-embed degrade, and the diagram-source-is-artifact-text rule.
+#     Asserts #1-#8 are RED-first (written before the content); asserts
+#     #9-#12 are regression guards on the pre-existing diagram discipline
+#     (green now, red if a future edit removes it — the shape of checks 5/8).
+#     Adds no plan-review rubric item and no review dimension, so check 6's
+#     parity counts (12 and 6) are untouched.
+grep -q "author or embed on a git artifact" references/delegation.md && note "delegation.md routing table carries the diagram row" || err "delegation.md missing the diagram routing row"
+grep -q "visualize" references/delegation.md && note "delegation.md routing row names the diagram skill" || err "delegation.md routing row does not name the diagram skill"
+grep -q "create the target directory first" references/delegation.md && note "delegation.md briefs an image slice to create the target directory" || err "delegation.md missing the create-target-directory reminder"
+grep -q "resolved to an absolute path" references/delegation.md && note "delegation.md briefs the image command with an absolute path" || err "delegation.md missing the absolute-path brief clause"
+grep -q "git push origin assets" references/git-conventions.md && note "git-conventions.md carries the assets-branch push sequencing" || err "git-conventions.md missing the assets-branch push sequencing"
+grep -q "no raster embeds" references/git-conventions.md && note "git-conventions.md carries the private-repo no-raster-embed degrade" || err "git-conventions.md missing the private-repo no-raster-embed degrade"
+grep -q "delivered as an image" references/git-conventions.md && note "git-conventions.md routes a non-Mermaid diagram through the skill as an image" || err "git-conventions.md missing the route-through-the-skill-as-an-image rule"
+grep -q '\.mmd' references/git-conventions.md && note "git-conventions.md treats diagram source (.mmd/...) as artifact text" || err "git-conventions.md missing the diagram-source-is-artifact-text rule"
+grep -q "Illustrate, don't govern" references/git-conventions.md && note "diagram discipline intact: illustrate-don't-govern" || err "diagram discipline weakened: illustrate-don't-govern removed"
+grep -q "Stable types only" references/git-conventions.md && note "diagram discipline intact: stable-types trio" || err "diagram discipline weakened: stable-types rule removed"
+grep -q "Team voice applies inside the diagram" references/git-conventions.md && note "diagram discipline intact: team voice inside diagram labels" || err "diagram discipline weakened: label-voice rule removed"
+grep -q "let the diagram restate it" references/git-conventions.md && note "diagram discipline intact: the refusal condition" || err "diagram discipline weakened: the refusal condition removed"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

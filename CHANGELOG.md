@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Install and update docs lead with the farzai-labs marketplace
+  (farzai/claude-plugins), the primary distribution route; this repo's own
+  marketplace stays as the direct-install alternative in the explicit
+  `argus-mode@argus-mode` form, the troubleshooting bullets point at the
+  update pair for the reader's install route, the marketplace manifest's
+  description names the primary route, and the bug-report template's
+  install-path dropdown distinguishes the two marketplaces. (#91)
+
 ## [0.9.0] - 2026-07-15
 
 ### Added

@@ -38,7 +38,8 @@ body:
       label: Install path
       description: Skills-only installs run without the agents and degrade differently
       options:
-        - Claude Code plugin (marketplace)
+        - Claude Code plugin — farzai-labs marketplace
+        - Claude Code plugin — this repo's own marketplace
         - skills-only (npx skills add)
     validations:
       required: true

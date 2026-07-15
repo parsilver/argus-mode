@@ -10,11 +10,19 @@ before merge. Nobody grades their own work.
 
 ## Install
 
-Official install — this repo is its own marketplace:
+Via the [farzai-labs marketplace](https://github.com/farzai/claude-plugins),
+which hosts every farzai-labs plugin:
+
+```
+/plugin marketplace add farzai/claude-plugins
+/plugin install argus-mode@farzai-labs
+```
+
+This repo is also its own marketplace, for a direct install:
 
 ```
 /plugin marketplace add parsilver/argus-mode
-/plugin install argus-mode
+/plugin install argus-mode@argus-mode
 ```
 
 The real commands are [`/argus-mode:run`](skills/run/SKILL.md) and
@@ -34,15 +42,22 @@ check, and the final report says so openly. It is never a silent degrade.
 
 ## Updating
 
+Run the pair for the marketplace you installed from, then restart the
+session to apply:
+
 ```
-claude plugin marketplace update argus-mode
-claude plugin update argus-mode@argus-mode
+claude plugin marketplace update farzai-labs
+claude plugin update argus-mode@farzai-labs
 ```
 
-Then restart the session to apply. Updates are detected by the `version`
-field in `plugin.json`, and the installer reads your **local marketplace
-clone** — always update the marketplace first, or the installer compares
-against a stale snapshot and reports "already installed".
+For a direct install from this repo, the pair is
+`claude plugin marketplace update argus-mode` and
+`claude plugin update argus-mode@argus-mode`.
+
+Updates are detected by the `version` field in `plugin.json`, and the
+installer reads your **local marketplace clone** — always update the
+marketplace first, or the installer compares against a stale snapshot and
+reports "already installed".
 
 ## Verify the install
 
@@ -66,10 +81,10 @@ comment is running without the skill — see below.
 ### Troubleshooting
 
 - **Commands missing after an update** — the installer compares
-  against your local marketplace clone. Run the two update commands
-  above in that order, then restart the session. Updating the plugin
-  before the marketplace reports "already installed" against a stale
-  snapshot.
+  against your local marketplace clone. Run the update pair for the
+  marketplace you installed from (the Updating section shows both), in
+  that order, then restart the session. Updating the plugin before the
+  marketplace reports "already installed" against a stale snapshot.
 - **Skills present, agents missing** — that is a skills-only install
   (`npx skills add`). The gates run inline and weaker, as the Install
   section describes. Install as a Claude Code plugin to get the
@@ -77,7 +92,8 @@ comment is running without the skill — see below.
 - **The session behaves like an older version** — the plugin cache
   pins whatever version it installed (`~/.claude/plugins/cache/...`).
   Compare the version it reports against `plugin.json` on this repo's
-  `main`; the fix is the same marketplace-then-plugin update pair.
+  `main`; the fix is the marketplace-then-plugin update pair for your
+  install route.
 
 ## Model matrix
 

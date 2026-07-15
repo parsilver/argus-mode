@@ -211,6 +211,7 @@ Plugin-namespaced variants count as matches (e.g. a plugin's
 | UI/visual work — layout, palette, type, motion, interface copy | `frontend-design` |
 | `components.json` present in the repo (shadcn project) | `shadcn` |
 | Charts, plots, dashboards, data visualization | `dataviz` |
+| A diagram to author or embed on a git artifact or in docs — architecture, flow, sequence, chart | `visualize` |
 | Bug investigation — root-causing a failure or unexplained behavior | `debug-mantra` |
 | Long user-facing prose — docs, README, release notes | `humanizer` |
 | Research / deep-dive investigation — multi-file or multi-source questions | `deep-research`, `paper-research`, or any installed research skill |
@@ -236,6 +237,15 @@ If a detected domain has no installed skill matching it, the plan states
 **"no matching skill installed"** explicitly for that domain and proceeds
 on the quality doctrine (`quality.md`) alone. Never a silent degrade — an
 unrecorded gap looks identical to a domain nobody noticed.
+
+**Diagram delivery stays with the lead.** Diagram rendering and delivery
+are lead-only work: a diagram skill's raster delivery to a public repo
+creates a commit — it moves the orphan `assets` ref — so it stays with the
+lead like every other commit. When a slice's deliverable includes a
+rendered image in the repo tree, the lead's brief inlines the full command
+with the plugin path already resolved to an absolute path (plugin
+placeholders like `${CLAUDE_PLUGIN_ROOT}` do not resolve inside a Task
+brief) and reminds the implementer to create the target directory first.
 
 ## How this document is used
 

@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Diagram-skill routing (`references/delegation.md`,
+  `references/git-conventions.md`): the domain-skill routing table gains a
+  row for authoring or embedding a diagram on a git artifact, so an installed
+  diagram-rendering skill is picked up by name and description instead of
+  staying invisible to a table with no diagram row. Because routing is
+  recorded a step after issues are composed, the diagram guidance also lands
+  in `git-conventions.md`, read at intake: route beyond a Mermaid fenced
+  block through the skill for anything a block cannot express — a vendor-icon
+  architecture, a data chart — or a Mermaid type outside the stable trio,
+  delivered as an image; raster delivery commits to the repo's orphan
+  `assets` branch and never pushes, so the lead runs `git push origin assets`
+  before posting any artifact that embeds the URL, and `assets` is
+  infrastructure exempt from the numbered-branch pattern, never force-pushed
+  or merged; private repositories get no raster embeds (no attachment API,
+  and the image proxy will not fetch private raw content), so their issue,
+  comment, and PR bodies stay Mermaid-only or move a raster to a docs
+  deliverable referenced by relative link; and diagram source is artifact
+  text — the lexicon check runs on it before rendering and a committed image
+  keeps its source beside it. Rendering and delivery stay with the lead (the
+  raster delivery is a commit), and the conventions text names "a
+  diagram-rendering skill" rather than any one plugin so another renderer can
+  slot in later. The existing diagram discipline — illustrate-don't-govern,
+  the stable-types trio, team voice in labels, the refusal condition — is
+  unchanged, and no claim is made that a passing local render proves the host
+  will render the artifact. A presence self-check in `tests/run-checks.sh`
+  guards the new content and, as regression guards, the four discipline
+  rules. (#87)
+
 ## [0.8.0] - 2026-07-15
 
 ### Added

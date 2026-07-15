@@ -180,6 +180,29 @@ discipline as everything else in this file:
 - **Team voice applies inside the diagram.** Node labels, edge labels,
   and titles are artifact text like any other — the lexicon check
   covers the whole artifact, diagram source included.
+- **Beyond a fenced block, route through the diagram skill.** When a
+  diagram-rendering skill is installed (routing table, `delegation.md`),
+  author through it anything a Mermaid block cannot express — a
+  vendor-icon architecture, a data chart — delivered as an image. A
+  Mermaid type outside the stable trio (flowchart, sequence, state) is
+  delivered as an image too, never as a block.
+- **Raster sequencing.** The skill's delivery for a public repo commits
+  the image to the repo's orphan `assets` branch and never pushes; the
+  lead runs the printed `git push origin assets` before posting any
+  artifact that embeds the URL — the URL resolves only after that push.
+  `assets` is infrastructure, not a work branch: exempt from the
+  `<issue-number>-<slug>` pattern, never force-pushed, never merged.
+- **Private repositories get no raster embeds.** There is no attachment
+  API, and the image proxy will not fetch private raw content, so an
+  embedded image cannot resolve on a private-repo issue, plan comment, or
+  PR body — those bodies stay Mermaid blocks only. A raster that matters
+  becomes a docs deliverable on the work branch, referenced by relative
+  link; otherwise it is omitted and the degrade named.
+- **Diagram source is artifact text.** The lexicon check runs on the
+  diagram source (`.mmd`/`.py`/`.dot`/`.puml`) before rendering, the same
+  as any other artifact text; and a committed image keeps its source
+  committed beside it — next to the ADR it illustrates, say — so the
+  diagram stays greppable and regenerable.
 - Refusal condition: a git artifact whose acceptance criteria, plan
   items, or any other load-bearing content exist only inside a diagram
   has hidden them from the checks and from every non-rendering surface

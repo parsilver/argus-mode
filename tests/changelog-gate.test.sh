@@ -267,11 +267,71 @@ All notable changes to this project are documented in this file.
 CL
 )
 
-run_scenario s1_dropped_entry_fails      1 0.1.0 0.2.0 "$base_cl"    "$head_dropped"
-run_scenario s2_altered_entry_fails      1 0.1.0 0.2.0 "$base_cl"    "$head_altered"
-run_scenario s3_lossless_roll_up_passes  0 0.1.0 0.2.0 "$base_cl"    "$head_lossless"
-run_scenario s4_fresh_notes_only_pass    0 0.1.0 0.2.0 "$base_empty" "$head_fresh"
-run_scenario s5_stranded_line_still_fails 1 0.1.0 0.2.0 "$base_cl"   "$head_stranded"
+# Duplicate-sibling drop: the base holds two byte-identical bullets and the
+# roll-up keeps only one. A set (sort -u) collapses both to a single line and
+# misses the loss; the multiset comparison must still catch the dropped copy.
+base_dup=$(cat <<'CL'
+# Changelog
+
+All notable changes to this project are documented in this file.
+
+## [Unreleased]
+
+### Added
+
+- Alpha feature that does a thing (#1)
+- Alpha feature that does a thing (#1)
+
+### Fixed
+
+- Gamma bugfix (#3)
+
+## [0.1.0] - 2026-01-01
+
+### Added
+
+- Initial release (#0)
+
+[Unreleased]: https://example.com/compare/v0.1.0...HEAD
+[0.1.0]: https://example.com/releases/tag/v0.1.0
+CL
+)
+
+head_dup_dropped=$(cat <<'CL'
+# Changelog
+
+All notable changes to this project are documented in this file.
+
+## [Unreleased]
+
+## [0.2.0] - 2026-07-15
+
+### Added
+
+- Alpha feature that does a thing (#1)
+
+### Fixed
+
+- Gamma bugfix (#3)
+
+## [0.1.0] - 2026-01-01
+
+### Added
+
+- Initial release (#0)
+
+[Unreleased]: https://example.com/compare/v0.2.0...HEAD
+[0.2.0]: https://example.com/releases/tag/v0.2.0
+[0.1.0]: https://example.com/releases/tag/v0.1.0
+CL
+)
+
+run_scenario s1_dropped_entry_fails       1 0.1.0 0.2.0 "$base_cl"    "$head_dropped"
+run_scenario s2_altered_entry_fails       1 0.1.0 0.2.0 "$base_cl"    "$head_altered"
+run_scenario s3_lossless_roll_up_passes   0 0.1.0 0.2.0 "$base_cl"    "$head_lossless"
+run_scenario s4_fresh_notes_only_pass     0 0.1.0 0.2.0 "$base_empty" "$head_fresh"
+run_scenario s5_stranded_line_still_fails 1 0.1.0 0.2.0 "$base_cl"    "$head_stranded"
+run_scenario s6_dropped_duplicate_fails   1 0.1.0 0.2.0 "$base_dup"   "$head_dup_dropped"
 
 echo
 if [ "$fail" -eq 0 ]; then echo "all changelog-gate scenarios passed"; else echo "changelog-gate scenarios failed"; exit 1; fi

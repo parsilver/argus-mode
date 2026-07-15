@@ -107,7 +107,10 @@ if command -v jq >/dev/null 2>&1 && [ -f "$manifest_file" ]; then
     # under Unreleased at the base against the set now under the new heading
     # (blank lines and link-reference definitions excluded from both); any
     # base-Unreleased line missing downstream is a dropped or altered entry.
-    entry_set() { grep -vE '^[[:space:]]*$|^\[[^]]+\]: ' | sort -u; }
+    # A multiset, not a set: plain sort (never sort -u) keeps duplicate
+    # lines, so dropping one of several byte-identical entries surfaces as a
+    # surplus copy under comm -23 rather than collapsing away unnoticed.
+    entry_set() { grep -vE '^[[:space:]]*$|^\[[^]]+\]: ' | sort; }
     base_unreleased=$(git show "$merge_base:$changelog_file" 2>/dev/null | awk '
       /^## \[Unreleased\]/ { in_span = 1; next }
       in_span && /^## \[/  { exit }

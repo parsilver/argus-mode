@@ -1,6 +1,6 @@
 {
   "name": "argus-mode",
-  "description": "Self-hosted marketplace for the argus-mode plugin — a staged engineering pipeline with independent quality gates.",
+  "description": "Self-hosted marketplace for the argus-mode plugin — a staged engineering pipeline with independent quality gates; the farzai-labs marketplace (farzai/claude-plugins) is the primary distribution route.",
   "owner": {
     "name": "parsilver"
   },

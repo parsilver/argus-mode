@@ -413,5 +413,31 @@ else
   printf '%s\n' "$cl_scen"
 fi
 
+# 18. v0.7.0 skill-review findings (issue #62). Nine skill-summary alignments
+#     bring skills/run and skills/consult back in sync with the reference files
+#     they defer to. Each assertion greps the aligned phrase — RED before the
+#     edit, GREEN after. Items 4 and 9 span BOTH skills, so each is asserted in
+#     both files; item 5 checks the restructured bullet header; item 7 asserts
+#     the reviewer-operating-rules read now precedes the review spawn; item 8
+#     also asserts the old three-alternative patch-file phrasing is gone.
+grep -q "running on a Fable or Opus model" skills/run/SKILL.md && note "run description carries the model qualifier (item 1)" || err "run description missing the model qualifier (item 1)"
+grep -q "The rule survives the commit" skills/run/SKILL.md && note "run triviality summary carries the commit-survival clause (item 2)" || err "run triviality summary missing the commit-survival clause (item 2)"
+grep -q "offer a committed report file" skills/run/SKILL.md && note "run read-only route carries the degraded report-file offer (item 3)" || err "run read-only route missing the degraded report-file offer (item 3)"
+grep -q "Scope each degrade to the agent" skills/run/SKILL.md && note "run availability scopes each degrade per-agent (item 4)" || err "run availability degrade not scoped per-agent (item 4)"
+grep -q "independent of the oracle" skills/consult/SKILL.md && note "consult scopes the executors-missing degrade independent of the oracle (item 4)" || err "consult executors-missing degrade still nested under the oracle (item 4)"
+grep -qF -- "- **Ambiguity gate:**" skills/consult/SKILL.md && note "consult intake restructured into bullets (item 5)" || err "consult intake not restructured into bullets (item 5)"
+grep -q "prose-style, diagram, and decision-record standard" skills/run/SKILL.md && note "run intake pointer widened past naming and message (item 6)" || err "run intake pointer not widened (item 6)"
+r18_read=$(grep -n "reviewer operating rules" skills/run/SKILL.md | head -1 | cut -d: -f1)
+r18_spawn=$(grep -nF 'Spawn `argus-reviewer`' skills/run/SKILL.md | head -1 | cut -d: -f1)
+if [ -n "$r18_read" ] && [ -n "$r18_spawn" ] && [ "$r18_read" -lt "$r18_spawn" ]; then
+  note "run delivery reads the review operating rules before the review spawn (item 7)"
+else
+  err "run delivery reads the operating rules after the spawn (item 7): read line ${r18_read:-none}, spawn line ${r18_spawn:-none}"
+fi
+grep -qF -- "repo tree (the session's scratch directory)" skills/run/SKILL.md && note "run model-gate door 3 renders the patch-file rule as two alternatives (item 8)" || err "run model-gate door 3 not aligned to the two-alternative form (item 8)"
+grep -qF -- "repo tree, in the session's scratch directory" skills/run/SKILL.md && err "run model-gate door 3 still carries the old three-alternative phrasing (item 8)" || note "run dropped the old three-alternative patch-file phrasing (item 8)"
+grep -q "or the issue text carries them" skills/run/SKILL.md && note "run judgment-value summary carries the second branch (item 9)" || err "run judgment-value summary missing the second branch (item 9)"
+grep -q "or the issue text carries them" skills/consult/SKILL.md && note "consult judgment-value summary carries the second branch (item 9)" || err "consult judgment-value summary missing the second branch (item 9)"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

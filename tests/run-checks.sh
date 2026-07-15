@@ -393,5 +393,25 @@ grep -q "items 1–11 above" references/verification.md && err "verification.md 
 grep -q "twelve-item review order" skills/consult/SKILL.md && note "consult review-order count updated to twelve-item" || err "consult review-order count not updated to twelve-item"
 grep -q "eleven-item review order" skills/consult/SKILL.md && err "consult still carries the stale 'eleven-item review order' count" || note "consult dropped the stale 'eleven-item review order' count"
 
+# 17. Changelog-gate release roll-up loss check (issue #63). Release mode
+#     asserted structure only — empty Unreleased, correct headings, a
+#     non-empty new section, prior sections untouched — but never compared the
+#     entries leaving the Unreleased span against those arriving in the new
+#     version section, so a roll-up that dropped or reworded an entry passed.
+#     tests/changelog-gate.sh now compares the two sets; tests/changelog-gate.test.sh
+#     exercises it against throwaway repos (dropped, altered, lossless,
+#     fresh-notes, and stranded-line scenarios), each RED against the old gate
+#     and GREEN once the comparison lands. A jq-absent host skips inside the
+#     harness (release mode is jq-guarded), reported as a skip here.
+if cl_scen=$(bash tests/changelog-gate.test.sh 2>&1); then
+  case "$cl_scen" in
+    skip:*) note "changelog-gate scenarios skipped — ${cl_scen#skip: }" ;;
+    *)      note "changelog-gate release-mode scenarios pass" ;;
+  esac
+else
+  err "changelog-gate release-mode scenarios failed (bash tests/changelog-gate.test.sh):"
+  printf '%s\n' "$cl_scen"
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

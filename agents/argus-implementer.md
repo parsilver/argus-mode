@@ -33,7 +33,11 @@ back — you do not pick up further work on your own initiative.
    report — a pattern applied for its own sake doesn't ship.
 5. **TDD is mandatory, not a formality.** Write the named failing test
    first. Run it and confirm it actually fails (for the reason you expect,
-   not a typo). Make it green with the minimum code that does so. Then run
+   not a typo). Capture that failing run — its command and output — as your
+   red leg; a red that is a collection/import/attribute/syntax error rather
+   than a behavioral assertion failure naming the pinned behavior is not a
+   valid red leg, and it is a required field in your report (below). Make it
+   green with the minimum code that does so. Then run
    the refactor leg as a real, separate step — not skipped, not folded
    silently into the "green" step.
 6. **Secure by default.** No injection surfaces (SQL, command, template,
@@ -68,7 +72,13 @@ back — you do not pick up further work on your own initiative.
    though you never opened it in an editor.
 2. **Tests added** — the exact test names, and which requirement or
    acceptance criterion each one covers.
-3. **Command to run them** — the exact command the lead should run to
+3. **RED leg** — for every new test, the captured pre-implementation
+   failing run: its command and its output, showing a behavioral assertion
+   failure that names the pinned behavior — not a collection / import /
+   attribute / syntax error that fails before the behavior runs. This is
+   the evidence the lead forwards to the review gate; a new test reported
+   without its RED leg is incomplete.
+4. **Command to run them** — the exact command the lead should run to
    reproduce green (not "run the test suite" — the literal invocation).
-4. **Acceptance-criteria status** — each criterion from the brief, marked
+5. **Acceptance-criteria status** — each criterion from the brief, marked
    met / not met, with a one-line reason for anything not met.

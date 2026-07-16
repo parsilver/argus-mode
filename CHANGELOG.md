@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Red-leg capture for new tests (`references/verification.md`,
+  `references/quality.md`, `agents/argus-implementer.md`,
+  `agents/argus-reviewer.md`, `agents/argus-oracle.md`, both
+  `skills/*/SKILL.md`): verification evidence was green-only, so a new test
+  that first failed for a trivial reason — a `NameError`, import, or
+  collection error before the symbol existed — then passed trivially cleared
+  every check that is actually looked at. For every new test the
+  pre-implementation failing run is now captured as an artifact and carried
+  to the review gate, and that failure must be a behavioral assertion that
+  names the pinned behavior, not a collection/import/attribute/syntax error.
+  The test-quality principle and the two review agents' test-quality
+  dimensions carry the bar; the implementer report gains a red-leg-output
+  field; `tests/run-checks.sh` gains check 20 asserting the rule across every
+  file that must hold it. (#93)
+
 ### Changed
 
 - Install and update docs lead with the farzai-labs marketplace

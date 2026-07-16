@@ -467,5 +467,35 @@ grep -q "Stable types only" references/git-conventions.md && note "diagram disci
 grep -q "Team voice applies inside the diagram" references/git-conventions.md && note "diagram discipline intact: team voice inside diagram labels" || err "diagram discipline weakened: label-voice rule removed"
 grep -q "let the diagram restate it" references/git-conventions.md && note "diagram discipline intact: the refusal condition" || err "diagram discipline weakened: the refusal condition removed"
 
+# 20. Red-leg witness doctrine (issue #93). Verification evidence was
+#     green-only, so a new test that first failed for a trivial reason — a
+#     NameError, import, or collection error before the symbol existed — then
+#     passed trivially cleared every check that is actually looked at. The
+#     pre-implementation failing run is now a captured artifact, and that
+#     failure must be a behavioral assertion that names the pinned behavior,
+#     not a collection/import/attribute/syntax error. "What a failable check
+#     is" (verification.md) carries the red-provenance clause and the RED-leg
+#     token; the behavioral-assertion bar rides principle 5 / dimension 5
+#     across quality.md and both review agents; the implementer report gains a
+#     red-leg-output field; both skills' verify sections reference the capture.
+#     Written RED-first — the two tokens do not exist until the prose lands, so
+#     this check fails before #93's content and passes after it. Rides inside
+#     no numbered rubric item or dimension row, so check 6's parity counts (12
+#     and 6) are untouched.
+for f in references/verification.md references/quality.md agents/argus-reviewer.md agents/argus-oracle.md; do
+  if grep -qi "behavioral assertion failure" "$f"; then
+    note "red-leg behavioral-assertion bar present in $f"
+  else
+    err "red-leg behavioral-assertion bar missing from $f"
+  fi
+done
+for f in references/verification.md agents/argus-implementer.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qi "RED leg" "$f"; then
+    note "red-leg capture reference present in $f"
+  else
+    err "red-leg capture reference missing from $f"
+  fi
+done
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

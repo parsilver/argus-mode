@@ -166,6 +166,8 @@ The marker is session-only — printed here, never posted to GitHub. The plan-co
 
 Run the actual build/test/lint commands and read the output. GREEN evidence is required before any "done / fixed / passing" claim. A red check is reported as red — never merged over, never rationalized away.
 
+For every new test, the pre-implementation failing run — the RED leg — is captured alongside the green and forwarded to the review gate; that RED must be a behavioral assertion failure naming the pinned behavior, not a collection/import/attribute/syntax error that fails before the behavior runs (`verification.md`, what a failable check is).
+
 The full-suite evidence names which CI job and command it mirrors, including the install path CI uses — a clean dependency install, not a warm local cache; a mismatch, or a repo with no CI config to mirror, is a named degradation in the final report, never silent (`verification.md`, what a failable check is). This binds the full-suite run and the reviewer's suite re-run, not every per-slice check. A red-then-green rerun with no code change is disclosed in that evidence, never presented as plain green.
 
 A red check that resists one obvious correction is a debugging event, not a retry event: **read `${CLAUDE_PLUGIN_ROOT}/references/debugging.md` now** and run the diagnose loop (reproduce → fail path → falsify → ledger) before any further attempt. If a `debug-mantra` skill is installed in the session, invoke it instead (domain routing, `references/delegation.md`).

@@ -42,10 +42,18 @@ any time.
 ## 5. TDD, non-negotiable
 
 Red → green → refactor. Tests are named in the plan before implementation
-code exists; the refactor leg is a planned step, not an afterthought.
+code exists; the refactor leg is a planned step, not an afterthought. The
+red leg is captured, not just performed: a new test's pre-implementation
+failure is recorded as evidence, and it must be a behavioral assertion
+failure naming the pinned behavior — not a collection/import/attribute/
+syntax error that fails before the behavior ever runs.
 
 - Refusal condition: implementation code written before its test exists
   is a stop-and-return-to-the-test-list event, not a style preference.
+- Refusal condition: a new test whose red leg was never captured, or
+  whose red is a collection/import/attribute/syntax error rather than a
+  behavioral assertion failure naming the pinned behavior, has not shown
+  it can fail for the right reason — capture the behavioral red first.
 - Refusal condition: green reached by disabling a test, raising a
   timeout, or a blind-rerun to green is not a real green — a flaky suite
   is root-caused, not silenced.

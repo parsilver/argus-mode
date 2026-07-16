@@ -291,6 +291,13 @@ Same as `/argus-mode:run`: run the actual build/test/lint commands, read
 the output, GREEN evidence required before any "done" claim. A red check
 is reported red — never merged over, never rationalized away.
 
+For every new test, the pre-implementation failing run — the RED leg — is
+captured alongside the green; that RED must be a behavioral assertion
+failure naming the pinned behavior, not a collection/import/attribute/
+syntax error that fails before the behavior runs (`verification.md`, what a
+failable check is). It goes to the oracle with the rest of the checkpoint-3
+evidence.
+
 The full-suite evidence names which CI job and command it mirrors,
 including the install path CI uses — a clean dependency install, not a
 warm local cache; a mismatch, or a repo with no CI config to mirror, is a

@@ -33,6 +33,18 @@ read — not eyeballed, not assumed.
   builds, containers) is not required: the closest runnable equivalent,
   explicitly named, is the bar. This binds the full-suite evidence and
   the reviewer's suite re-run, not every per-slice check.
+- **The RED leg is evidence too — capture it.** For every *new* test, the
+  pre-implementation run that fails is captured as an artifact, recorded
+  alongside the green: the "can it go RED?" the oracle asserts at plan time
+  is confirmed as *observed* output at verify time, not taken on faith. The
+  recorded RED must be a **behavioral assertion failure that names the
+  behavior under test** — a `NameError`/`ImportError`, a collection or
+  attribute error, or a syntax error that fails *before the pinned symbol
+  runs* proves only that the harness loaded, not that the test pins any
+  behavior, so it is not a RED leg. A plan or diff that adds a new test
+  without its RED leg is refused by the reviewer or the oracle, naming the
+  missing artifact — the same refusal a "done" claim without its command
+  output draws.
 - Refusal condition: any claim of "done", "fixed", or "passing" that is
   not backed by a command that was actually run, plus its actual output,
   is rejected on sight — by the lead, the oracle, and the reviewer alike.
@@ -233,7 +245,13 @@ Checked on every review, every time — not opted into per task:
    complexity — a pattern applied without a stated reason is unjustified
    complexity, not craftsmanship.
 5. **Test quality.** Tests can actually fail — no tautologies, no tests
-   that pass regardless of whether the code is correct. On a rebuild or
+   that pass regardless of whether the code is correct. A new test is
+   shown with its RED leg (the captured pre-implementation failure, "what
+   a failable check is" above), and that RED is a behavioral assertion
+   failure naming the pinned behavior — not a collection/import/attribute/
+   syntax error that fails before the behavior runs; a new test presented
+   with no RED leg, or a RED that only proves the harness loaded, is a
+   finding here. On a rebuild or
    redesign, an old markup-coupled suite staying green measures how
    little changed — anti-correlated with the goal; rewriting the specs
    against the new surface is the default, and keeping old specs as a

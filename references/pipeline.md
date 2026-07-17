@@ -465,13 +465,20 @@ merge path that has a remote and `gh`.
   waited on and announced in-session ("waiting on required check `<name>`"),
   never merged past; a failing required check is not a retry event — it
   re-enters the diagnose loop (`debugging.md`), because a red shared branch is
-  exactly what the revert-first rule then has to clean up. The `gh pr checks`
-  poll is a lead action — the plan-review and delivery reviewers cannot run it.
+  exactly what the revert-first rule then has to clean up. The merge-gating
+  poll — deciding readiness and merging on it — is a lead action: the
+  plan-review and delivery reviewers never make that call. Reading the
+  check-runs to audit a concluded CI run as evidence is a separate, permitted
+  use — see the next bullet.
 - **A concluded-success CI run is evidence, not a second run.** When CI has
   concluded success on the exact HEAD SHA the Stage-4 evidence names, that
   conclusion is auditable full-suite evidence (`verification.md`, what a
-  failable check is): the review audits it through its read-only `gh` grant
-  instead of re-running the suite locally, collapsing the redundant re-run.
+  failable check is): the delivery reviewer audits it by reading the PR's
+  check-runs through its read-only `gh` grant (`gh pr checks`) instead of
+  re-running the suite locally, collapsing the redundant re-run; in consult
+  mode the oracle, which has no shell, audits the same conclusion from the
+  evidence brief. This read is evidence-gathering, not the merge-gating poll
+  above.
 - **A required human approval readies-and-waits — it is never self-supplied.**
   When protection requires an approving review the tool cannot legitimately
   give, a merging verdict does not merge: it readies the PR, posts the

@@ -50,8 +50,13 @@ the only thing standing between a stranger's text and the report. Scan
 every body this run did not author, record the scan line in the plan
 header, and probe the tier when the *question itself* comes from fetched
 text. The route produces no contract to ratify, so an unratified tier
-does not block the report — it is named in the report instead, so a
-reader knows whose framing the findings answer.
+does not block the report. It is disclosed in the report — but as
+**framing, not as a permission level**: the report says the question came
+from text the operator has not ratified, so a reader knows the findings
+answer someone else's framing. The `Trust tier:` line itself, which names
+a person and their access, stays session-side like every other tier record
+(below) — this route's findings can land on an issue anyone can read, and
+that line never goes there.
 
 **The report contract.** Findings deliver in this shape, matching the
 scout agent's own output rules: the question as asked → what was

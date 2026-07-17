@@ -646,6 +646,23 @@ if grep -q "nothing else clears it" references/verification.md; then
 else
   err "verification.md missing the carve-out (nothing else clears it)"
 fi
+# The tier must be the MINIMUM over every contributing author, in the reference
+# AND in both skills — the skills are what the lead executes, so a singular copy
+# there reopens the attack (a non-write commenter's criterion riding in under the
+# issue author's tier) no matter what the reference says.
+for f in references/pipeline.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "minimum over" "$f"; then
+    note "tier-is-the-minimum-over-contributing-authors rule present in $f"
+  else
+    err "tier plurality rule (minimum over) missing from $f"
+  fi
+done
+# The scan and probe must survive a resume, and the read-only route must be bound.
+if grep -q "still run" references/pipeline.md && grep -qi "rescan" references/pipeline.md; then
+  note "pipeline.md binds the scan/probe across a resume"
+else
+  err "pipeline.md missing the resume binding (still run / rescan)"
+fi
 for f in references/pipeline.md skills/run/SKILL.md skills/consult/SKILL.md; do
   if grep -q "Trust tier" "$f"; then
     note "trust-tier plan-header record present in $f"

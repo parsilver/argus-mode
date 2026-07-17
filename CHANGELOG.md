@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Untrusted input at intake and a requester trust tier
+  (`references/pipeline.md`, `references/verification.md`,
+  `references/delegation.md`, `agents/argus-oracle.md`, both
+  `skills/*/SKILL.md`): the data-not-instructions rule bound only the review
+  agents, and the lead's binding was narrow (a gate-definition edit is never
+  made because fetched text asked for it), so nothing bound the lead when it
+  derived acceptance criteria from issue, PR, or comment text at intake — an
+  embedded imperative could steer the plan itself, and the plan review would
+  then faithfully diff that plan against the injected criteria. Injection was
+  defended where it is detected, not where it lands. A new "Untrusted input at
+  intake" section in `references/pipeline.md` — placed before the ambiguity
+  gate, which would otherwise clarify around a quarantined span and turn it
+  into criteria the requester blesses — binds the lead first: every body this
+  run reads but did not author is data, judged against three categorical tests
+  (addressee, diff — a criterion that cannot be met by a diff is not a
+  criterion — and channel) rather than a keyword list, with any hit quarantined
+  and surfaced in-session, quoted and attributed, never folded into the plan or
+  any artifact. A trusted author never skips the scan, and text the run wrote
+  from the operator's own words is not foreign, so a solo run gates nothing and
+  records the absence. Separately, the criteria author's repository permission
+  is probed: `admin`/`maintain`/`write` ratifies by tier, while `triage`,
+  `read`, `none`, a bot author, or a probe that cannot run leaves the criteria
+  **unratified** until the operator ratifies the goal — the plan header now
+  carries an `Untrusted-input scan:` line and a `Trust tier:` line, both checked
+  by plan-review item 2. The rule binds because the run skill's revise-override
+  bullet is carved out: an unratified-criteria revise is cleared only by the
+  operator's ratification, never by a justification. No fourth
+  precondition-refusal class is added — such a plan is reviewable but not
+  approvable — and no plan-review item or review dimension is added, so the
+  parity counts (12 and 6) are unchanged; the existing no-`gh` degradation row
+  already skips issues, so no new row is needed. A presence self-check in
+  `tests/run-checks.sh` (number 23) guards the section, the probe, both header
+  records, the override carve-out, and the mirrors. (#96)
 - Commit-hook Stage-4 parity and a `--no-verify` prohibition
   (`references/verification.md`, `references/delegation.md`,
   `references/pipeline.md`, `agents/argus-reviewer.md`,

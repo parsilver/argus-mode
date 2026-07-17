@@ -548,8 +548,9 @@ fi
 #     suite is explicit command->result Stage-4 evidence (no hooks configured = named
 #     absence), the isolation model forbids the lead committing --no-verify (a hook
 #     bypass is a gate bypass, a failing hook a Stage-4 RED into debugging), and both
-#     review agents' dimension-6 rows detect the bypass by absence of the hook-run
-#     evidence. Written RED-first — the tokens below do not exist until #95's prose
+#     review agents' dimension-6 rows flag a missing hook-run on a hooks-configured
+#     repo as a Stage-4-completeness finding (the prohibition itself is a prompt-level
+#     lead rule). Written RED-first — the tokens below do not exist until #95's prose
 #     lands, so this check fails before it and passes after. Rides inside no numbered
 #     rubric item or dimension row, so check 6's parity counts (12 and 6) are untouched.
 if grep -q "no-verify" references/delegation.md; then
@@ -586,9 +587,9 @@ else
 fi
 for f in agents/argus-reviewer.md agents/argus-oracle.md; do
   if grep -q "no-verify" "$f"; then
-    note "dimension-6 --no-verify detection mirror present in $f"
+    note "dimension-6 --no-verify completeness-check mirror present in $f"
   else
-    err "dimension-6 --no-verify detection mirror (no-verify) missing from $f"
+    err "dimension-6 --no-verify completeness-check mirror (no-verify) missing from $f"
   fi
 done
 

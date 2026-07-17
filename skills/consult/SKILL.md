@@ -313,7 +313,7 @@ green.
 The repo's commit-hook suite is Stage-4 evidence too — run it explicitly
 through its configured runner (`command → result`), naming the runner as
 the full-suite evidence names its CI job; no commit hooks configured is a
-named absence, and a configured hook that cannot run fails its stage
+named absence in the final report, and a configured hook that cannot run fails its stage
 (`verification.md`, what a failable check is). The lead never commits
 `--no-verify` (or any hook-suppression flag) — a hook bypass is a gate
 bypass, and a hook that fails on the lead's commit is a Stage-4 RED into

@@ -22,10 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   command → result Stage-4 evidence (a repo with no hooks is a named absence, a
   configured hook that cannot run fails its stage); the isolation model forbids
   the lead committing `--no-verify` or any hook-suppression flag — a hook bypass
-  is a gate bypass, the refusal doctrine already makes of a blind-rerun-to-green,
-  and a failing hook is a Stage-4 RED into the diagnose loop — and both review
-  agents' dimension-6 rows detect the bypass by the absence of the hook-run
-  evidence when the repo configures hooks. No plan-review rubric item and no
+  is a gate bypass, refused the way doctrine already refuses reaching green by
+  disabling a test or a blind-rerun, and a failing hook is a Stage-4 RED into the
+  diagnose loop — and both review
+  agents' dimension-6 rows treat a missing hook-run on a hooks-configured repo as
+  a Stage-4-completeness finding (the prohibition itself is a prompt-level lead
+  rule, not a diff-visible trace, and a concluded-success CI run covering that
+  hook suite counts as the evidence). No plan-review rubric item and no
   review dimension is added, so the parity counts (12 and 6) are unchanged; a
   presence self-check in `tests/run-checks.sh` (number 22) guards the references,
   both skills, and both review agents. (#95)

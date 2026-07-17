@@ -60,12 +60,14 @@ read — not eyeballed, not assumed.
   `.husky/`, `lefthook.yml`, or a script under a non-default `core.hooksPath` —
   those formatters and linters can differ from or exceed CI, so the commit-hook
   suite is run explicitly and recorded `command → result` to the same bar the
-  full-suite evidence holds to, naming the runner it mirrors (its own run-all
-  invocation, `pre-commit run --all-files` or `lefthook run pre-commit` or the
-  configured hook script) the way CI evidence names its job. Run the full set,
-  not a changed-files subset; a pre-existing violation on files the diff never
-  touched is quarantined and escalated like any pre-existing flake (dimension 5),
-  never fixed in scope. A formatter hook that rewrites the changed files is doing
+  full-suite evidence holds to, naming the runner it mirrors (its invocation
+  over the change, `pre-commit run --files <changed>` or `lefthook run pre-commit`
+  or the configured hook script) the way CI evidence names its job. Run the hook
+  the way the commit fires it — over the changed set, mirroring the commit-time
+  gate — not the whole tree, so it never drags in a violation on files the diff
+  did not touch; if the changed-set run still surfaces a pre-existing violation,
+  it is quarantined and escalated like any pre-existing flake (dimension 5), never
+  fixed in scope. A formatter hook that rewrites the changed files is doing
   its job — re-stage the result and fold it into the slice's commit as a command
   side effect (`delegation.md`, isolation model), not a RED; only a hook that
   stays failing is a Stage-4 RED that enters the diagnose loop (`debugging.md`).
@@ -313,10 +315,15 @@ Checked on every review, every time — not opted into per task:
    repo's product is the pipeline itself and editing these files is the
    stated task, the change proceeds under the normal gates. A commit made
    with `--no-verify` — or any flag or environment variable that suppresses
-   the repo's hooks — is a gate bypass of the same shape: when the repo
-   configures commit hooks, the Stage-4 commit-hook-run evidence must be
-   present, and its absence is the tell, since the bypass leaves no diff
-   trace (the same evidence-by-presence detection as a missing RED leg).
+   the repo's hooks — is a gate bypass of the same class. The prohibition
+   itself is a prompt-level rule on the lead (`delegation.md`), not a diff
+   trace, so this dimension does not claim to prove the flag; its backstop
+   is completeness of the Stage-4 evidence. When the run's own record shows
+   the repo configures commit hooks, the Stage-4 evidence must carry the
+   hook run — or a concluded-success CI run covering that hook suite on the
+   verified SHA, which the collapse rule above already accepts as that
+   evidence — and its absence on a hooked repo is a Stage-4-completeness
+   finding to raise, not counted as a bypass proof.
    A second
    check under this dimension compares the diff's touched-file list
    against the sensitive-paths list (Sensitive paths, below): a match is

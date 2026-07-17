@@ -602,7 +602,7 @@ done
 #     Separately, a non-write author's criteria were treated as the trusted
 #     contract. The lead now scans every body it did not author (addressee/diff/
 #     channel tests, not a keyword list), quarantines and surfaces an imperative
-#     in-session, probes the author's permission, and records both an
+#     in-session, probes every contributing author's permission and takes the minimum, and records both an
 #     Untrusted-input scan line and a Trust tier line in the plan header;
 #     unratified criteria are a revise that ONLY the user's ratification
 #     clears (the run skill's override bullet is carved out — without that the

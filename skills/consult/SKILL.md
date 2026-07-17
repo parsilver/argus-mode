@@ -387,7 +387,19 @@ evidence it can't trust.
 On `ship` / `fix-then-ship`: first confirm the merge base is current — per
 `pipeline.md`'s "Merge on a fresh base only", fetch, and if the default
 branch moved past the base the Stage 4 evidence was gathered on, update the
-branch and re-run Stage 4 before merging. Then update the PR description's
+branch and re-run Stage 4 before merging. Then confirm merge readiness
+(`pipeline.md`, Merge readiness): poll `gh pr checks <n>` and require every
+required check concluded success (a pending required check waits and is
+announced; a failing one re-enters `debugging.md`), and read the default
+branch's protection
+(`gh api repos/<owner>/<repo>/branches/<default>/protection`) — a required
+approval the tool cannot supply readies the PR and waits for that GitHub
+approval instead of merging, and the allowed merge method selects
+`--squash` / `--rebase` / `--merge`. A concluded-success CI run on the exact
+verified HEAD SHA is auditable full-suite evidence the oracle audits from the
+evidence brief instead of a local re-run. Zero check-runs or no protection
+info → named skip, the local Stage 4 stands alone (`pipeline.md`, degradation
+table). Then update the PR description's
 "How it was verified" section with the Stage 4 command and its result — PR text in
 the team voice per `git-conventions.md` — flip the draft PR to ready,
 merge — issue auto-closes (degraded modes per `pipeline.md`'s table —

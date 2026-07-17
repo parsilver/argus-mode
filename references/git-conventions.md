@@ -74,7 +74,13 @@ Bug:
 ## PR titles and descriptions
 
 The PR title becomes the merge commit subject under squash-merge — so
-it follows the Conventional Commits subject rules exactly.
+it follows the Conventional Commits subject rules exactly. Squash is the
+default, not an assumption: the repo's allowed merge method can differ, so
+the actual method is read from branch protection at merge time and the
+matching `--squash` / `--rebase` / `--merge` is selected (`pipeline.md`,
+Merge readiness). Under a rebase or merge-commit method the title still
+follows these subject rules — it is the subject of the resulting commit
+either way.
 
 Description, in this order:
 

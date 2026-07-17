@@ -540,5 +540,58 @@ else
   err "git-conventions.md missing the merge-method-from-protection note"
 fi
 
+# 22. Commit-hook Stage-4 parity + --no-verify refusal (issue #95). Stage 4
+#     mirrored CI but ignored the repo's commit-time hooks (.pre-commit-config.yaml,
+#     .husky/, lefthook.yml, a non-default core.hooksPath) — formatters/linters that
+#     can differ from or exceed CI; a hook failure had no pipeline rule and nothing
+#     forbade a --no-verify bypass. The scout now discovers hook config, the hook
+#     suite is explicit command->result Stage-4 evidence (no hooks configured = named
+#     absence), the isolation model forbids the lead committing --no-verify (a hook
+#     bypass is a gate bypass, a failing hook a Stage-4 RED into debugging), and both
+#     review agents' dimension-6 rows flag a missing hook-run on a hooks-configured
+#     repo as a Stage-4-completeness finding (the prohibition itself is a prompt-level
+#     lead rule). Written RED-first — the tokens below do not exist until #95's prose
+#     lands, so this check fails before it and passes after. Rides inside no numbered
+#     rubric item or dimension row, so check 6's parity counts (12 and 6) are untouched.
+if grep -q "no-verify" references/delegation.md; then
+  note "delegation.md carries the --no-verify prohibition"
+else
+  err "delegation.md missing the --no-verify prohibition (no-verify)"
+fi
+if grep -q "hook bypass is a gate bypass" references/delegation.md; then
+  note "delegation.md carries the gate-bypass anchor phrase"
+else
+  err "delegation.md missing the 'hook bypass is a gate bypass' anchor"
+fi
+if grep -q "core.hooksPath" references/pipeline.md; then
+  note "pipeline.md scout discovers hook config (core.hooksPath)"
+else
+  err "pipeline.md scout missing hook discovery (core.hooksPath)"
+fi
+for f in references/verification.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "commit-hook suite" "$f"; then
+    note "commit-hook Stage-4 evidence doctrine present in $f"
+  else
+    err "commit-hook Stage-4 evidence doctrine (commit-hook suite) missing from $f"
+  fi
+done
+if grep -q "core.hooksPath" references/verification.md; then
+  note "verification.md names the hook runners generically (core.hooksPath)"
+else
+  err "verification.md missing generic runner naming (core.hooksPath)"
+fi
+if grep -q "no commit hooks configured" references/verification.md; then
+  note "verification.md carries the no-hooks named-absence rule"
+else
+  err "verification.md missing the no-hooks named-absence rule"
+fi
+for f in agents/argus-reviewer.md agents/argus-oracle.md; do
+  if grep -q "no-verify" "$f"; then
+    note "dimension-6 --no-verify completeness-check mirror present in $f"
+  else
+    err "dimension-6 --no-verify completeness-check mirror (no-verify) missing from $f"
+  fi
+done
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

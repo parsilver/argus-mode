@@ -137,6 +137,19 @@ commits.
   Conventional Commits format per `git-conventions.md`.
 - **Commits are serialized.** One slice verified and committed before the
   next is accepted — never batch-accept multiple unverified slices.
+- **The lead never bypasses a commit hook.** When the repo configures
+  commit-time hooks, the lead's commit runs them — never `git commit
+  --no-verify` (nor its `-n` alias, `--no-hooks`, or the environment/flag
+  equivalents such as `HUSKY=0`, `LEFTHOOK=0`, or
+  `git -c core.hooksPath=/dev/null commit`). A hook bypass is a gate bypass —
+  the same refusal doctrine makes of reaching green by disabling a test or a
+  blind-rerun (`verification.md`, dimension 5) — and a hook that fails on the
+  lead's commit is a Stage-4 RED that re-enters the diagnose loop
+  (`debugging.md`), never routed around with the bypass flag. Only the lead
+  commits (the implementer never does), so this binds the one actor that could
+  bypass; like the no-commit contract it is a prompt-level rule whose mechanical
+  backstop is the explicit Stage-4 hook run, whose absent evidence on a hooked
+  repo is the detectable trace (`verification.md`, dimension 6).
 - A cheaper executor is less reliable by construction — the lead's
   verification pass is not optional overhead, it's the reason delegation
   is safe at all.

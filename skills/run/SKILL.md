@@ -82,7 +82,7 @@ Write the plan as a task list, one row per stage, three columns filled for every
 
 A check that cannot fail ("looks good", "review the code") is not a check — rewrite it before moving on.
 
-**Scout before you plan** (`pipeline.md`): surfaces not read this session get their reconnaissance questions answered first — direct reads or `argus-explorer` — and the plan header records a `Scouted:` line; the oracle checks the plan against it.
+**Scout before you plan** (`pipeline.md`): surfaces not read this session get their reconnaissance questions answered first — direct reads or `argus-explorer` — and the plan header records a `Scouted:` line; the oracle checks the plan against it. Commit-time hook config (`.pre-commit-config.yaml`, `.husky/`, `lefthook.yml`, a non-default `core.hooksPath`) is a standing scout question, recorded on that line as the runner found or "no commit hooks configured — checked".
 
 **Cost line:** the plan header also carries a per-run cost line — order-of-magnitude, naming the pipeline path (read-only route, full pipeline, or full pipeline plus fan-out) and which model tier pays each expensive step (the plan review, execution, the review gate). It is session-side output, surfaced when the plan is presented and never written into the plan comment (`git-conventions.md`, team voice) — not a git-artifact line. The plan-review gate checks it exists (rubric item 12).
 
@@ -169,6 +169,8 @@ Run the actual build/test/lint commands and read the output. GREEN evidence is r
 For every new test, the pre-implementation failing run — the RED leg — is captured alongside the green and forwarded to the review gate; that RED must be a behavioral assertion failure naming the pinned behavior, not a collection/import/attribute/syntax error that fails before the behavior runs (`verification.md`, what a failable check is).
 
 The full-suite evidence names which CI job and command it mirrors, including the install path CI uses — a clean dependency install, not a warm local cache; a mismatch, or a repo with no CI config to mirror, is a named degradation in the final report, never silent (`verification.md`, what a failable check is). This binds the full-suite run and the reviewer's suite re-run, not every per-slice check. A red-then-green rerun with no code change is disclosed in that evidence, never presented as plain green.
+
+The repo's commit-hook suite is Stage-4 evidence too — run it explicitly through its configured runner (`command → result`), naming the runner as the full-suite evidence names its CI job; no commit hooks configured is a named absence in the final report, and a configured hook that cannot run fails its stage (`verification.md`, what a failable check is). The lead never commits `--no-verify` (or any hook-suppression flag) — a hook bypass is a gate bypass, and a hook that fails on the lead's commit is a Stage-4 RED into `debugging.md`.
 
 A red check that resists one obvious correction is a debugging event, not a retry event: **read `${CLAUDE_PLUGIN_ROOT}/references/debugging.md` now** and run the diagnose loop (reproduce → fail path → falsify → ledger) before any further attempt. If a `debug-mantra` skill is installed in the session, invoke it instead (domain routing, `references/delegation.md`).
 

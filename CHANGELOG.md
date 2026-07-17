@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Commit-hook Stage-4 parity and a `--no-verify` prohibition
+  (`references/verification.md`, `references/delegation.md`,
+  `references/pipeline.md`, `agents/argus-reviewer.md`,
+  `agents/argus-oracle.md`, both `skills/*/SKILL.md`): Stage 4 mirrored CI but
+  ignored the repo's commit-time hooks — `.pre-commit-config.yaml`, `.husky/`,
+  `lefthook.yml`, a non-default `core.hooksPath` — formatters and linters that
+  can differ from or exceed CI, so a hook failure surfaced as a raw commit error
+  with no rule and nothing forbade a `--no-verify` bypass landing unformatted
+  code CI then rejects. The scout now discovers hook config as a standing
+  reconnaissance question; the commit-hook suite is run explicitly as
+  command → result Stage-4 evidence (a repo with no hooks is a named absence, a
+  configured hook that cannot run fails its stage); the isolation model forbids
+  the lead committing `--no-verify` or any hook-suppression flag — a hook bypass
+  is a gate bypass, refused the way doctrine already refuses reaching green by
+  disabling a test or a blind-rerun, and a failing hook is a Stage-4 RED into the
+  diagnose loop — and both review
+  agents' dimension-6 rows treat a missing hook-run on a hooks-configured repo as
+  a Stage-4-completeness finding (the prohibition itself is a prompt-level lead
+  rule, not a diff-visible trace, and a concluded-success CI run covering that
+  hook suite counts as the evidence). No plan-review rubric item and no
+  review dimension is added, so the parity counts (12 and 6) are unchanged; a
+  presence self-check in `tests/run-checks.sh` (number 22) guards the references,
+  both skills, and both review agents. (#95)
 - Merge readiness — required CI checks and branch protection
   (`references/pipeline.md`, `references/verification.md`,
   `references/git-conventions.md`, `agents/argus-reviewer.md`,

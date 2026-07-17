@@ -123,6 +123,7 @@ You do not run the suite yourself — you have no Bash. Your job is to **audit t
 - **Command** — is it an actual test/build/lint invocation, not a paraphrase of one?
 - **Suite scope** — does it cover the diff's surface, or only a slice of it (and if a slice, is that scoping justified)?
 - **Freshness** — compare the attached run-time SHA against the diff you were given: does the output belong to this exact state, or to a run predating the last edit?
+- **CI conclusion, when the brief carries it** — a repo CI run that has concluded success on that same verified SHA is auditable full-suite evidence in its own right; audit it exactly as you audit the local Stage 4 output (command, scope, and the SHA match). A conclusion on a different SHA is stale and does not count.
 
 ### Precondition refusal
 

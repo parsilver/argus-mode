@@ -33,6 +33,16 @@ read — not eyeballed, not assumed.
   builds, containers) is not required: the closest runnable equivalent,
   explicitly named, is the bar. This binds the full-suite evidence and
   the reviewer's suite re-run, not every per-slice check.
+- **A concluded-success CI run is full-suite evidence.** When the repo's CI
+  has concluded success on the exact HEAD SHA the Stage-4 evidence names, that
+  conclusion — read from the PR's own check-runs (`gh pr checks`,
+  `pipeline.md`, Merge readiness) — is auditable full-suite evidence in its own
+  right. The reviewer audits that conclusion through its read-only `gh` grant
+  instead of re-running the suite locally, collapsing a redundant re-run; the
+  oracle, which has no shell, audits the same conclusion when the evidence
+  brief carries it with the verified SHA. CI concluded on a *different* SHA than
+  the evidence names is stale and proves nothing — the SHA match is what makes
+  the conclusion evidence, the same freshness bar every "done" claim holds to.
 - **The RED leg is evidence too — capture it.** For every *new* test, the
   pre-implementation run that fails is captured as an artifact, recorded
   alongside the green: the "can it go RED?" the oracle asserts at plan time

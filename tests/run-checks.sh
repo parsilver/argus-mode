@@ -497,5 +497,48 @@ for f in references/verification.md agents/argus-implementer.md skills/run/SKILL
   fi
 done
 
+# 21. Merge CI-check + branch-protection gate (issue #94). The merge step
+#     gathered green by running CI's command locally and never polled the PR's
+#     own check-runs, so a red or pending CI-only job could still merge on a
+#     local proxy; the merge also ran with no awareness of branch protection.
+#     The merge now polls the PR's required check-runs (`gh pr checks`), reads
+#     the default branch's protection (a required approval readies-and-waits, a
+#     merge-method constraint selects the flag), reuses a concluded-success CI
+#     run on the verified commit as auditable evidence instead of a redundant
+#     local re-run, and degrades by a named skip when there are zero check-runs
+#     or no protection info. Written RED-first — the tokens below do not exist
+#     until #94's prose lands, so this check fails before it and passes after.
+#     Rides inside no numbered rubric item or dimension row, so check 6's parity
+#     counts (12 and 6) are untouched.
+for f in references/pipeline.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "gh pr checks" "$f"; then
+    note "merge CI-check poll present in $f"
+  else
+    err "merge CI-check poll (gh pr checks) missing from $f"
+  fi
+  if grep -q "/protection" "$f"; then
+    note "branch-protection read present in $f"
+  else
+    err "branch-protection read (/protection) missing from $f"
+  fi
+done
+if grep -q "zero check-runs" references/pipeline.md; then
+  note "pipeline.md degradation row covers zero check-runs / no protection"
+else
+  err "pipeline.md missing the zero-check-runs degradation row"
+fi
+for f in references/verification.md agents/argus-reviewer.md agents/argus-oracle.md; do
+  if grep -q "concluded success" "$f"; then
+    note "CI-conclusion-as-evidence present in $f"
+  else
+    err "CI-conclusion-as-evidence (concluded success) missing from $f"
+  fi
+done
+if grep -q "merge method" references/git-conventions.md; then
+  note "git-conventions.md carries the merge-method-from-protection note"
+else
+  err "git-conventions.md missing the merge-method-from-protection note"
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

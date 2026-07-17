@@ -383,6 +383,7 @@ report.
 | Issues disabled on the repo, or no permission to create them | Branch + PR, no issue | Plan comment moves to the PR description (no issue thread to host it) | Normal — PR diff | Normal — merge the PR; note the missing issue in the final report |
 | User opts out ("no issue for this one") | Honor it: branch + PR, no issue | Plan comment moves to the PR description | Normal — PR diff | Normal — merge the PR; note the opt-out in the final report |
 | No Projects v2 board, or the token lacks the project scope (`project` in `gh auth status`) | Normal issue/PR flow | Issue comment as usual | Normal — PR diff | Normal — board sync skipped, named in the final report |
+| The PR has zero check-runs, or protection info is unreadable (unprotected branch, or the token can't read protection) | Normal | Normal | Normal | The required-CI-check and protection gate (Merge readiness, above) is a named skip; the local Stage 4 evidence stands alone as merge evidence, and the merge method defaults to squash |
 
 - Refusal condition: a degraded form that isn't named in the final
   report is an undisclosed degrade, not a permitted one.
@@ -448,6 +449,55 @@ applies to terminal outcomes, not pauses.
   suite there before merging. A conflict resolution that changes the reviewed
   diff re-enters the Stage 5 review; a conflict-free update re-verifies and
   merges without a fresh review.
+
+## Merge readiness — required CI checks and branch protection
+
+The gates' verdict is necessary but not sufficient: before any merge the lead
+also confirms the PR's own CI check-runs are green and that branch protection
+permits the merge. This runs alongside the fresh-base check above, on every
+merge path that has a remote and `gh`.
+
+- **Required check-runs must be concluded success.** Poll the PR's checks —
+  `gh pr checks <n>` — and read the default branch's protection for which
+  checks are *required*
+  (`gh api repos/<owner>/<repo>/branches/<default>/protection`). Require every
+  required check concluded success before merging. A pending required check is
+  waited on and announced in-session ("waiting on required check `<name>`"),
+  never merged past; a failing required check is not a retry event — it
+  re-enters the diagnose loop (`debugging.md`), because a red shared branch is
+  exactly what the revert-first rule then has to clean up. The merge-gating
+  poll — deciding readiness and merging on it — is a lead action: the
+  plan-review and delivery reviewers never make that call. Reading the
+  check-runs to audit a concluded CI run as evidence is a separate, permitted
+  use — see the next bullet.
+- **A concluded-success CI run is evidence, not a second run.** When CI has
+  concluded success on the exact HEAD SHA the Stage-4 evidence names, that
+  conclusion is auditable full-suite evidence (`verification.md`, what a
+  failable check is): the delivery reviewer audits it by reading the PR's
+  check-runs through its read-only `gh` grant (`gh pr checks`) instead of
+  re-running the suite locally, collapsing the redundant re-run; in consult
+  mode the oracle, which has no shell, audits the same conclusion from the
+  evidence brief. This read is evidence-gathering, not the merge-gating poll
+  above.
+- **A required human approval readies-and-waits — it is never self-supplied.**
+  When protection requires an approving review the tool cannot legitimately
+  give, a merging verdict does not merge: it readies the PR, posts the
+  evidence, and waits for that GitHub approval — "PR readied, evidence posted,
+  waiting for the required GitHub approval". This required-approval wait is a
+  distinct state from the user-acceptance hold below: it keys off the repo's
+  branch-protection config and a GitHub-required reviewer, not the change's
+  nature or the requesting user, and the model must not approve its own PR to
+  clear it. When both this wait and a user-acceptance hold apply to one merge —
+  a sensitive-path change on a protected branch — both clear before it lands.
+- **The merge method follows protection.** Protection may permit only one of
+  squash / rebase / merge-commit; read it and select the matching
+  `--squash` / `--rebase` / `--merge` rather than assuming a squash merge
+  (`git-conventions.md`, PR titles).
+
+- Refusal condition: flipping the draft PR to ready and merging while a
+  required check-run is pending or failing — or without reading protection on
+  a repo that has it — merges on the local proxy the gate exists to backstop,
+  landing exactly the red shared branch the revert-first rule then cleans up.
 
 ## The user-acceptance hold — two triggers
 

@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Merge readiness — required CI checks and branch protection
+  (`references/pipeline.md`, `references/verification.md`,
+  `references/git-conventions.md`, `agents/argus-reviewer.md`,
+  `agents/argus-oracle.md`, both `skills/*/SKILL.md`): the merge step gathered
+  green by running CI's command locally and never polled the PR's own
+  check-runs, so a red or pending CI-only job could still flip the draft ready
+  and merge on a local proxy, and the merge ran with no awareness of branch
+  protection. Before merge the lead now polls `gh pr checks` and requires every
+  required check concluded success (a pending check waits and is announced, a
+  failing one re-enters the diagnose loop), and reads the default branch's
+  protection so a required approval the tool cannot supply readies the PR and
+  waits for that GitHub approval — a state kept distinct from the
+  user-acceptance hold, because it keys off the repo's protection config and a
+  GitHub-required reviewer rather than the change or the requesting user — while
+  a merge-method constraint selects the correct `--squash` / `--rebase` /
+  `--merge` instead of assuming squash. A concluded-success CI run on the exact
+  verified commit is reused as auditable full-suite evidence the review audits
+  instead of re-running locally, collapsing the redundant run; the rule lives in
+  `references/verification.md` and mirrors into both review agents. A
+  degradation row covers repos with zero check-runs or no protection info —
+  named skip, the local verify stands alone. A presence self-check in
+  `tests/run-checks.sh` (number 21) guards the references, both skills, and both
+  review agents; no plan-review rubric item and no review dimension is added, so
+  the parity counts (12 and 6) are unchanged. (#94)
 - Red-leg capture for new tests (`references/verification.md`,
   `references/quality.md`, `agents/argus-implementer.md`,
   `agents/argus-reviewer.md`, `agents/argus-oracle.md`, both

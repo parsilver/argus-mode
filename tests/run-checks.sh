@@ -604,7 +604,7 @@ done
 #     channel tests, not a keyword list), quarantines and surfaces an imperative
 #     in-session, probes the author's permission, and records both an
 #     Untrusted-input scan line and a Trust tier line in the plan header;
-#     unratified criteria are a revise that ONLY the operator's ratification
+#     unratified criteria are a revise that ONLY the user's ratification
 #     clears (the run skill's override bullet is carved out — without that the
 #     rule does not bind, since the override is written against any revise).
 #     Written RED-first — every token below is absent until #96's prose lands.
@@ -635,10 +635,10 @@ fi
 # consult mode-comparison table describes run's override rule, so a stale copy
 # there re-advertises the bypass this closes.
 for f in skills/run/SKILL.md skills/consult/SKILL.md; do
-  if grep -q "only the operator's ratification" "$f"; then
+  if grep -q "only the user's ratification" "$f"; then
     note "override carve-out for the unratified revise present in $f"
   else
-    err "override carve-out (only the operator's ratification) missing from $f"
+    err "override carve-out (only the user's ratification) missing from $f"
   fi
 done
 if grep -q "nothing else clears it" references/verification.md; then
@@ -657,8 +657,9 @@ for f in references/pipeline.md skills/run/SKILL.md skills/consult/SKILL.md; do
     err "tier plurality rule (minimum over) missing from $f"
   fi
 done
-# The scan and probe must survive a resume, and the read-only route must be bound.
-if grep -q "still run" references/pipeline.md && grep -qi "rescan" references/pipeline.md; then
+# The scan and probe must survive a resume — they are per-run duties, not state
+# to adopt.
+if grep -q "the tier probe still run" references/pipeline.md && grep -qi "rescan" references/pipeline.md; then
   note "pipeline.md binds the scan/probe across a resume"
 else
   err "pipeline.md missing the resume binding (still run / rescan)"

@@ -117,7 +117,7 @@ for the two that skip the rest of the rubric entirely when missing.
    (`pipeline.md`, Untrusted input at intake). A header carrying no
    `Untrusted-input scan:` record → `revise`: the plan was derived from
    text nobody checked for embedded instructions. A `Trust tier:` still
-   reading `UNRATIFIED` → `revise` until the operator ratifies the goal,
+   reading `UNRATIFIED` → `revise` until the user ratifies the goal,
    and **nothing else clears it** — not a lead override, not a
    justification. This is not a precondition refusal: such a plan is
    **reviewable but not approvable** — its criteria are attached and every

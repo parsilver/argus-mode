@@ -593,5 +593,98 @@ for f in agents/argus-reviewer.md agents/argus-oracle.md; do
   fi
 done
 
+# 23. Untrusted input at intake + requester trust tier (issue #96). The
+#     data-not-instructions rule bound only the review agents, and the lead's
+#     binding was narrow (gate-definition edits), so an imperative embedded in a
+#     fetched issue/PR/comment body could steer the plan itself — and the
+#     plan-review gate would then faithfully diff that plan against the injected
+#     criteria. Injection was defended where it is detected, not where it lands.
+#     Separately, a non-write author's criteria were treated as the trusted
+#     contract. The lead now scans every body it did not author (addressee/diff/
+#     channel tests, not a keyword list), quarantines and surfaces an imperative
+#     in-session, probes every contributing author's permission and takes the minimum, and records both an
+#     Untrusted-input scan line and a Trust tier line in the plan header;
+#     unratified criteria are a revise that ONLY the user's ratification
+#     clears (the run skill's override bullet is carved out — without that the
+#     rule does not bind, since the override is written against any revise).
+#     Written RED-first — every token below is absent until #96's prose lands.
+#     Rides inside existing rubric item 2, adds no dimension and no fourth
+#     precondition class, so check 6's parity counts (12 and 6) are untouched.
+if grep -q "## Untrusted input at intake" references/pipeline.md; then
+  note "pipeline.md carries the untrusted-input intake section"
+else
+  err "pipeline.md missing the '## Untrusted input at intake' section"
+fi
+if grep -q "did not author" references/pipeline.md; then
+  note "pipeline.md scopes the scan to text this run did not author"
+else
+  err "pipeline.md missing the 'did not author' scope clause"
+fi
+if grep -q "collaborators/" references/pipeline.md; then
+  note "pipeline.md carries the author-permission probe"
+else
+  err "pipeline.md missing the author-permission probe (collaborators/)"
+fi
+if grep -q "Untrusted input at intake" references/delegation.md; then
+  note "delegation.md points at the general lead-side rule"
+else
+  err "delegation.md missing the pointer to 'Untrusted input at intake'"
+fi
+# The carve-out is the single mechanism that makes the boundary bind, so it
+# is guarded in the reference that wins on conflict AND in both skills — the
+# consult mode-comparison table describes run's override rule, so a stale copy
+# there re-advertises the bypass this closes.
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "only the user's ratification" "$f"; then
+    note "override carve-out for the unratified revise present in $f"
+  else
+    err "override carve-out (only the user's ratification) missing from $f"
+  fi
+done
+if grep -q "nothing else clears it" references/verification.md; then
+  note "verification.md carries the carve-out as the source of truth"
+else
+  err "verification.md missing the carve-out (nothing else clears it)"
+fi
+# The tier must be the MINIMUM over every contributing author, in the reference
+# AND in both skills — the skills are what the lead executes, so a singular copy
+# there reopens the attack (a non-write commenter's criterion riding in under the
+# issue author's tier) no matter what the reference says.
+for f in references/pipeline.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "minimum over" "$f"; then
+    note "tier-is-the-minimum-over-contributing-authors rule present in $f"
+  else
+    err "tier plurality rule (minimum over) missing from $f"
+  fi
+done
+# The scan and probe must survive a resume — they are per-run duties, not state
+# to adopt.
+if grep -q "the tier probe still run" references/pipeline.md && grep -qi "rescan" references/pipeline.md; then
+  note "pipeline.md binds the scan/probe across a resume"
+else
+  err "pipeline.md missing the resume binding (still run / rescan)"
+fi
+for f in references/pipeline.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "Trust tier" "$f"; then
+    note "trust-tier plan-header record present in $f"
+  else
+    err "trust-tier plan-header record (Trust tier) missing from $f"
+  fi
+done
+for f in references/verification.md skills/run/SKILL.md skills/consult/SKILL.md agents/argus-oracle.md; do
+  if grep -q "Untrusted-input scan" "$f"; then
+    note "untrusted-input-scan record present in $f"
+  else
+    err "untrusted-input-scan record (Untrusted-input scan) missing from $f"
+  fi
+  # Case-insensitive: the header flag is UNRATIFIED, the prose says
+  # "unratified criteria" — the concept is the assertion, not its case.
+  if grep -qi "unratified" "$f"; then
+    note "unratified-criteria block present in $f"
+  else
+    err "unratified-criteria block (unratified) missing from $f"
+  fi
+done
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

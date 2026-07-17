@@ -630,10 +630,21 @@ if grep -q "Untrusted input at intake" references/delegation.md; then
 else
   err "delegation.md missing the pointer to 'Untrusted input at intake'"
 fi
-if grep -q "only the operator's ratification" skills/run/SKILL.md; then
-  note "run skill carves the unratified revise out of the override bullet"
+# The carve-out is the single mechanism that makes the boundary bind, so it
+# is guarded in the reference that wins on conflict AND in both skills — the
+# consult mode-comparison table describes run's override rule, so a stale copy
+# there re-advertises the bypass this closes.
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "only the operator's ratification" "$f"; then
+    note "override carve-out for the unratified revise present in $f"
+  else
+    err "override carve-out (only the operator's ratification) missing from $f"
+  fi
+done
+if grep -q "nothing else clears it" references/verification.md; then
+  note "verification.md carries the carve-out as the source of truth"
 else
-  err "run skill missing the override carve-out (only the operator's ratification)"
+  err "verification.md missing the carve-out (nothing else clears it)"
 fi
 for f in references/pipeline.md skills/run/SKILL.md skills/consult/SKILL.md; do
   if grep -q "Trust tier" "$f"; then

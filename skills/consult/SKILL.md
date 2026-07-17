@@ -222,7 +222,7 @@ runs, with one binding difference:
 
 | | `/argus-mode:run` | `/argus-mode:consult` |
 |---|---|---|
-| `revise` verdict | may be overridden with an explicit user-visible justification | **no lead override** (the user still decides at the two-cycle escalation) |
+| `revise` verdict | may be overridden with an explicit user-visible justification — except the unratified-criteria `revise` (item 2), which only the operator's ratification clears | **no lead override** (the user still decides at the two-cycle escalation) |
 | Revise-cycle cap | two, then escalate to the user | same: two, then escalate to the user (board Status → Blocked while waiting, when a board exists) |
 
 The lead **must** apply the oracle's verdict — and a response lacking

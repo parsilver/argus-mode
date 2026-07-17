@@ -246,6 +246,18 @@ as a `Scouted:` line in the plan header (areas read, questions
 answered, anything that changed the plan's shape). The plan review
 checks the plan against this record (`verification.md`).
 
+**Commit-hook config is a standing scout question.** Every run answers
+whether the repo configures commit-time hooks — `.pre-commit-config.yaml`,
+`.husky/`, `lefthook.yml`, or a non-default `core.hooksPath` — with a
+read-only probe (`ls -d .pre-commit-config.yaml .husky lefthook.yml
+lefthook.yaml .lefthook.yml 2>/dev/null; git config --get core.hooksPath`;
+a `core.hooksPath` set outside the default `.git/hooks` is the non-default
+signal). The `Scouted:` line records the runner found or "no commit hooks
+configured — checked", and the plan turns a found runner into a named
+Stage-4 check — its explicit hook run (`verification.md`, what a failable
+check is). The hook suite is verification evidence, so its discovery
+belongs with the scout, not left to commit time.
+
 - Refusal condition: a plan header with no `Scouted:` record on a
   surface the lead first opened this run is unreviewable optimism —
   the plan review sends it back.

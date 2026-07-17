@@ -55,6 +55,27 @@ read — not eyeballed, not assumed.
   without its RED leg is refused by the reviewer or the oracle, naming the
   missing artifact — the same refusal a "done" claim without its command
   output draws.
+- **The repo's commit-hook suite is Stage-4 evidence too — run it explicitly.**
+  When the repo configures commit-time hooks — `.pre-commit-config.yaml`,
+  `.husky/`, `lefthook.yml`, or a script under a non-default `core.hooksPath` —
+  those formatters and linters can differ from or exceed CI, so the commit-hook
+  suite is run explicitly and recorded `command → result` to the same bar the
+  full-suite evidence holds to, naming the runner it mirrors (its own run-all
+  invocation, `pre-commit run --all-files` or `lefthook run pre-commit` or the
+  configured hook script) the way CI evidence names its job. Run the full set,
+  not a changed-files subset; a pre-existing violation on files the diff never
+  touched is quarantined and escalated like any pre-existing flake (dimension 5),
+  never fixed in scope. A formatter hook that rewrites the changed files is doing
+  its job — re-stage the result and fold it into the slice's commit as a command
+  side effect (`delegation.md`, isolation model), not a RED; only a hook that
+  stays failing is a Stage-4 RED that enters the diagnose loop (`debugging.md`).
+  When that same hook suite is also a concluded-success CI job on the verified
+  SHA, the concluded-CI-run rule above collapses the redundant local re-run. A
+  repo with **no commit hooks configured** is named as such in the final report —
+  a silent skip is indistinguishable from an unrun hook; a configured hook that
+  *cannot* run (a missing tool, one needing network or a secret) is "a check that
+  cannot run fails its stage" (`pipeline.md`), built runnable or waived, never
+  passed silently, and slowness alone is not "cannot run".
 - Refusal condition: any claim of "done", "fixed", or "passing" that is
   not backed by a command that was actually run, plus its actual output,
   is rejected on sight — by the lead, the oracle, and the reviewer alike.
@@ -290,7 +311,13 @@ Checked on every review, every time — not opted into per task:
    finding here even when a plan amendment covers it. Carve-out, mirroring
    the one `git-conventions.md` draws for the lexicon check: where the
    repo's product is the pipeline itself and editing these files is the
-   stated task, the change proceeds under the normal gates. A second
+   stated task, the change proceeds under the normal gates. A commit made
+   with `--no-verify` — or any flag or environment variable that suppresses
+   the repo's hooks — is a gate bypass of the same shape: when the repo
+   configures commit hooks, the Stage-4 commit-hook-run evidence must be
+   present, and its absence is the tell, since the bypass leaves no diff
+   trace (the same evidence-by-presence detection as a missing RED leg).
+   A second
    check under this dimension compares the diff's touched-file list
    against the sensitive-paths list (Sensitive paths, below): a match is
    surfaced — not a defect in itself — so the Stage-5 user-acceptance

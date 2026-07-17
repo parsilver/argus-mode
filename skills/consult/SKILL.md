@@ -122,7 +122,10 @@ with a domain header recording which installed skills apply and which
 don't (never guessed from memory). Scout before you plan applies
 unchanged (`pipeline.md`): surfaces not read this session get their
 reconnaissance questions answered first, recorded as a `Scouted:` line
-in the plan header. The plan header also carries a per-run cost line
+in the plan header — commit-time hook config (`.pre-commit-config.yaml`,
+`.husky/`, `lefthook.yml`, a non-default `core.hooksPath`) among the
+standing scout questions, recorded as the runner found or "no commit
+hooks configured — checked". The plan header also carries a per-run cost line
 (same as `/argus-mode:run`): order-of-magnitude, naming the pipeline
 path and which model tier pays each expensive step; session-side
 output, never written into the plan comment. The planned-file overlap
@@ -306,6 +309,15 @@ what a failable check is). This binds the full-suite run and the evidence
 the oracle audits, not every per-slice check. A red-then-green rerun with
 no code change is disclosed in that evidence, never presented as plain
 green.
+
+The repo's commit-hook suite is Stage-4 evidence too — run it explicitly
+through its configured runner (`command → result`), naming the runner as
+the full-suite evidence names its CI job; no commit hooks configured is a
+named absence, and a configured hook that cannot run fails its stage
+(`verification.md`, what a failable check is). The lead never commits
+`--no-verify` (or any hook-suppression flag) — a hook bypass is a gate
+bypass, and a hook that fails on the lead's commit is a Stage-4 RED into
+`debugging.md`.
 
 One consult-specific requirement: **capture the exact command and its
 full output verbatim.** Checkpoint 3 hands this to the oracle instead of

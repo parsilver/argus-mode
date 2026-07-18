@@ -352,11 +352,14 @@ bypass, and a hook that fails on the lead's commit is a Stage-4 RED into
 Every diff also carries a secret-scan — a maintained scanner
 (gitleaks/trufflehog) over the diff, or the shipped regex-sweep fallback
 when none is installed — its output recorded `command → result` and handed
-to the oracle with the rest of the checkpoint-3 evidence. No scanner
-installed is the named regex-sweep degradation (never a silent skip); a hit
-is a dimension-6 finding resolved before merge; deliberately-planted test
-fixtures are excluded by a named allowlist (`verification.md`, what a
-failable check is).
+to the oracle with the rest of the checkpoint-3 evidence, produced at the
+Stage-4 HEAD SHA over the same diff range as the test evidence (the oracle
+has no Bash to re-scan, so a scan from an earlier commit is stale evidence,
+refused like a stale test run). No scanner installed is the named
+regex-sweep degradation (never a silent skip); a hit is a dimension-6
+finding resolved before merge; deliberately-planted test fixtures are
+excluded by a named allowlist (`verification.md`, what a failable check
+is).
 
 One consult-specific requirement: **capture the exact command and its
 full output verbatim.** Checkpoint 3 hands this to the oracle instead of

@@ -743,6 +743,35 @@ elif [ -f tests/fixtures/secrets-dirty.md ] && [ -f tests/fixtures/secrets-clean
     err "shipped regex-sweep flagged the clean secret fixture (${chits}): $(grep -inE "$sweep" tests/fixtures/secrets-clean.md)"
   fi
 fi
+# Per-branch coverage (review follow-up): dhits>=1 is a single OR over the
+# pattern's branches, so a broken single branch can stay green while the fixture
+# still hits via another. Drive each detector branch with its own probe,
+# constructed at runtime so no full provider-token literal is committed (GitHub
+# push protection and the dogfood scan both stay clean), and require each to
+# match — breaking or deleting any branch turns this RED, so the doctrine's "a
+# broken pattern cannot silently report nothing found" holds per branch.
+if [ -n "$sweep" ]; then
+  d5=$(printf -- '-%.0s' $(seq 5))
+  declare -a sweep_probes=(
+    "AKIA$(printf 'A%.0s' $(seq 16))"
+    "ghp_$(printf 'a%.0s' $(seq 36))"
+    "xoxb-$(printf '0%.0s' $(seq 12))"
+    "AIza$(printf 'a%.0s' $(seq 35))"
+    "${d5}BEGIN RSA PRIVATE KEY${d5}"
+    "token=$(printf 'a%.0s' $(seq 16))"
+  )
+  declare -a sweep_names=( AKIA ghp_ xox AIza PEM keyword-assign )
+  for i in "${!sweep_probes[@]}"; do
+    if printf '%s\n' "${sweep_probes[$i]}" | grep -qiE -e "$sweep"; then
+      note "secret-sweep branch '${sweep_names[$i]}' matches its probe"
+    else
+      err "secret-sweep branch '${sweep_names[$i]}' does not match — branch broken or removed"
+    fi
+  done
+fi
+# The scan output is bound to the diff's freshness/range, like the test evidence
+# (review follow-up: a stale/mis-ranged clean scan must not pass the gate).
+grep -q "Stage-4 HEAD SHA" references/verification.md && note "verification.md binds the secret-scan to the Stage-4 HEAD SHA" || err "verification.md missing the secret-scan freshness/range binding (Stage-4 HEAD SHA)"
 
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

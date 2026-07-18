@@ -111,7 +111,7 @@ The brief **must** include:
   current files alone cannot show you the delta,
 - the verbatim Stage 4 test command,
 - its full output,
-- the **Stage-4 secret-scan output** — a maintained scanner's report (gitleaks/trufflehog), or the shipped regex-sweep fallback's when none is installed (`verification.md`, "what a failable check is"),
+- the **Stage-4 secret-scan output** — a maintained scanner's report (gitleaks/trufflehog), or the shipped regex-sweep fallback's when none is installed (`verification.md`, "what a failable check is") — produced at the same run-time SHA and over the same diff range as the test evidence, so the single SHA below timestamps it too,
 - the **HEAD commit SHA at the moment the Stage 4 command ran**, and
 - **the git-artifact text the run produced** — issue body, PR
   description, and the current plan comment, attached verbatim (you
@@ -124,11 +124,12 @@ You do not run the suite yourself — you have no Bash. Your job is to **audit t
 - **Command** — is it an actual test/build/lint invocation, not a paraphrase of one?
 - **Suite scope** — does it cover the diff's surface, or only a slice of it (and if a slice, is that scoping justified)?
 - **Freshness** — compare the attached run-time SHA against the diff you were given: does the output belong to this exact state, or to a run predating the last edit?
+- **Secret-scan** — is the attached scan the one for *this* diff, at the run-time SHA and over the diff's own range, not an earlier commit or a narrower range? You cannot re-scan (no Bash), so a scan you cannot tie to this diff's SHA and range is stale evidence — refuse it.
 - **CI conclusion, when the brief carries it** — a repo CI run that has concluded success on that same verified SHA is auditable full-suite evidence in its own right; audit it exactly as you audit the local Stage 4 output (command, scope, and the SHA match). A conclusion on a different SHA is stale and does not count.
 
 ### Precondition refusal
 
-If **the diff is absent**, or the test evidence is missing, not verbatim, lacking its run-time SHA, or stale relative to the diff under review, or **the secret-scan output is not attached** (dimension 6's secret half would be unreviewable), or **the produced git-artifact text is not attached** (dimension 2 would be unreviewable), **refuse the review immediately** and name exactly what's missing (e.g., "no diff attached — I cannot review what I cannot see" / "no Stage 4 output attached" / "no secret-scan output attached" / "no run-time SHA — freshness is unverifiable" / "output predates the last commit in the diff" / "no issue/PR/comment text attached — the team-voice check has nothing to read"). Do not review until this is fixed. Attached evidence that presents a red-then-green rerun as a plain pass is not GREEN — refuse and name the concealed rerun.
+If **the diff is absent**, or the test evidence is missing, not verbatim, lacking its run-time SHA, or stale relative to the diff under review, or **the secret-scan output is not attached, or is stale** — from an earlier SHA or a narrower range than the diff under review (dimension 6's secret half would be unreviewable, and you have no Bash to re-scan), or **the produced git-artifact text is not attached** (dimension 2 would be unreviewable), **refuse the review immediately** and name exactly what's missing (e.g., "no diff attached — I cannot review what I cannot see" / "no Stage 4 output attached" / "no secret-scan output attached, or it is stale relative to the diff" / "no run-time SHA — freshness is unverifiable" / "output predates the last commit in the diff" / "no issue/PR/comment text attached — the team-voice check has nothing to read"). Do not review until this is fixed. Attached evidence that presents a red-then-green rerun as a plain pass is not GREEN — refuse and name the concealed rerun.
 
 ### The 6 dimensions — check every one, every time
 

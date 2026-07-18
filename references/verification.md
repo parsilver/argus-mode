@@ -85,7 +85,7 @@ read — not eyeballed, not assumed.
   scanner whose own detectors and tests you trust the way you trust the test
   runner — `gitleaks detect` over the staged diff, or `trufflehog` over the
   commit range. When none is installed, the **shipped regex-sweep fallback**
-  runs instead: a named, greppable pattern over the diff's added lines, shipped
+  runs instead: a named, greppable pattern over the diff, shipped
   here the way `git-conventions.md` ships the lexicon pattern —
 
   ```
@@ -95,10 +95,17 @@ read — not eyeballed, not assumed.
   The fallback is heuristic — high-signal token shapes plus a keyword-anchored
   assignment with a length floor — so it is the floor, not the ceiling: it
   trades recall for a low false-positive rate, and the maintained scanner is the
-  better path. Its own efficacy is tested, not assumed (`tests/run-checks.sh`
-  check 24 extracts this pattern and runs it against a planted-secret fixture it
-  must flag and a false-positive fixture it must not), so a broken pattern
-  cannot silently report "nothing found". **No scanner installed** is the
+  better path. The scan runs at the Stage-4 HEAD SHA the test evidence already
+  names, over the diff-under-review's own range — `<base>` above is that diff's
+  merge base (`origin/<default>` for a branch) — so one run-time SHA timestamps
+  the whole Stage-4 bundle, test output and scan alike. A scan produced at an
+  earlier commit is stale evidence, refused like a stale test run: a clean scan
+  at commit N says nothing about a credential added at N+1. Its own efficacy is
+  tested, not assumed (`tests/run-checks.sh` check 24 extracts this pattern, runs
+  it against a planted-secret fixture it must flag and a false-positive fixture
+  it must not, and drives each detector branch with its own probe that must
+  match), so a broken pattern — any single detector branch included — cannot
+  silently report "nothing found". **No scanner installed** is the
   degradation that runs the regex-sweep — named in the final report, never a
   silent skip; a configured scanner that *cannot* run (a missing binary, or one
   needing network) is "a check that cannot run fails its stage" (`pipeline.md`),

@@ -349,6 +349,18 @@ named absence in the final report, and a configured hook that cannot run fails i
 bypass, and a hook that fails on the lead's commit is a Stage-4 RED into
 `debugging.md`.
 
+Every diff also carries a secret-scan — a maintained scanner
+(gitleaks/trufflehog) over the diff, or the shipped regex-sweep fallback
+when none is installed — its output recorded `command → result` and handed
+to the oracle with the rest of the checkpoint-3 evidence, produced at the
+Stage-4 HEAD SHA over the same diff range as the test evidence (the oracle
+has no Bash to re-scan, so a scan from an earlier commit is stale evidence,
+refused like a stale test run). No scanner installed is the named
+regex-sweep degradation (never a silent skip); a hit is a dimension-6
+finding resolved before merge; deliberately-planted test fixtures are
+excluded by a named allowlist (`verification.md`, what a failable check
+is).
+
 One consult-specific requirement: **capture the exact command and its
 full output verbatim.** Checkpoint 3 hands this to the oracle instead of
 letting it re-run the suite — a paraphrased "tests passed" is not evidence
@@ -377,7 +389,10 @@ holding the identical bar:
   that can actually fail — on a rebuild or redesign, an old
   markup-coupled suite staying green needs an explicit plan-level
   justification; no reaching green by disabling a test, raising a
-  timeout, or a blind-rerun to green), security.
+  timeout, or a blind-rerun to green), security (the secret half
+  mechanical — the oracle audits the attached secret-scan output like the
+  suite; a diff without it is refused, a hit is a finding; sink review
+  stays judgment).
 - Same operating rules: end-to-end tracing beyond the diff, no
   rubber-stamps ("LGTM" is not an output — report what was traced and
   checked), every finding cites `file:line`, report format is
@@ -396,8 +411,9 @@ holding the identical bar:
 
 **Lifecycle tail applies unchanged:** versioned repos record under Unreleased in the same PR, a release is its own task (`${CLAUDE_PLUGIN_ROOT}/references/releasing.md`), a bad merge reverts first (`pipeline.md`), and a `reject`, rework-cap escalation, post-merge rejection, or non-converging hold files a post-mortem record on the triggering issue (`${CLAUDE_PLUGIN_ROOT}/references/post-mortem.md`).
 
-**Precondition refusal still holds:** a non-GREEN diff gets an instant
-refusal naming the missing evidence, not a review.
+**Precondition refusal still holds:** a non-GREEN diff, or one whose
+secret-scan output is not attached, gets an instant refusal naming the
+missing evidence, not a review.
 
 **Evidence handling is the one structural difference from
 `/argus-mode:run`:** the review brief must carry, verbatim —
@@ -408,7 +424,10 @@ refusal naming the missing evidence, not a review.
    into the PR; never a bare changed-file list with a base ref — the
    oracle has no Bash, a git ref is not a readable path, and current
    files alone cannot show it the delta,
-2. the Stage 4 command and its full output,
+2. the Stage 4 command and its full output, and the **Stage-4
+   secret-scan output** — a maintained scanner's report, or the shipped
+   regex-sweep fallback's when none is installed (`verification.md`, what
+   a failable check is),
 3. the **HEAD commit SHA at the moment the Stage 4 command ran**, so
    freshness is checkable instead of taken on the lead's word, and
 4. **the git-artifact text this run produced** — issue body, PR
@@ -422,9 +441,9 @@ refusal naming the missing evidence, not a review.
 The oracle audits that evidence — command, suite scope, freshness,
 artifact voice — rather than re-running the suite itself (unlike
 `argus-reviewer`, which may re-run tests). A missing diff, missing SHA,
-missing artifact text, or stale/ambiguous output is an instant refusal
-naming the gap: the oracle never reviews blind, and never audits
-evidence it can't trust.
+missing artifact text, missing secret-scan output, or stale/ambiguous
+output is an instant refusal naming the gap: the oracle never reviews
+blind, and never audits evidence it can't trust.
 
 On `ship` / `fix-then-ship`: first confirm the merge base is current — per
 `pipeline.md`'s "Merge on a fresh base only", fetch, and if the default

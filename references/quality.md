@@ -62,10 +62,16 @@ syntax error that fails before the behavior ever runs.
 
 No injection surfaces, authorization respected at every seam, no secrets
 in code or diffs, safe defaults. Security is part of the writer's bar, not
-only the reviewer's.
+only the reviewer's. The secret half is mechanical, not eyeballed: the
+writer runs the diff's secret-scan (`verification.md`, "what a failable
+check is") and records the clean output as evidence — a maintained scanner
+when installed, the shipped regex-sweep fallback otherwise — the same way a
+new test's red leg is captured rather than taken on faith.
 
 - Refusal condition: a diff with an injection surface, an authz gap, or a
   secret in it does not ship, security task or not.
+- Refusal condition: a "no secrets" claim with no secret-scan output behind
+  it is the opinion this principle forbids — run the scan, attach the result.
 
 ## How this document is used
 

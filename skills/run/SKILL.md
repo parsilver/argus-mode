@@ -176,6 +176,8 @@ The full-suite evidence names which CI job and command it mirrors, including the
 
 The repo's commit-hook suite is Stage-4 evidence too — run it explicitly through its configured runner (`command → result`), naming the runner as the full-suite evidence names its CI job; no commit hooks configured is a named absence in the final report, and a configured hook that cannot run fails its stage (`verification.md`, what a failable check is). The lead never commits `--no-verify` (or any hook-suppression flag) — a hook bypass is a gate bypass, and a hook that fails on the lead's commit is a Stage-4 RED into `debugging.md`.
 
+Every diff also carries a secret-scan — a maintained scanner (gitleaks/trufflehog) over the diff, or the shipped regex-sweep fallback when none is installed — its output recorded `command → result` and forwarded to the review gate, produced at the Stage-4 HEAD SHA over the same diff range as the test evidence (a scan from an earlier commit is stale, refused like a stale test run). No scanner installed is the named regex-sweep degradation (never a silent skip); a hit is a dimension-6 finding resolved before merge; deliberately-planted test fixtures are excluded by a named allowlist (`verification.md`, what a failable check is).
+
 A red check that resists one obvious correction is a debugging event, not a retry event: **read `${CLAUDE_PLUGIN_ROOT}/references/debugging.md` now** and run the diagnose loop (reproduce → fail path → falsify → ledger) before any further attempt. If a `debug-mantra` skill is installed in the session, invoke it instead (domain routing, `references/delegation.md`).
 
 ## Stage 5 — Review & deliver
@@ -184,7 +186,7 @@ A red check that resists one obvious correction is a debugging event, not a retr
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/verification.md` now** for the reviewer operating rules: end-to-end, not diff-local (trace the call graph through the unchanged code around the diff — bugs hide at the seams); no rubber-stamps ("LGTM" is not an output — report what was traced and what was checked); every finding cites `file:line`; report format per finding is **Finding / Why it matters / Evidence / Suggested change**, ordered by severity.
 
-Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline per the Agent availability check above; under a Stage 0 "proceed anyway" override, spawn `argus-oracle`'s final-review duty instead — see the model gate). **The brief must attach the verbatim Stage 4 command and its full output** — the reviewer's precondition demands it — **name the issue and PR under review** so the reviewer can read their text with its read-only `gh` grant (dimension 2 covers the artifacts this run produced), **and carry a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth** — the reviewer applies the file, not this summary. **Precondition refusal:** the reviewer refuses a diff whose test suite is not shown GREEN — it returns immediately naming the missing precondition.
+Spawn `argus-reviewer` on the diff (or, if unavailable, apply this rubric inline per the Agent availability check above; under a Stage 0 "proceed anyway" override, spawn `argus-oracle`'s final-review duty instead — see the model gate). **The brief must attach the verbatim Stage 4 command and its full output, and the Stage-4 secret-scan output** — the reviewer's precondition demands both — **name the issue and PR under review** so the reviewer can read their text with its read-only `gh` grant (dimension 2 covers the artifacts this run produced), **and carry a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth** — the reviewer applies the file, not this summary. **Precondition refusal:** the reviewer refuses a diff whose test suite is not shown GREEN, or whose secret-scan output is not attached — it returns immediately naming the missing precondition.
 
 Review dimensions (rubric shared with `quality.md`):
 
@@ -193,7 +195,7 @@ Review dimensions (rubric shared with `quality.md`):
 3. **Architecture fit** — boundaries respected; single responsibility.
 4. **Pattern justification** — patterns earn their complexity.
 5. **Test quality** — tests can actually fail; no tautologies; no reaching green by disabling a test, raising a timeout, or a blind-rerun to green (a red-then-green rerun is disclosed, not counted as plain green).
-6. **Security** — injection surfaces, authz seams, secrets in the diff, unsafe defaults. Checked on every review, not only "security tasks".
+6. **Security** — injection surfaces, authz seams, secrets in the diff, unsafe defaults. Checked on every review, not only "security tasks". The secret half is mechanical: the reviewer audits the attached secret-scan output like the test suite — a diff without it is refused, a hit is a finding; sink review stays judgment.
 
 **Verdict → action mapping (exact):**
 

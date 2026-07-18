@@ -686,5 +686,114 @@ for f in references/verification.md skills/run/SKILL.md skills/consult/SKILL.md 
   fi
 done
 
+# 24. Mechanical secret-scan of the diff (issue #97). Dimension 6's secret half
+#     was reviewer judgment with no required command — "no secrets found" is the
+#     opinion the pipeline forbids as a check everywhere else. Stage 4 now runs a
+#     secret-scan over the diff (gitleaks/trufflehog preferred, a named
+#     regex-sweep shipped as the fallback), its output recorded and attached;
+#     both review agents refuse a diff without it and audit the output under
+#     dimension 6, and quality.md principle 6 carries the writer-bar mirror. The
+#     shipped regex-sweep is fixture-tested for efficacy the way check 1 tests
+#     the lexicon pattern: extracted from verification.md and run against a dirty
+#     fixture it MUST flag and a clean fixture (false-positive traps) it must
+#     NOT. Written RED-first — the tokens and the shipped pattern are absent
+#     until #97's prose lands, so this fails before it and passes after. All
+#     prose rides inside dimension 6 / "what a failable check is", and the
+#     fixtures plus the extraction assertion live outside every region check 6
+#     counts, so check 6's parity counts (12 and 6) are untouched.
+for f in references/verification.md references/quality.md agents/argus-reviewer.md agents/argus-oracle.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "secret-scan" "$f"; then
+    note "secret-scan doctrine present in $f"
+  else
+    err "secret-scan doctrine (secret-scan) missing from $f"
+  fi
+done
+grep -q "gitleaks" references/verification.md && note "verification.md names the preferred scanners (gitleaks)" || err "verification.md missing the preferred-scanner naming (gitleaks)"
+grep -q "regex-sweep" references/verification.md && note "verification.md names the shipped regex-sweep fallback" || err "verification.md missing the regex-sweep fallback name"
+grep -qi "no scanner installed" references/verification.md && note "verification.md carries the no-scanner named degradation" || err "verification.md missing the no-scanner named degradation"
+for f in agents/argus-reviewer.md agents/argus-oracle.md; do
+  if grep -q "secret-scan output" "$f"; then
+    note "dimension-6 refuses a diff without secret-scan output in $f"
+  else
+    err "dimension-6 secret-scan-output refusal missing from $f"
+  fi
+done
+# Efficacy: extract the shipped regex-sweep pattern from verification.md and
+# exercise it against the fixtures, the way check 1 exercises the lexicon
+# pattern (a single grep -iEn '...' command, distinct flags from the lexicon's
+# grep -inE and in a different file, so no extraction collision). A
+# shipped-but-untested matcher would let the fallback report "no secrets found"
+# as an unvalidated opinion — the exact thing this change removes.
+[ -f tests/fixtures/secrets-dirty.md ] || err "secret dirty fixture missing (tests/fixtures/secrets-dirty.md)"
+[ -f tests/fixtures/secrets-clean.md ] || err "secret clean fixture missing (tests/fixtures/secrets-clean.md)"
+sweep=$(grep -o "grep -iEn '[^']*'" references/verification.md | head -1 | sed "s/^grep -iEn '//; s/'\$//")
+if [ -z "$sweep" ]; then
+  err "shipped regex-sweep pattern not found in references/verification.md (expected one grep -iEn '...' command)"
+elif [ -f tests/fixtures/secrets-dirty.md ] && [ -f tests/fixtures/secrets-clean.md ]; then
+  dhits=$(grep -icE -e "$sweep" tests/fixtures/secrets-dirty.md || true)
+  if [ "${dhits:-0}" -ge 1 ]; then
+    note "shipped regex-sweep flags the dirty secret fixture ($dhits hits)"
+  else
+    err "shipped regex-sweep has zero hits on the dirty secret fixture — pattern malformed?"
+  fi
+  chits=$(grep -icE -e "$sweep" tests/fixtures/secrets-clean.md || true)
+  if [ "${chits:-0}" -eq 0 ]; then
+    note "shipped regex-sweep passes the clean secret fixture (0 hits)"
+  else
+    err "shipped regex-sweep flagged the clean secret fixture (${chits}): $(grep -inE "$sweep" tests/fixtures/secrets-clean.md)"
+  fi
+fi
+# Per-branch coverage (review follow-up): dhits>=1 is a single OR over the
+# pattern's branches, so a broken single branch can stay green while the fixture
+# still hits via another. Drive each detector branch with its own probe,
+# constructed at runtime so no full provider-token literal is committed (GitHub
+# push protection and the dogfood scan both stay clean), and require each to
+# match — breaking or deleting any branch turns this RED, so the doctrine's "a
+# broken pattern cannot silently report nothing found" holds per branch.
+if [ -n "$sweep" ]; then
+  d5=$(printf -- '-%.0s' $(seq 5))
+  declare -a sweep_probes=(
+    "AKIA$(printf 'A%.0s' $(seq 16))"
+    "ghp_$(printf 'a%.0s' $(seq 36))"
+    "xoxb-$(printf '0%.0s' $(seq 12))"
+    "AIza$(printf 'a%.0s' $(seq 35))"
+    "${d5}BEGIN RSA PRIVATE KEY${d5}"
+    "token=$(printf 'a%.0s' $(seq 16))"
+  )
+  declare -a sweep_names=( AKIA ghp_ xox AIza PEM keyword-assign )
+  for i in "${!sweep_probes[@]}"; do
+    if printf '%s\n' "${sweep_probes[$i]}" | grep -qiE -e "$sweep"; then
+      note "secret-sweep branch '${sweep_names[$i]}' matches its probe"
+    else
+      err "secret-sweep branch '${sweep_names[$i]}' does not match — branch broken or removed"
+    fi
+  done
+  # Guard against a future branch added to the pattern without a matching probe:
+  # count the pattern's top-level alternation branches (paren-depth and bracket
+  # aware, the way check 1 splits the lexicon pattern) and require it to equal
+  # the probe count, so extending the pattern without extending the probes here
+  # turns this RED instead of silently under-covering.
+  inner=${sweep#(}; inner=${inner%)}
+  nbranch=$(awk -v s="$inner" 'BEGIN {
+    depth = 0; n = length(s); count = 1;
+    for (i = 1; i <= n; i++) {
+      c = substr(s, i, 1);
+      if (c == "(") depth++;
+      else if (c == ")") depth--;
+      else if (c == "[") { i++; while (i <= n && substr(s, i, 1) != "]") i++; }
+      else if (c == "|" && depth == 0) count++;
+    }
+    print count;
+  }')
+  if [ "${nbranch:-0}" -eq "${#sweep_probes[@]}" ]; then
+    note "secret-sweep per-branch probes cover all $nbranch pattern branches"
+  else
+    err "secret-sweep branch/probe mismatch: pattern has $nbranch top-level branches, ${#sweep_probes[@]} probes"
+  fi
+fi
+# The scan output is bound to the diff's freshness/range, like the test evidence
+# (review follow-up: a stale/mis-ranged clean scan must not pass the gate).
+grep -q "Stage-4 HEAD SHA" references/verification.md && note "verification.md binds the secret-scan to the Stage-4 HEAD SHA" || err "verification.md missing the secret-scan freshness/range binding (Stage-4 HEAD SHA)"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

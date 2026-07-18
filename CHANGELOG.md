@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A mechanical secret-scan of the diff (`references/verification.md`,
+  `references/quality.md`, `agents/argus-reviewer.md`,
+  `agents/argus-oracle.md`, both `skills/*/SKILL.md`, `tests/run-checks.sh`,
+  `tests/fixtures/`). The security dimension was the one review dimension with
+  no required command — a reviewer saying "no secrets found" produced the
+  opinion the pipeline forbids as a check everywhere else. The verify stage
+  now scans every diff for committed credentials — a maintained scanner
+  (gitleaks/trufflehog) preferred, a named regex-sweep shipped as the fallback
+  — records the output `command → result`, and both review agents refuse a
+  diff that arrives without it and audit the output the way they audit the
+  test suite; `quality.md` principle 6 carries the writer-bar mirror. The
+  shipped regex-sweep is fixture-tested for detection — it must flag a
+  planted-secret fixture and stay clean on a false-positive fixture — so a
+  broken fallback cannot silently report "nothing found", and
+  deliberately-planted test fixtures are excluded by a named scanner allowlist.
+  Generic sink review stays reviewer judgment, since a sink assertion cannot be
+  mechanized without becoming a check that always passes — only the secret half
+  becomes mechanical.
 - Untrusted input at intake and a requester trust tier
   (`references/pipeline.md`, `references/verification.md`,
   `references/delegation.md`, `agents/argus-oracle.md`, both

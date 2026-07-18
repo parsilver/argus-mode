@@ -768,6 +768,28 @@ if [ -n "$sweep" ]; then
       err "secret-sweep branch '${sweep_names[$i]}' does not match — branch broken or removed"
     fi
   done
+  # Guard against a future branch added to the pattern without a matching probe:
+  # count the pattern's top-level alternation branches (paren-depth and bracket
+  # aware, the way check 1 splits the lexicon pattern) and require it to equal
+  # the probe count, so extending the pattern without extending the probes here
+  # turns this RED instead of silently under-covering.
+  inner=${sweep#(}; inner=${inner%)}
+  nbranch=$(awk -v s="$inner" 'BEGIN {
+    depth = 0; n = length(s); count = 1;
+    for (i = 1; i <= n; i++) {
+      c = substr(s, i, 1);
+      if (c == "(") depth++;
+      else if (c == ")") depth--;
+      else if (c == "[") { i++; while (i <= n && substr(s, i, 1) != "]") i++; }
+      else if (c == "|" && depth == 0) count++;
+    }
+    print count;
+  }')
+  if [ "${nbranch:-0}" -eq "${#sweep_probes[@]}" ]; then
+    note "secret-sweep per-branch probes cover all $nbranch pattern branches"
+  else
+    err "secret-sweep branch/probe mismatch: pattern has $nbranch top-level branches, ${#sweep_probes[@]} probes"
+  fi
 fi
 # The scan output is bound to the diff's freshness/range, like the test evidence
 # (review follow-up: a stale/mis-ranged clean scan must not pass the gate).

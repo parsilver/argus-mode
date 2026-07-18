@@ -112,9 +112,12 @@ read — not eyeballed, not assumed.
   built runnable or waived, never passed silently. Deliberately-planted secret
   fixtures are excluded by the scanner's own allowlist (gitleaks
   `.gitleaksignore`, trufflehog `--exclude-paths`, or a named path exclusion for
-  the regex-sweep), and the exclusion is named, never silent. A clean scan is
-  evidence attached to the diff; a hit is a dimension-6 finding resolved before
-  merge, not a line the reviewer eyeballs.
+  the regex-sweep), and the exclusion is named, never silent — and the reviewer
+  confirms each named exclusion covers deliberately-planted test data, not a
+  live credential, so an over-broad exclusion cannot hide a real secret (a
+  dimension-6 finding when it does). A clean scan is evidence attached to the
+  diff; a hit is a dimension-6 finding resolved before merge, not a line the
+  reviewer eyeballs.
 - Refusal condition: any claim of "done", "fixed", or "passing" that is
   not backed by a command that was actually run, plus its actual output,
   is rejected on sight — by the lead, the oracle, and the reviewer alike.

@@ -795,5 +795,78 @@ fi
 # (review follow-up: a stale/mis-ranged clean scan must not pass the gate).
 grep -q "Stage-4 HEAD SHA" references/verification.md && note "verification.md binds the secret-scan to the Stage-4 HEAD SHA" || err "verification.md missing the secret-scan freshness/range binding (Stage-4 HEAD SHA)"
 
+# 25. Capability preflight (issue #98). The pipeline discovered environment
+#     degradations one at a time mid-run and announced each as it hit it, so a run
+#     on a fresh repo learned its true shape piecemeal. A new "## Capability
+#     preflight" section in references/pipeline.md consolidates the probes into one
+#     intake table — legibility only, no new gate, session-only — generalizing the
+#     pre-Stage-0 agent-availability announcement to the git/CI capabilities too.
+#     The move is asymmetric: the run skill defers its announcement into the
+#     preflight; the consult skill keeps its pre-Stage-0 oracle-missing OFFER in
+#     place and only adds a non-blocking reference. The mode column reuses the exact
+#     "## Degradation rules" condition strings, so a per-string drift guard extracts
+#     the section and requires each verbatim. Written RED-first — the phrases below
+#     are absent until #98's prose lands, so this fails before it and passes after.
+#     Rides inside no numbered rubric item or dimension row, so check 6's parity
+#     counts (12 and 6) are untouched.
+preflight=$(awk '/^## Capability preflight$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+if [ -n "$preflight" ]; then
+  note "pipeline.md carries the '## Capability preflight' section"
+else
+  err "pipeline.md missing the '## Capability preflight' section"
+fi
+if printf '%s\n' "$preflight" | grep -q "announcement, not a gate"; then
+  note "preflight section frames itself as an announcement, not a gate"
+else
+  err "preflight section missing the 'announcement, not a gate' framing"
+fi
+if printf '%s\n' "$preflight" | grep -q "decides nothing"; then
+  note "preflight section states it decides nothing (session-only)"
+else
+  err "preflight section missing the 'decides nothing' session-only framing"
+fi
+# Drift guard: every mode string is a verbatim "## Degradation rules" condition.
+# One missing or abbreviated string turns this RED, so a shipped ellipsis cannot
+# pass — the mode column reuses the exact vocabulary or fails.
+while IFS= read -r cond; do
+  [ -n "$cond" ] || continue
+  if printf '%s\n' "$preflight" | grep -qF "$cond"; then
+    note "preflight reuses the exact degradation string: $cond"
+  else
+    err "preflight missing the exact degradation string: $cond"
+  fi
+done <<'PFCONDS'
+No git repo
+Git repo, no remote at all
+Remote exists, `gh` CLI missing
+Remote exists, no push rights (fork / OSS contribution)
+Issues disabled on the repo, or no permission to create them
+No Projects v2 board, or the token lacks the project scope
+PFCONDS
+# The issue's own failable check: preflight referenced from BOTH skills.
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "preflight" "$f"; then
+    note "preflight referenced from $f (issue #98 failable check)"
+  else
+    err "preflight not referenced from $f (issue #98 failable check)"
+  fi
+done
+# Single-announcement lock: agent status is announced via the preflight in both
+# skills' availability sections (so the absorb is real, not a second announcement).
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "announced in the capability preflight" "$f"; then
+    note "single-announcement anchor present in $f"
+  else
+    err "single-announcement anchor (announced in the capability preflight) missing from $f"
+  fi
+done
+# Regression guards — no rename broke a cross-reference, and consult's pre-Stage-0
+# severe oracle-missing OFFER survives the reword (a decision the post-Stage-0
+# preflight cannot host, so it must stay in place).
+grep -q "## Agent availability check" skills/run/SKILL.md && note "run skill keeps the Agent availability check heading" || err "run skill lost the Agent availability check heading"
+grep -q "## Agent availability check" skills/consult/SKILL.md && note "consult skill keeps the Agent availability check heading" || err "consult skill lost the Agent availability check heading"
+grep -q "per the Agent availability check above" skills/run/SKILL.md && note "run skill keeps the 'per the Agent availability check above' cross-refs" || err "run skill lost the 'per the Agent availability check above' cross-refs"
+grep -q "Offer the user the choice before proceeding" skills/consult/SKILL.md && note "consult keeps the pre-Stage-0 severe oracle-missing offer" || err "consult lost the pre-Stage-0 severe oracle-missing offer"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

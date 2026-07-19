@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A capability preflight at intake (`references/pipeline.md`, both
+  `skills/*/SKILL.md`, `tests/run-checks.sh`): the pipeline discovered
+  environment degradations — no `gh`, no remote, no push rights, issues disabled,
+  no board, no issue types, no CI to mirror — one at a time mid-run and announced
+  each as it hit it, so a run on a fresh repo learned its true shape piecemeal.
+  The pre-Stage-0 agent-availability check already did the right thing for the
+  four agents — one upfront announcement — but only for them. A new "Capability
+  preflight" section in `references/pipeline.md`, placed above `## Degradation
+  rules`, runs the read-only discovery probes once at intake and prints one
+  table: each capability, its probe, and the mode this run takes for it, the
+  environment rows reusing the exact `## Degradation rules` condition strings. It
+  adds no capability and no gate — legibility only: it prints once and decides
+  nothing, every degrade stays enforced where it already lives, and the table is
+  session-only output, never written to a git artifact. The agent announcement is
+  absorbed as the table's top rows; the move is asymmetric across the skills,
+  because the consult skill's missing-advisor case is a before-you-proceed offer
+  the post-intake table cannot host — the run skill defers its announcement into
+  the preflight, the consult skill keeps that offer in place and adds a
+  non-blocking reference. The merge-time required-check and branch-protection poll
+  stays out, since it is unknowable at intake. A presence self-check in
+  `tests/run-checks.sh` (number 25) guards the section, both skills' references,
+  the single-announcement anchor, the six verbatim degradation strings, and the
+  consult offer, written before the prose so it fails first; no plan-review rubric
+  item and no review dimension is added, so the parity counts (12 and 6) are
+  unchanged. (#98)
 - A mechanical secret-scan of the diff (`references/verification.md`,
   `references/quality.md`, `agents/argus-reviewer.md`,
   `agents/argus-oracle.md`, both `skills/*/SKILL.md`, `tests/run-checks.sh`,

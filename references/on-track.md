@@ -104,24 +104,63 @@ To hand off:
 
 ## Stage-transition marker
 
-Print this line at every stage boundary, before starting the next stage:
+Print this block at every stage boundary, before starting the next stage —
+the marker line plus a compact status of where the run stands:
 
 ```
 Stage N done — failable check: <cmd> → GREEN | next: Stage N+1
+gates: revise 0/2 · rework 0/2 · attempt 0/3 (active: <next-cmd>)
+degraded: <each active degradation, one clause each>
+budget: <standing against the ~80% action line>
 ```
 
-**"Stage N" counts the approved plan's rows** (the execution stages the
-plan defined), not the pipeline's fixed step numbers — gate steps like
-the plan review produce a verdict, which is their own record, not a
-marker.
+- **Line 1 — the marker.** Always. **"Stage N" counts the approved plan's
+  rows** (the execution stages the plan defined), not the pipeline's fixed
+  step numbers — gate steps like the plan review produce a verdict, which is
+  their own record, not a marker.
+- **`gates:` — always, all three counters with their caps, even at zero.**
+  The point is seeing headroom *before* a cap escalates: `rework 2/2` is one
+  verdict from escalation. `revise X/2` (the plan-review revise cycles) and
+  `rework Y/2` (the review-gate rework cycles) are run-cumulative counts the
+  plan comment records at each verdict, so they read forward at any boundary.
+  `attempt Z/3` is the retry count of the **active check** — the incoming
+  stage's check (`(active: <next-cmd>)`), not the completed one on line 1. At a
+  fresh stage it reads zero of three; a resumed run that adopts a stage which
+  already accumulated identical failures reads them back from the plan comment's
+  retry-bound trace. The denominators do not read alike: `/2` is the last
+  *permitted* cycle, but the retry bound escalates at the **second** identical
+  failure and forbids the third run, so `attempt 2/3` is a next-run-refused
+  warning, not one attempt of headroom left. The live warning at that second
+  failure is the self-catch's own record (`pipeline.md`, plan-comment
+  lifecycle), not a re-print of this block — the block prints at stage
+  boundaries, where line 1 is a completed stage. These three are the caps
+  **both skills** share; consult's mid-execution checkpoint-firing cap is a
+  separate escalation tracked in consult's own section, not folded into this
+  line.
+- **`degraded:` — omit the row entirely when nothing is degraded** (never
+  `degraded: none`). The capability preflight (`pipeline.md`) is the explicit
+  degrade floor, announced once at intake; this row is the running delta on
+  top of it, so an empty row is noise, not a dropped floor. When one or more
+  degrades are active, name each in the degradation contract's own vocabulary.
+- **`budget:` — only when the request stated a budget** (`## Stated budget`
+  above), and **qualitative** against the ~80% action line: "well under the
+  stated ceiling" below the line, "~80% of the stated ceiling reached —
+  escalate or hand off, don't continue" at it. Never a fabricated numeric
+  meter — no token or dollar counter exists to read, so printing `$3.10 / $4.00`
+  would itself be the new tracking this block does not add.
 
-The marker is session-only output — printed in the session, never
-posted to GitHub. The plan-comment update that follows it is a git
-artifact: it carries the same state in the team voice
-(`git-conventions.md`) — named checklist items and `command → result`
-evidence, never the marker's internal numbering.
+Every value renders state that already exists — no counter is invented. The
+revise and rework rounds are read back from the plan comment (recorded at each
+verdict), the degradations from the degradation contract, the budget from the
+stated ceiling; `attempt Z/3` is the active check's recorded retry count from the
+plan comment's retry-bound trace — zero of three when that stage has no recorded
+failures. The block adds no count of its own.
 
-Then update the plan comment (or `PLAN.md`) to match. The marker keeps
-the discipline in recent context on long runs; the comment update is
-what makes the checklist state trustworthy at any point someone reads
-it mid-run.
+The block is session-only output — printed in the session, never posted to
+GitHub. The plan-comment update that follows it is a git artifact: it carries
+the same state in the team voice (`git-conventions.md`) — named checklist
+items and `command → result` evidence, never the block's internal numbering.
+
+Then update the plan comment (or `PLAN.md`) to match. The block keeps the
+discipline in recent context on long runs; the comment update is what makes
+the checklist state trustworthy at any point someone reads it mid-run.

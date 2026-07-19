@@ -324,11 +324,13 @@ this is not a fourth oracle checkpoint. Judgment calls about slice
 *quality* (beyond pass/fail) fold into checkpoint 3's final review; never
 spawn the oracle per slice.
 
-Print the stage-transition marker at every boundary —
-`Stage N done — failable check: <cmd> → GREEN | next: Stage N+1` — and
-update the plan comment, exactly as in `/argus-mode:run`. The marker is
-session-only — never posted to GitHub; the comment update follows the
-team-voice contract in `git-conventions.md`.
+Print the **stage-transition marker block** (`on-track.md`) at every boundary
+— the marker line plus the live gate counters
+(`gates: revise 0/2 · rework 0/2 · attempt 0/3`), the active degradations, and,
+when a budget was stated, the budget standing — and update the plan comment,
+exactly as in `/argus-mode:run`. Every value renders existing state, nothing
+new is tracked. The block is session-only — never posted to GitHub; the comment
+update follows the team-voice contract in `git-conventions.md`.
 
 ## Stage 4 — Verify
 

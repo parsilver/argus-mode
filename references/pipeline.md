@@ -271,6 +271,94 @@ not decoration.
   `fix-then-ship` verdict (see the mapping below) — never before the
   review gate.
 
+## Preview mode
+
+Git intake creates the issue, branch, and draft PR (steps 2–4) **before**
+Stage 2 drafts the plan and its cost line. A user unsure whether a task is
+worth the pipeline would otherwise commit to those artifacts sight-unseen,
+or not invoke the pipeline at all — the triviality hatch is binary and
+offers no "show me the plan and cost first, then let me decide." Preview
+mode fills that gap: it runs the read-only front of intake, drafts the plan
+and cost, and stops before the first artifact-creating step, ending on a
+handshake.
+
+Invoke it with the `--preview` flag (`/argus-mode:run --preview <task>`,
+likewise `:consult`) or an unambiguous dry-run intent ("preview this
+first", "show me the plan and cost before you create anything"); an
+ambiguous invocation fails toward asking, never toward assuming preview.
+The `--preview` intent carries across the run↔consult model-gate redirect.
+
+Preview is a **new-work** intake mode. When durable state already exists —
+the request resolves to an existing issue, PR, branch, or plan comment —
+preview does not apply: fall through to the Resume path (Resume — the
+receiving side, below). Work that already has durable state to adopt is
+resumed, not previewed.
+
+**The flow — the read-only front of the pipeline, then a stop:**
+
+1. **Stage 0 model gate** — unchanged. Preview does not bypass it; a
+   non-trivial task still needs a Fable/Opus tier, or the consult redirect.
+2. **Triviality classification** — first, as always. A trivial task creates
+   no ceremony, so there is **nothing to preview**: the hatch acts verbatim
+   (announce the classification, handle directly, stop) and preview adds no
+   step. Only a non-trivial task continues.
+3. **Creed** — recited once, here, exactly as a normal non-trivial run does.
+4. **The read-only head of git intake, in its normal position:** the
+   capability preflight table (Capability preflight, below — it already runs
+   at the head of git intake, is read-only, and creates no artifacts); the
+   untrusted-input scan and trust-tier probe (Untrusted input at intake,
+   above — session-side and read-only); and `git fetch origin` (git intake
+   step 1, read-only). The step-1 local-default fast-forward is skipped — it
+   is coupled to the step-3 in-flight probe, which preview never reaches.
+5. **Stage 2 draft** — scout the unread surfaces (read-only), write the
+   three-column plan, produce the per-run cost line, run the planned-file
+   overlap check. The plan header carries its usual `Scouted:`,
+   `Untrusted-input scan:`, `Trust tier:`, and cost lines — all already
+   session-side and non-durable.
+
+Then **stop before git intake step 2.** Preview creates
+**no issue, no branch, no PR**, and posts nothing to any issue, PR,
+`PLAN.md`, or comment: it **creates no durable state**.
+
+**The handshake.** Print, in-session: the draft plan labeled
+**not yet oracle-reviewed**; the per-run cost estimate (the full-run figure
+— the number the user wanted before committing); which gates will fire (the
+fixed pipeline structure — the Stage 2.5 plan review and the Stage 5 review
+gate always, the user-acceptance hold when the draft touches a sensitive
+path or is a perceptual goal, the merge-readiness poll at merge; a
+description of the structure, not the live stage-transition counters, and
+preview prints no stage-transition marker); and which degrades apply (the
+preflight table). End with the **proceed handshake** — the ask to create
+the artifacts and run the full pipeline. This is announce-and-ask, not a
+gate.
+
+**On the user's yes** (same session): reuse the in-context draft — do not
+re-draft, do not re-recite the creed, do not re-print the preflight.
+Re-take only the volatile read-only checks (a fresh `git fetch`, and a
+re-scan if a foreign thread grew — a snapshot is not a standing grant),
+then run git intake steps 2–4 in order (issue → branch/worktree → draft
+PR), and the reused draft **still goes through the Stage 2.5 plan review**,
+exactly as any normal run. Preview defers the git ceremony and the plan
+review to the far side of the handshake and removes neither —
+no gate is skipped, the opposite of the dropped express-lane, which
+removed the plan review itself.
+
+The handshake yes is a commitment to spend the pipeline,
+**not a ratification** of the goal: an unratified trust tier (Untrusted
+input at intake, above) stays unratified across the yes and still yields
+its Stage 2.5 item-2 revise, which only the user's own ratification
+clears. Preview never spawns the oracle, an executor, or the reviewer —
+the first gated or billed step is the plan review, past the handshake.
+
+**On the user's no, or a session that ends before the yes:** nothing was
+ever created, so there is nothing to clean up and nothing to resume — a
+fresh invocation starts clean.
+
+- Refusal condition: a preview that creates any git artifact, posts the
+  draft anywhere durable, or lets the handshake yes stand in for the goal's
+  ratification has defeated the one thing preview is for — a look before the
+  ceremony, not a shortcut through it.
+
 ## Announce in-flight work at intake
 
 The in-flight probe (git intake step 3) and the Resume check both inventory

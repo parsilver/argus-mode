@@ -939,5 +939,72 @@ for f in skills/run/SKILL.md skills/consult/SKILL.md; do
   fi
 done
 
+# 27. Preview intake mode (issue #100). Git intake created the issue,
+#     branch/worktree, and draft PR (steps 2-4) BEFORE Stage 2 drafted the plan
+#     and its cost line, so a user unsure whether a task was worth the pipeline
+#     had to commit to those artifacts sight-unseen; the triviality hatch is
+#     binary and offered no "show me the plan and cost first, then let me decide".
+#     A new "## Preview mode" section in references/pipeline.md defines an intake
+#     mode that runs the read-only front of intake (capability preflight +
+#     untrusted-input scan/tier + git fetch) and a Stage 2 draft plan + cost line,
+#     then STOPS before git-intake step 2 (no issue, no branch, no PR), prints the
+#     draft labeled "not yet oracle-reviewed" with a proceed handshake, and on the
+#     user's yes reuses the draft into the normal run where it still goes through
+#     the Stage 2.5 plan review -- no gate is skipped, and the handshake yes is not
+#     a ratification (an unratified trust tier stays unratified, keeping #96
+#     closed). Both skills document it. Written RED-first -- the phrases below are
+#     absent until #100's prose lands, so this fails before it and passes after.
+#     Preview is an intake mode, not a gate: it adds no plan-review rubric item and
+#     no review dimension, so check 6's parity counts (12 and 6) are untouched. The
+#     load-bearing phrases are grep -qF within the awk-extracted section body
+#     (existence via -n, since the awk strips the heading line the way checks 25/26
+#     do); each phrase sits on one line in the prose, so a hand-wrap across a line
+#     break would turn its assertion RED.
+preview=$(awk '/^## Preview mode$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+if [ -n "$preview" ]; then
+  note "pipeline.md carries the '## Preview mode' section"
+else
+  err "pipeline.md missing the '## Preview mode' section"
+fi
+while IFS= read -r phrase; do
+  [ -n "$phrase" ] || continue
+  if printf '%s\n' "$preview" | grep -qF -- "$phrase"; then
+    note "preview section carries: $phrase"
+  else
+    err "preview section missing the load-bearing phrase: $phrase"
+  fi
+done <<'PVPHRASES'
+not yet oracle-reviewed
+proceed handshake
+no issue, no branch, no PR
+no gate is skipped
+not a ratification
+still goes through the Stage 2.5 plan review
+nothing to preview
+creates no durable state
+--preview
+PVPHRASES
+# The issue's own check (grep -rn "preview" skills/) plus the two summary tokens
+# that guard against a references-only edit -- the skills are the executed
+# prompt, so each must carry the mode and its no-skip and label guarantees, not
+# merely point at the reference.
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "preview" "$f"; then
+    note "preview mode referenced from $f (issue #100 check)"
+  else
+    err "preview mode not referenced from $f (issue #100 check)"
+  fi
+  if grep -qF "not yet oracle-reviewed" "$f"; then
+    note "preview 'not yet oracle-reviewed' label carried in $f"
+  else
+    err "preview 'not yet oracle-reviewed' label missing from $f"
+  fi
+  if grep -qF "no gate is skipped" "$f"; then
+    note "preview 'no gate is skipped' guarantee carried in $f"
+  else
+    err "preview 'no gate is skipped' guarantee missing from $f"
+  fi
+done
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

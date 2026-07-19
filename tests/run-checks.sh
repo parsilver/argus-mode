@@ -881,5 +881,54 @@ grep -q "## Agent availability check" skills/consult/SKILL.md && note "consult s
 grep -q "per the Agent availability check above" skills/run/SKILL.md && note "run skill keeps the 'per the Agent availability check above' cross-refs" || err "run skill lost the 'per the Agent availability check above' cross-refs"
 grep -q "Offer the user the choice before proceeding" skills/consult/SKILL.md && note "consult keeps the pre-Stage-0 severe oracle-missing offer" || err "consult lost the pre-Stage-0 severe oracle-missing offer"
 
+# 26. Stage-transition marker counter block (issue #99). The marker showed only
+#     "Stage N done → next"; the revise (2) / rework (2) / attempt (3) caps, the
+#     active degradations, and the stated-budget standing were never surfaced as a
+#     live glance, so a user could not see "one send-back from escalation" without
+#     the model volunteering it. The "## Stage-transition marker" section in
+#     references/on-track.md is extended into a compact block re-printed at every
+#     boundary — a gates counter line, a degraded line (shown only when degraded),
+#     and a budget line (shown only when a budget was stated) — rendering state that
+#     already exists (plan-comment counts, named degrades, stated budget), never a
+#     new count, session-only. The three counters are asserted SEPARATELY, never
+#     grepping the "·" middot separator (load-bearing — a hand-wrap could split the
+#     line around it). Written RED-first — the tokens are absent until #99's prose
+#     lands, so this fails before it and passes after. Rides inside no numbered
+#     rubric item or dimension row, so check 6's parity counts (12 and 6) are
+#     untouched.
+marker=$(awk '/^## Stage-transition marker$/{f=1;next} /^## /{f=0} f' references/on-track.md)
+if printf '%s\n' "$marker" | grep -Eq 'revise [0-9]+/2'; then
+  note "marker block carries the revise counter (revise N/2)"
+else
+  err "marker block missing the revise counter (revise N/2)"
+fi
+if printf '%s\n' "$marker" | grep -Eq 'rework [0-9]+/2'; then
+  note "marker block carries the rework counter (rework N/2)"
+else
+  err "marker block missing the rework counter (rework N/2)"
+fi
+if printf '%s\n' "$marker" | grep -Eq 'attempt [0-9]+/3'; then
+  note "marker block carries the attempt counter (attempt N/3)"
+else
+  err "marker block missing the attempt counter (attempt N/3)"
+fi
+if printf '%s\n' "$marker" | grep -q 'degraded:'; then
+  note "marker block specs the degraded row"
+else
+  err "marker block missing the degraded row"
+fi
+if printf '%s\n' "$marker" | grep -q 'budget'; then
+  note "marker block specs the budget row"
+else
+  err "marker block missing the budget row"
+fi
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "stage-transition marker block" "$f"; then
+    note "stage-transition marker block referenced from $f"
+  else
+    err "stage-transition marker block reference missing from $f"
+  fi
+done
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

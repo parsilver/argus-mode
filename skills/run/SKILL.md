@@ -160,13 +160,14 @@ A new module, interface, or dependency not named in the approved plan — or a r
 
 Run the on-track check — **read `${CLAUDE_PLUGIN_ROOT}/references/on-track.md` now**: loop signals, bounded deliberation, context budget.
 
-Then, before starting the next stage, print the mandatory transition marker and update the plan comment:
+Then, before starting the next stage, print the mandatory **stage-transition marker block** (`on-track.md`) and update the plan comment. The block re-prints the marker line plus the live gate counters, the active degradations, and — when a budget was stated — the budget standing:
 
 ```
 Stage N done — failable check: <cmd> → GREEN | next: Stage N+1
+gates: revise 0/2 · rework 0/2 · attempt 0/3 (active: <cmd>)
 ```
 
-The marker is session-only — printed here, never posted to GitHub. The plan-comment update that accompanies it is a git artifact and follows the team-voice contract in `git-conventions.md`.
+The `degraded:` and `budget:` rows and the per-row visibility rules live in `on-track.md`. Every value renders existing state — the plan comment's counts, the named degrades, the stated budget — nothing new is tracked. The block is session-only — printed here, never posted to GitHub; the plan-comment update that accompanies it is a git artifact and follows the team-voice contract in `git-conventions.md`.
 
 ## Stage 4 — Verify
 

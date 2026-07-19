@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Gate counters and active degrades in the stage-transition marker
+  (`references/on-track.md`, both `skills/*/SKILL.md`, `tests/run-checks.sh`): the
+  mandatory marker showed only which stage finished and which is next. The
+  two-cycle revise and rework caps and the retry bound existed and survived a
+  resume on the plan comment, but were never surfaced as a live count — a user
+  could not see "one send-back from escalation" without the model volunteering it,
+  and active degradations and budget standing were not consolidated anywhere
+  glanceable. The marker is now a compact block re-printed at every stage boundary:
+  the marker line, a gate-counter line (each cap and its live count, always shown
+  so headroom is visible before a cap escalates), an active-degradations line shown
+  only when something is degraded (the capability preflight already announces the
+  full set once at intake, so this is the running delta), and a budget line shown
+  only when the request stated a budget, standing qualitatively against the action
+  line — never an invented numeric meter, since no such counter exists to read.
+  Every value renders state that already exists — the plan comment's counts, the
+  named degrades, the stated budget — so nothing new is tracked, and the block
+  stays session-only, never a git artifact, the same contract the single line held.
+  Both skills carry a compact form and defer the full rules to the shared
+  reference. A presence self-check in `tests/run-checks.sh` (number 26) guards the
+  counter row, the degraded and budget rows, and both skills' reference, written
+  before the prose so it fails first; no plan-review rubric item and no review
+  dimension is added, so the parity counts (12 and 6) are unchanged. (#99)
 - A capability preflight at intake (`references/pipeline.md`, both
   `skills/*/SKILL.md`, `tests/run-checks.sh`): the pipeline discovered
   environment degradations — no `gh`, no remote, no push rights, issues disabled,

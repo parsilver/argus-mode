@@ -310,9 +310,12 @@ resumed, not previewed.
    above — session-side and read-only); and `git fetch origin` (git intake
    step 1, read-only). The step-1 local-default fast-forward is skipped — it
    is coupled to the step-3 in-flight probe, which preview never reaches.
-5. **Stage 2 draft** — scout the unread surfaces (read-only), write the
-   three-column plan, produce the per-run cost line, run the planned-file
-   overlap check. The plan header carries its usual `Scouted:`,
+5. **Stage 2 draft** — scout the unread surfaces by direct reads only —
+   preview does not spawn the scout agent, so its one cost stays the lead's
+   own reads (a task that needs a breadth-reconnaissance agent to draft a
+   plan is a signal to run, not preview) — then write the three-column
+   plan, produce the per-run cost line, and run the planned-file overlap
+   check. The plan header carries its usual `Scouted:`,
    `Untrusted-input scan:`, `Trust tier:`, and cost lines — all already
    session-side and non-durable.
 
@@ -335,8 +338,9 @@ gate.
 **On the user's yes** (same session): reuse the in-context draft — do not
 re-draft, do not re-recite the creed, do not re-print the preflight.
 Re-take only the volatile read-only checks (a fresh `git fetch`, and a
-re-scan if a foreign thread grew — a snapshot is not a standing grant),
-then run git intake steps 2–4 in order (issue → branch/worktree → draft
+re-scan and trust-tier re-probe if a foreign thread grew — a snapshot is
+not a standing grant, refreshing both header records), then run git intake
+steps 2–4 in order (issue → branch/worktree → draft
 PR), and the reused draft **still goes through the Stage 2.5 plan review**,
 exactly as any normal run. Preview defers the git ceremony and the plan
 review to the far side of the handshake and removes neither —

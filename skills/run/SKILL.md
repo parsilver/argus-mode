@@ -164,10 +164,10 @@ Then, before starting the next stage, print the mandatory **stage-transition mar
 
 ```
 Stage N done — failable check: <cmd> → GREEN | next: Stage N+1
-gates: revise 0/2 · rework 0/2 · attempt 0/3 (active: <cmd>)
+gates: revise 0/2 · rework 0/2 · attempt 0/3 (active: <next-cmd>)
 ```
 
-The `degraded:` and `budget:` rows and the per-row visibility rules live in `on-track.md`. Every value renders existing state — nothing new is tracked (the revise and rework rounds from the plan comment, the active check's retry count from the run's own record, the degrades, the stated budget). The block is session-only — printed here, never posted to GitHub; the plan-comment update that accompanies it is a git artifact and follows the team-voice contract in `git-conventions.md`.
+The `degraded:` and `budget:` rows and the per-row visibility rules live in `on-track.md`. Every value renders existing state — nothing new is tracked (the revise and rework rounds and the active check's retry-bound trace from the plan comment, the degrades, the stated budget). The block is session-only — printed here, never posted to GitHub; the plan-comment update that accompanies it is a git artifact and follows the team-voice contract in `git-conventions.md`.
 
 ## Stage 4 — Verify
 

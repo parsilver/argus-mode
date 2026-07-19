@@ -918,15 +918,18 @@ if printf '%s\n' "$marker" | grep -qF 'attempt 0/3'; then
 else
   err "marker block missing the attempt counter (attempt 0/3)"
 fi
-if printf '%s\n' "$marker" | grep -q 'degraded:'; then
-  note "marker block specs the degraded row"
+# degraded/budget bind to their fence forms ("degraded: <each" / "budget: <standing"),
+# not the backticked prose mentions ("`degraded:`" / "`budget:`"), so deleting either
+# fence row turns this RED — the same fence-binding the three counters now have.
+if printf '%s\n' "$marker" | grep -qF 'degraded: <each'; then
+  note "marker block carries the degraded row (degraded: <each on the fence)"
 else
-  err "marker block missing the degraded row"
+  err "marker block missing the degraded row (degraded: <each)"
 fi
-if printf '%s\n' "$marker" | grep -q 'budget'; then
-  note "marker block specs the budget row"
+if printf '%s\n' "$marker" | grep -qF 'budget: <standing'; then
+  note "marker block carries the budget row (budget: <standing on the fence)"
 else
-  err "marker block missing the budget row"
+  err "marker block missing the budget row (budget: <standing)"
 fi
 for f in skills/run/SKILL.md skills/consult/SKILL.md; do
   if grep -q "stage-transition marker block" "$f"; then

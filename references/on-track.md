@@ -109,7 +109,7 @@ the marker line plus a compact status of where the run stands:
 
 ```
 Stage N done — failable check: <cmd> → GREEN | next: Stage N+1
-gates: revise 0/2 · rework 0/2 · attempt 0/3 (active: <cmd>)
+gates: revise 0/2 · rework 0/2 · attempt 0/3 (active: <next-cmd>)
 degraded: <each active degradation, one clause each>
 budget: <standing against the ~80% action line>
 ```
@@ -123,18 +123,20 @@ budget: <standing against the ~80% action line>
   verdict from escalation. `revise X/2` (the plan-review revise cycles) and
   `rework Y/2` (the review-gate rework cycles) are run-cumulative counts the
   plan comment records at each verdict, so they read forward at any boundary.
-  `attempt Z/3` is the identical failures of the **active check** — the stage
-  in progress, named in `(active: <cmd>)`, not a completed one. Because a
-  clean boundary has no failing check, the block **re-prints whenever a counter
-  increments** — a revise or rework send-back, or a recorded failure of the
-  active check — so `attempt 2/3` appears live at the moment the next run of
-  that check would be refused; a clean boundary shows the incoming stage's check
-  at zero of three. The denominators do not read alike: `/2` is the last
+  `attempt Z/3` is the retry count of the **active check** — the incoming
+  stage's check (`(active: <next-cmd>)`), not the completed one on line 1. At a
+  fresh stage it reads zero of three; a resumed run that adopts a stage which
+  already accumulated identical failures reads them back from the plan comment's
+  retry-bound trace. The denominators do not read alike: `/2` is the last
   *permitted* cycle, but the retry bound escalates at the **second** identical
-  failure and forbids the third run, so `attempt 2/3` means the next run is
-  refused, not one attempt of headroom left. These three are the caps **both
-  skills** share; consult's mid-execution checkpoint-firing cap is a separate
-  escalation tracked in consult's own section, not folded into this line.
+  failure and forbids the third run, so `attempt 2/3` is a next-run-refused
+  warning, not one attempt of headroom left. The live warning at that second
+  failure is the self-catch's own record (`pipeline.md`, plan-comment
+  lifecycle), not a re-print of this block — the block prints at stage
+  boundaries, where line 1 is a completed stage. These three are the caps
+  **both skills** share; consult's mid-execution checkpoint-firing cap is a
+  separate escalation tracked in consult's own section, not folded into this
+  line.
 - **`degraded:` — omit the row entirely when nothing is degraded** (never
   `degraded: none`). The capability preflight (`pipeline.md`) is the explicit
   degrade floor, announced once at intake; this row is the running delta on
@@ -150,10 +152,9 @@ budget: <standing against the ~80% action line>
 Every value renders state that already exists — no counter is invented. The
 revise and rework rounds are read back from the plan comment (recorded at each
 verdict), the degradations from the degradation contract, the budget from the
-stated ceiling; `attempt Z/3` is the session's own running count of the active
-check's identical failures, which the plan comment durably records only from the
-second failure (the retry-bound trace), so a run resumed before that second
-failure shows that check at zero of three. The block adds no count of its own.
+stated ceiling; `attempt Z/3` is the active check's recorded retry count from the
+plan comment's retry-bound trace — zero of three when that stage has no recorded
+failures. The block adds no count of its own.
 
 The block is session-only output — printed in the session, never posted to
 GitHub. The plan-comment update that follows it is a git artifact: it carries

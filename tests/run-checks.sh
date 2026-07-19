@@ -825,15 +825,24 @@ if printf '%s\n' "$preflight" | grep -q "decides nothing"; then
 else
   err "preflight section missing the 'decides nothing' session-only framing"
 fi
-# Drift guard: every mode string is a verbatim "## Degradation rules" condition.
-# One missing or abbreviated string turns this RED, so a shipped ellipsis cannot
-# pass — the mode column reuses the exact vocabulary or fails.
+# Drift guard (two-sided): each string below must appear verbatim in BOTH the
+# extracted preflight section AND the live "## Degradation rules" section.
+# Presence in the preflight proves it reuses the vocabulary; presence in the
+# live Degradation section couples the guard to the real source — rewording a
+# Degradation condition (or truncating the preflight cell) turns this RED instead
+# of drifting silently against a frozen copy. Only the six rows that map to a
+# Degradation-rules condition are pinned; the issue-type and CI rows reuse the
+# Issue-metadata-contract and verification.md vocabulary, not this table. The
+# Projects string carries its full parenthetical, so a truncated cell fails.
+degrada=$(awk '/^## Degradation rules$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
 while IFS= read -r cond; do
   [ -n "$cond" ] || continue
-  if printf '%s\n' "$preflight" | grep -qF "$cond"; then
-    note "preflight reuses the exact degradation string: $cond"
+  in_pf=$(printf '%s\n' "$preflight" | grep -qF "$cond" && echo y || echo n)
+  in_dg=$(printf '%s\n' "$degrada" | grep -qF "$cond" && echo y || echo n)
+  if [ "$in_pf" = y ] && [ "$in_dg" = y ]; then
+    note "preflight and Degradation rules both carry the verbatim string: $cond"
   else
-    err "preflight missing the exact degradation string: $cond"
+    err "drift: '$cond' — in preflight=$in_pf, in Degradation rules=$in_dg (both must be y)"
   fi
 done <<'PFCONDS'
 No git repo
@@ -841,7 +850,7 @@ Git repo, no remote at all
 Remote exists, `gh` CLI missing
 Remote exists, no push rights (fork / OSS contribution)
 Issues disabled on the repo, or no permission to create them
-No Projects v2 board, or the token lacks the project scope
+No Projects v2 board, or the token lacks the project scope (`project` in `gh auth status`)
 PFCONDS
 # The issue's own failable check: preflight referenced from BOTH skills.
 for f in skills/run/SKILL.md skills/consult/SKILL.md; do

@@ -18,16 +18,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   four agents — one upfront announcement — but only for them. A new "Capability
   preflight" section in `references/pipeline.md`, placed above `## Degradation
   rules`, runs the read-only discovery probes once at intake and prints one
-  table: each capability, its probe, and the mode this run takes for it, the
-  environment rows reusing the exact `## Degradation rules` condition strings. It
-  adds no capability and no gate — legibility only: it prints once and decides
-  nothing, every degrade stays enforced where it already lives, and the table is
-  session-only output, never written to a git artifact. The agent announcement is
-  absorbed as the table's top rows; the move is asymmetric across the skills,
-  because the consult skill's missing-advisor case is a before-you-proceed offer
-  the post-intake table cannot host — the run skill defers its announcement into
-  the preflight, the consult skill keeps that offer in place and adds a
-  non-blocking reference. The merge-time required-check and branch-protection poll
+  table: each capability, its probe, and the mode this run takes for it — the
+  git, remote, `gh`, push-rights, issues, and board rows reusing the exact
+  `## Degradation rules` condition strings verbatim, the issue-type and CI rows
+  the Issue-metadata-contract and `verification.md` vocabulary. It adds no
+  capability and no gate — legibility only: it prints once and decides nothing,
+  every degrade stays enforced where it already lives, and the table is
+  session-only output, never written to a git artifact. The agent modes are
+  re-shown as the table's top rows, but both skills keep announcing a missing
+  agent directly — the floor that covers the read-only route and a skills-only
+  install, where the preflight is never reached — the run skill's bullet reworded
+  to re-show the modes in the preflight, the consult skill keeping its
+  before-you-proceed offer and adding a non-blocking reference. The merge-time required-check and branch-protection poll
   stays out, since it is unknowable at intake. A presence self-check in
   `tests/run-checks.sh` (number 25) guards the section, both skills' references,
   the single-announcement anchor, the six verbatim degradation strings, and the

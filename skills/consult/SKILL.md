@@ -44,12 +44,12 @@ spawnable agents, and scope each degrade to the agent that is missing:
   run from this file's summaries and announce that too.
 - Never silently skip a checkpoint because the agent isn't installed.
 
-Each agent's resulting mode is **announced in the capability preflight** at
+Each agent's resulting mode is also **announced in the capability preflight** at
 intake (`pipeline.md`, Capability preflight), alongside the environment
-capabilities — one consolidated announcement rather than a per-agent aside. The
-preflight reflects these results; it does not gate them, so the `argus-oracle`
-missing offer above still fires here, before Stage 0 — a decision the
-post-intake preflight cannot host.
+capabilities — a consolidated view of the run's shape. The preflight reflects
+these results; it does not gate them, so the `argus-oracle` missing offer above
+still fires here, before Stage 0 — a decision the post-intake preflight cannot
+host, and one that announces the missing advisor in its own right.
 
 ## Stage 0 — Model gate (reverse)
 

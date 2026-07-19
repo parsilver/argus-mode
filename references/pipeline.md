@@ -522,13 +522,18 @@ The pipeline degrades gracefully when the platform does not cooperate — no
 CI to mirror — but it used to discover each degrade one at a time, mid-run,
 announcing it only as it hit it. A run on a fresh repo learned its true shape
 piecemeal, surprised stage by stage. The agent-availability check already does
-the right thing for the four agents: one upfront announcement. The capability
-preflight generalizes that to every capability the run depends on.
+the right thing for the agents: one upfront announcement, on every run. The
+capability preflight brings that same consolidation to the git and CI
+capabilities, and re-shows the agent modes beside them so a code-change run sees
+its whole shape at intake.
 
-Once at intake — after the triviality hatch clears (a trivial task never
-reaches it and pays no probes) and after the model gate — run the read-only
-discovery probes once and print one table: every capability, the probe that
-establishes it, and the mode this run takes for it.
+At the head of git intake — after the triviality hatch clears (a trivial task
+never reaches it and pays no probes) and after the model gate — run the
+read-only discovery probes once and print one table: every capability, the probe
+that establishes it, and the mode this run takes for it. The read-only route
+creates no git artifacts and prints no table; its missing-agent announcement
+comes from the agent-availability check directly — the floor that covers every
+run class, whether the preflight runs or not.
 
 | Concern | Probe | This run's mode |
 |---|---|---|
@@ -541,14 +546,18 @@ establishes it, and the mode this run takes for it.
 | Push rights | a push / fork probe | normal, or Remote exists, no push rights (fork / OSS contribution) |
 | Issues | issue-create permission | normal, or Issues disabled on the repo, or no permission to create them |
 | Issue types | `repository.issueTypes` (GraphQL) | normal, or the named issue-type degrade (Issue metadata contract) |
-| Projects v2 board | `gh project list`, the `project` token scope | normal, or No Projects v2 board, or the token lacks the project scope |
+| Projects v2 board | `gh project list` | normal, or No Projects v2 board, or the token lacks the project scope (`project` in `gh auth status`) |
 | CI to mirror | `.github/workflows` presence | normal, or no CI config to mirror — the local Stage-4 evidence stands alone (`verification.md`) |
 
-The agent rows are the four agents the agent-availability check already probes;
-the run skill carries all three agent rows, the consult skill omits the
-review-gate row — it never spawns the reviewer, the oracle reviews instead. The
-environment rows reuse the exact condition strings from `## Degradation rules`
-below: the preflight names the mode, that table defines what it does.
+The agent rows re-show the modes the agent-availability check already recorded —
+that check announces a missing agent directly, the floor, whether or not the
+preflight runs; the run skill carries all three agent rows, the consult skill
+omits the review-gate row, since it never spawns the reviewer. The git, remote,
+`gh`, push-rights, issues, and board rows copy their condition strings verbatim
+from `## Degradation rules` below; the issue-types row names the Issue metadata
+contract's degrade and the CI row names `verification.md`'s, since neither has a
+Degradation-rules row. The preflight names the mode; those sources define what
+it does.
 
 **Legibility only — an announcement, not a gate.** The preflight prints once and
 decides nothing: it never blocks, asks, or selects a mode — it reports the mode
@@ -556,7 +565,8 @@ each concern already resolves to. Every degrade stays chosen and enforced where
 it already lives: the agent rows by the skills' agent-availability check, the
 git, issue, and board rows by `## Degradation rules` below, the CI row by
 `verification.md`. It adds no capability and no probe the pipeline did not
-already run; it runs them once, together, and shows the result.
+already run; it runs the environment probes once, together, and displays their
+result beside the agent modes the availability check already recorded.
 
 Session-only output — the same treatment as the stage-transition marker
 (`on-track.md`) and the in-flight-work announce above: printed for the user,
@@ -570,7 +580,7 @@ merge, where the check-runs exist.
 
 - Refusal condition: a run that degrades a capability without the preflight
   having named it at intake has re-created the piecemeal surprise the preflight
-  exists to remove — the one consolidated announcement is the whole point.
+  exists to remove — consolidating them into one intake table is the whole point.
 
 ## Degradation rules
 

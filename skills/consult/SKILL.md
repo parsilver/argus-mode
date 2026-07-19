@@ -44,6 +44,13 @@ spawnable agents, and scope each degrade to the agent that is missing:
   run from this file's summaries and announce that too.
 - Never silently skip a checkpoint because the agent isn't installed.
 
+Each agent's resulting mode is also **announced in the capability preflight** at
+intake (`pipeline.md`, Capability preflight), alongside the environment
+capabilities — a consolidated view of the run's shape. The preflight reflects
+these results; it does not gate them, so the `argus-oracle` missing offer above
+still fires here, before Stage 0 — a decision the post-intake preflight cannot
+host, and one that announces the missing advisor in its own right.
+
 ## Stage 0 — Model gate (reverse)
 
 Check the session model exactly as `/argus-mode:run` Stage 0 does — the
@@ -101,6 +108,11 @@ runs, in pipeline.md's section order:
   Nothing fetched → nothing to gate; record the absence.
 - **Ambiguity gate:** a new capability with unstated requirements gets
   clarified with the requester before the issue is written.
+- **Capability preflight:** print one table at the head of intake
+  (`pipeline.md`, Capability preflight) — every capability this run depends on
+  (the agents plus git, remote, `gh`, push rights, issues, issue types, board, and CI)
+  and the mode each takes, reusing the exact degradation vocabulary. Legibility
+  only, session-only, never a git artifact.
 - **Git intake:** an issue with every metadata dimension the repo has
   filled per the Issue metadata contract — type, labels, milestone,
   Projects fields, relationships; judgment values (priority, size,

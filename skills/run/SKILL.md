@@ -15,7 +15,7 @@ reference wins.
 
 Before Stage 0, check whether `argus-oracle`, `argus-explorer`, `argus-implementer`, and `argus-reviewer` exist as spawnable agents (true on a Claude Code plugin install; not true on a skills-only install, e.g. `npx skills add`).
 
-- Any missing → **announce this to the user now**, plainly, naming which agents are absent. Never degrade silently.
+- Any missing → **announce which agents are absent now**, plainly. That direct announcement is the floor — it covers the read-only route (which prints no table) and a skills-only install (where the preflight's `pipeline.md` spec is unreachable). On the full pipeline the same modes are re-shown alongside the environment capabilities when the run's shape is **announced in the capability preflight** at intake (`pipeline.md`, Capability preflight). Never a silent degrade.
 - **Scope each degrade to the agent that is actually missing.** No `argus-oracle` → Stage 2.5 (the plan-review gate) runs **inline**; no `argus-reviewer` → Stage 5 (the review gate) runs **inline**; both apply the same rubrics from `${CLAUDE_PLUGIN_ROOT}/references/verification.md` and `${CLAUDE_PLUGIN_ROOT}/references/quality.md`. An agent that is present still runs its own gate — a missing reviewer does not push the plan review inline, and vice versa.
 - No `argus-explorer` / `argus-implementer` → Stage 3 fan-out has no executors: the lead executes every slice **solo**, in plan order, under the same TDD and verification rules.
 - Any gate the lead runs inline is a **weaker gate** — the lead grading its own work. State plainly in the Deliver section of the final report which gates ran inline and why.
@@ -60,6 +60,8 @@ request, the ambiguity gate applies — clarify with the requester before
 the issue is written (`pipeline.md`, Ambiguous ask).
 
 **Read `${CLAUDE_PLUGIN_ROOT}/references/pipeline.md` and `${CLAUDE_PLUGIN_ROOT}/references/git-conventions.md` now** — pipeline.md is the flow (follow it exactly, including its degradation rules); git-conventions.md is the naming, message, prose-style, diagram, and decision-record standard every artifact below follows.
+
+**Capability preflight** (`pipeline.md`, Capability preflight): print it once at the head of intake, before the steps below — one table naming every capability this run depends on (the agents from the availability check above, plus git, remote, `gh`, push rights, issues, issue types, board, and CI) and the mode each takes, reusing the exact degradation vocabulary. Legibility only, session-only — never a git artifact.
 
 **Resume first (`pipeline.md`, Resume — the receiving side):** when the request names an existing issue, PR, or branch — or an in-flight branch whose plan comment already covers this task — adopt that state instead of creating new artifacts: reconcile the plan comment against the branch's commit log (the log outranks the comment), apply any recorded-but-unapplied review outcome, and enter at the first open item. The steps below create state only when none exists:
 

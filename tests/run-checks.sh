@@ -795,5 +795,91 @@ fi
 # (review follow-up: a stale/mis-ranged clean scan must not pass the gate).
 grep -q "Stage-4 HEAD SHA" references/verification.md && note "verification.md binds the secret-scan to the Stage-4 HEAD SHA" || err "verification.md missing the secret-scan freshness/range binding (Stage-4 HEAD SHA)"
 
+# 25. Capability preflight (issue #98). The pipeline discovered environment
+#     degradations one at a time mid-run and announced each as it hit it, so a run
+#     on a fresh repo learned its true shape piecemeal. A new "## Capability
+#     preflight" section in references/pipeline.md consolidates the probes into one
+#     intake table — legibility only, no new gate, session-only — generalizing the
+#     pre-Stage-0 agent-availability announcement to the git/CI capabilities too.
+#     Both skills keep announcing a missing agent DIRECTLY — the floor that covers
+#     the read-only route and a skills-only install — and re-show the modes in the
+#     preflight when it runs; the consult skill also keeps its pre-Stage-0
+#     oracle-missing OFFER. The six environment mode cells that map to a
+#     "## Degradation rules" condition reuse it verbatim, so a two-sided drift guard
+#     requires each string in both the preflight and the live Degradation section.
+#     Written RED-first — the phrases below
+#     are absent until #98's prose lands, so this fails before it and passes after.
+#     Rides inside no numbered rubric item or dimension row, so check 6's parity
+#     counts (12 and 6) are untouched.
+preflight=$(awk '/^## Capability preflight$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+if [ -n "$preflight" ]; then
+  note "pipeline.md carries the '## Capability preflight' section"
+else
+  err "pipeline.md missing the '## Capability preflight' section"
+fi
+if printf '%s\n' "$preflight" | grep -q "announcement, not a gate"; then
+  note "preflight section frames itself as an announcement, not a gate"
+else
+  err "preflight section missing the 'announcement, not a gate' framing"
+fi
+if printf '%s\n' "$preflight" | grep -q "decides nothing"; then
+  note "preflight section states it decides nothing (session-only)"
+else
+  err "preflight section missing the 'decides nothing' session-only framing"
+fi
+# Drift guard (two-sided): each string below must appear verbatim in BOTH the
+# extracted preflight section AND the live "## Degradation rules" section.
+# Presence in the preflight proves it reuses the vocabulary; presence in the
+# live Degradation section couples the guard to the real source — rewording a
+# Degradation condition (or truncating the preflight cell) turns this RED instead
+# of drifting silently against a frozen copy. Only the six rows that map to a
+# Degradation-rules condition are pinned; the issue-type and CI rows reuse the
+# Issue-metadata-contract and verification.md vocabulary, not this table. The
+# Projects string carries its full parenthetical, so a truncated cell fails.
+degrada=$(awk '/^## Degradation rules$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+while IFS= read -r cond; do
+  [ -n "$cond" ] || continue
+  in_pf=$(printf '%s\n' "$preflight" | grep -qF "$cond" && echo y || echo n)
+  in_dg=$(printf '%s\n' "$degrada" | grep -qF "$cond" && echo y || echo n)
+  if [ "$in_pf" = y ] && [ "$in_dg" = y ]; then
+    note "preflight and Degradation rules both carry the verbatim string: $cond"
+  else
+    err "drift: '$cond' — in preflight=$in_pf, in Degradation rules=$in_dg (both must be y)"
+  fi
+done <<'PFCONDS'
+No git repo
+Git repo, no remote at all
+Remote exists, `gh` CLI missing
+Remote exists, no push rights (fork / OSS contribution)
+Issues disabled on the repo, or no permission to create them
+No Projects v2 board, or the token lacks the project scope (`project` in `gh auth status`)
+PFCONDS
+# The issue's own failable check: preflight referenced from BOTH skills.
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "preflight" "$f"; then
+    note "preflight referenced from $f (issue #98 failable check)"
+  else
+    err "preflight not referenced from $f (issue #98 failable check)"
+  fi
+done
+# Preflight-anchor retention: both skills carry the "announced in the capability
+# preflight" anchor in their availability sections, so the preflight re-shows each
+# agent's mode alongside the environment capabilities — the direct floor
+# announcement stays; this is the consolidated view, not a replacement.
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -q "announced in the capability preflight" "$f"; then
+    note "preflight anchor present in $f"
+  else
+    err "preflight anchor (announced in the capability preflight) missing from $f"
+  fi
+done
+# Regression guards — no rename broke a cross-reference, and consult's pre-Stage-0
+# severe oracle-missing OFFER survives the reword (a decision the post-Stage-0
+# preflight cannot host, so it must stay in place).
+grep -q "## Agent availability check" skills/run/SKILL.md && note "run skill keeps the Agent availability check heading" || err "run skill lost the Agent availability check heading"
+grep -q "## Agent availability check" skills/consult/SKILL.md && note "consult skill keeps the Agent availability check heading" || err "consult skill lost the Agent availability check heading"
+grep -q "per the Agent availability check above" skills/run/SKILL.md && note "run skill keeps the 'per the Agent availability check above' cross-refs" || err "run skill lost the 'per the Agent availability check above' cross-refs"
+grep -q "Offer the user the choice before proceeding" skills/consult/SKILL.md && note "consult keeps the pre-Stage-0 severe oracle-missing offer" || err "consult lost the pre-Stage-0 severe oracle-missing offer"
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

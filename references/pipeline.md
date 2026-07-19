@@ -210,9 +210,11 @@ not to the pipeline's guess.
 
 ## Stage 1 — Git intake
 
-Run these four steps, in order, when the project is a git repo. (No repo,
-no remote, no `gh`, no issue permission — see Degradation rules below;
-each has a defined substitute for these steps, never a silent skip.)
+Print the capability preflight (below) first — one table naming every capability
+this run depends on and the mode it takes for each — then run these four steps,
+in order, when the project is a git repo. (No repo, no remote, no `gh`, no issue
+permission — see Degradation rules below; each has a defined substitute for
+these steps, never a silent skip.)
 
 **Every name and message these steps produce follows
 `git-conventions.md` — read it together with this file.** Branches,
@@ -512,6 +514,73 @@ edit.
   comment breaks the resume contract, and a post or edit that skips
   the lexicon check ships session vocabulary to a human audience — the
   update, in the team voice, is part of finishing the stage.
+
+## Capability preflight
+
+The pipeline degrades gracefully when the platform does not cooperate — no
+`gh`, no remote, no push rights, issues disabled, no board, no issue types, no
+CI to mirror — but it used to discover each degrade one at a time, mid-run,
+announcing it only as it hit it. A run on a fresh repo learned its true shape
+piecemeal, surprised stage by stage. The agent-availability check already does
+the right thing for the agents: one upfront announcement, on every run. The
+capability preflight brings that same consolidation to the git and CI
+capabilities, and re-shows the agent modes beside them so a code-change run sees
+its whole shape at intake.
+
+At the head of git intake — after the triviality hatch clears (a trivial task
+never reaches it and pays no probes) and after the model gate — run the
+read-only discovery probes once and print one table: every capability, the probe
+that establishes it, and the mode this run takes for it. The read-only route
+creates no git artifacts and prints no table; its missing-agent announcement
+comes from the agent-availability check directly — the floor that covers every
+run class, whether the preflight runs or not.
+
+| Concern | Probe | This run's mode |
+|---|---|---|
+| Plan review (`argus-oracle`) | spawnable? | normal, or Stage 2.5 runs **inline** |
+| Executors (`argus-explorer` / `argus-implementer`) | spawnable? | normal, or Stage 3 executes **solo** |
+| Review gate (`argus-reviewer`) — run skill only | spawnable? | normal, or Stage 5 runs **inline** |
+| Git repo | `git rev-parse` | normal, or No git repo |
+| Remote | `git remote` | normal, or Git repo, no remote at all |
+| `gh` CLI and auth | `gh auth status` (with the `project` scope) | normal, or Remote exists, `gh` CLI missing |
+| Push rights | a push / fork probe | normal, or Remote exists, no push rights (fork / OSS contribution) |
+| Issues | issue-create permission | normal, or Issues disabled on the repo, or no permission to create them |
+| Issue types | `repository.issueTypes` (GraphQL) | normal, or the named issue-type degrade (Issue metadata contract) |
+| Projects v2 board | `gh project list` | normal, or No Projects v2 board, or the token lacks the project scope (`project` in `gh auth status`) |
+| CI to mirror | `.github/workflows` presence | normal, or no CI config to mirror — the local Stage-4 evidence stands alone (`verification.md`) |
+
+The agent rows re-show the modes the agent-availability check already recorded —
+that check announces a missing agent directly, the floor, whether or not the
+preflight runs; the run skill carries all three agent rows, the consult skill
+omits the review-gate row, since it never spawns the reviewer. The git, remote,
+`gh`, push-rights, issues, and board rows copy their condition strings verbatim
+from `## Degradation rules` below; the issue-types row names the Issue metadata
+contract's degrade and the CI row names `verification.md`'s, since neither has a
+Degradation-rules row. The preflight names the mode; those sources define what
+it does.
+
+**Legibility only — an announcement, not a gate.** The preflight prints once and
+decides nothing: it never blocks, asks, or selects a mode — it reports the mode
+each concern already resolves to. Every degrade stays chosen and enforced where
+it already lives: the agent rows by the skills' agent-availability check, the
+git, issue, and board rows by `## Degradation rules` below, the CI row by
+`verification.md`. It adds no capability and no probe the pipeline did not
+already run; it runs the environment probes once, together, and displays their
+result beside the agent modes the availability check already recorded.
+
+Session-only output — the same treatment as the stage-transition marker
+(`on-track.md`) and the in-flight-work announce above: printed for the user,
+**never written to an issue, PR, `PLAN.md`, or any git artifact.** A capability
+table names push rights and a run's degraded modes — session context, not repo
+content a reader with no session should find on an issue.
+
+The merge-time required-check and branch-protection poll (Merge readiness,
+below) is not a preflight concern: it is unknowable at intake and belongs at the
+merge, where the check-runs exist.
+
+- Refusal condition: a run that degrades a capability without the preflight
+  having named it at intake has re-created the piecemeal surprise the preflight
+  exists to remove — consolidating them into one intake table is the whole point.
 
 ## Degradation rules
 

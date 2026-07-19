@@ -120,15 +120,21 @@ budget: <standing against the ~80% action line>
   their own record, not a marker.
 - **`gates:` — always, all three counters with their caps, even at zero.**
   The point is seeing headroom *before* a cap escalates: `rework 2/2` is one
-  verdict from escalation. `revise X/2` is the plan-review revise cycles,
-  `rework Y/2` the review-gate rework cycles, `attempt Z/3` the identical
-  recorded failures of the just-completed stage's failable check (the `<cmd>`
-  on line 1, echoed in `(active: …)`). The denominators do not read alike:
-  `/2` is the last *permitted* cycle, but the retry bound escalates at the
-  **second** identical failure and forbids the third run — so `attempt 2/3`
-  means the next run is refused, not that one attempt of headroom remains, and
-  a GREEN boundary never prints `attempt 3/3` because escalation fired before
-  it. All three are a render of the plan comment; the comment is authoritative.
+  verdict from escalation. `revise X/2` (the plan-review revise cycles) and
+  `rework Y/2` (the review-gate rework cycles) are run-cumulative counts the
+  plan comment records at each verdict, so they read forward at any boundary.
+  `attempt Z/3` is the identical failures of the **active check** — the stage
+  in progress, named in `(active: <cmd>)`, not a completed one. Because a
+  clean boundary has no failing check, the block **re-prints whenever a counter
+  increments** — a revise or rework send-back, or a recorded failure of the
+  active check — so `attempt 2/3` appears live at the moment the next run of
+  that check would be refused; a clean boundary shows the incoming stage's check
+  at zero of three. The denominators do not read alike: `/2` is the last
+  *permitted* cycle, but the retry bound escalates at the **second** identical
+  failure and forbids the third run, so `attempt 2/3` means the next run is
+  refused, not one attempt of headroom left. These three are the caps **both
+  skills** share; consult's mid-execution checkpoint-firing cap is a separate
+  escalation tracked in consult's own section, not folded into this line.
 - **`degraded:` — omit the row entirely when nothing is degraded** (never
   `degraded: none`). The capability preflight (`pipeline.md`) is the explicit
   degrade floor, announced once at intake; this row is the running delta on
@@ -141,9 +147,13 @@ budget: <standing against the ~80% action line>
   meter — no token or dollar counter exists to read, so printing `$3.10 / $4.00`
   would itself be the new tracking this block does not add.
 
-Every value renders state that already exists — the plan comment's round and
-attempt counts, the active degradations, the stated budget — so the block
-adds no count of its own.
+Every value renders state that already exists — no counter is invented. The
+revise and rework rounds are read back from the plan comment (recorded at each
+verdict), the degradations from the degradation contract, the budget from the
+stated ceiling; `attempt Z/3` is the session's own running count of the active
+check's identical failures, which the plan comment durably records only from the
+second failure (the retry-bound trace), so a run resumed before that second
+failure shows that check at zero of three. The block adds no count of its own.
 
 The block is session-only output — printed in the session, never posted to
 GitHub. The plan-comment update that follows it is a git artifact: it carries

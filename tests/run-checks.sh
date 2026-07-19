@@ -897,20 +897,26 @@ grep -q "Offer the user the choice before proceeding" skills/consult/SKILL.md &&
 #     rubric item or dimension row, so check 6's parity counts (12 and 6) are
 #     untouched.
 marker=$(awk '/^## Stage-transition marker$/{f=1;next} /^## /{f=0} f' references/on-track.md)
-if printf '%s\n' "$marker" | grep -Eq 'revise [0-9]+/2'; then
-  note "marker block carries the revise counter (revise N/2)"
+# Each counter binds to the code-fence gates line via its base-zero literal
+# (revise 0/2 / rework 0/2 / attempt 0/3) — the prose deliberately uses letter
+# placeholders (revise X/2) and non-zero examples (rework 2/2, attempt 2/3), so a
+# zero-literal appears ONLY on the rendered gates line; deleting that line turns
+# all three RED, not just revise. Still asserted separately, never grepping the
+# "·" middot separator (a hand-wrap could split the line around it).
+if printf '%s\n' "$marker" | grep -qF 'revise 0/2'; then
+  note "marker block carries the revise counter (revise 0/2 on the gates line)"
 else
-  err "marker block missing the revise counter (revise N/2)"
+  err "marker block missing the revise counter (revise 0/2)"
 fi
-if printf '%s\n' "$marker" | grep -Eq 'rework [0-9]+/2'; then
-  note "marker block carries the rework counter (rework N/2)"
+if printf '%s\n' "$marker" | grep -qF 'rework 0/2'; then
+  note "marker block carries the rework counter (rework 0/2 on the gates line)"
 else
-  err "marker block missing the rework counter (rework N/2)"
+  err "marker block missing the rework counter (rework 0/2)"
 fi
-if printf '%s\n' "$marker" | grep -Eq 'attempt [0-9]+/3'; then
-  note "marker block carries the attempt counter (attempt N/3)"
+if printf '%s\n' "$marker" | grep -qF 'attempt 0/3'; then
+  note "marker block carries the attempt counter (attempt 0/3 on the gates line)"
 else
-  err "marker block missing the attempt counter (attempt N/3)"
+  err "marker block missing the attempt counter (attempt 0/3)"
 fi
 if printf '%s\n' "$marker" | grep -q 'degraded:'; then
   note "marker block specs the degraded row"

@@ -23,8 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   full set once at intake, so this is the running delta), and a budget line shown
   only when the request stated a budget, standing qualitatively against the action
   line — never an invented numeric meter, since no such counter exists to read.
-  Every value renders state that already exists — the plan comment's counts, the
-  named degrades, the stated budget — so nothing new is tracked, and the block
+  Every value renders state that already exists — the revise and rework rounds
+  from the plan comment, the active check's retry count from the run's own record,
+  the named degrades, the stated budget — so nothing new is tracked, and the block
   stays session-only, never a git artifact, the same contract the single line held.
   Both skills carry a compact form and defer the full rules to the shared
   reference. A presence self-check in `tests/run-checks.sh` (number 26) guards the

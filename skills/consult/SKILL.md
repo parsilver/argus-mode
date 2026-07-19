@@ -110,7 +110,7 @@ runs, in pipeline.md's section order:
   clarified with the requester before the issue is written.
 - **Capability preflight:** print one table at the head of intake
   (`pipeline.md`, Capability preflight) — every capability this run depends on
-  (the agents plus git, remote, push rights, issues, issue types, board, and CI)
+  (the agents plus git, remote, `gh`, push rights, issues, issue types, board, and CI)
   and the mode each takes, reusing the exact degradation vocabulary. Legibility
   only, session-only, never a git artifact.
 - **Git intake:** an issue with every metadata dimension the repo has

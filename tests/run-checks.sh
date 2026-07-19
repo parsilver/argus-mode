@@ -801,11 +801,13 @@ grep -q "Stage-4 HEAD SHA" references/verification.md && note "verification.md b
 #     preflight" section in references/pipeline.md consolidates the probes into one
 #     intake table — legibility only, no new gate, session-only — generalizing the
 #     pre-Stage-0 agent-availability announcement to the git/CI capabilities too.
-#     The move is asymmetric: the run skill defers its announcement into the
-#     preflight; the consult skill keeps its pre-Stage-0 oracle-missing OFFER in
-#     place and only adds a non-blocking reference. The mode column reuses the exact
-#     "## Degradation rules" condition strings, so a per-string drift guard extracts
-#     the section and requires each verbatim. Written RED-first — the phrases below
+#     Both skills keep announcing a missing agent DIRECTLY — the floor that covers
+#     the read-only route and a skills-only install — and re-show the modes in the
+#     preflight when it runs; the consult skill also keeps its pre-Stage-0
+#     oracle-missing OFFER. The six environment mode cells that map to a
+#     "## Degradation rules" condition reuse it verbatim, so a two-sided drift guard
+#     requires each string in both the preflight and the live Degradation section.
+#     Written RED-first — the phrases below
 #     are absent until #98's prose lands, so this fails before it and passes after.
 #     Rides inside no numbered rubric item or dimension row, so check 6's parity
 #     counts (12 and 6) are untouched.
@@ -860,13 +862,15 @@ for f in skills/run/SKILL.md skills/consult/SKILL.md; do
     err "preflight not referenced from $f (issue #98 failable check)"
   fi
 done
-# Single-announcement lock: agent status is announced via the preflight in both
-# skills' availability sections (so the absorb is real, not a second announcement).
+# Preflight-anchor retention: both skills carry the "announced in the capability
+# preflight" anchor in their availability sections, so the preflight re-shows each
+# agent's mode alongside the environment capabilities — the direct floor
+# announcement stays; this is the consolidated view, not a replacement.
 for f in skills/run/SKILL.md skills/consult/SKILL.md; do
   if grep -q "announced in the capability preflight" "$f"; then
-    note "single-announcement anchor present in $f"
+    note "preflight anchor present in $f"
   else
-    err "single-announcement anchor (announced in the capability preflight) missing from $f"
+    err "preflight anchor (announced in the capability preflight) missing from $f"
   fi
 done
 # Regression guards — no rename broke a cross-reference, and consult's pre-Stage-0

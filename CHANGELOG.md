@@ -26,10 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   every degrade stays enforced where it already lives, and the table is
   session-only output, never written to a git artifact. The agent modes are
   re-shown as the table's top rows, but both skills keep announcing a missing
-  agent directly — the floor that covers the read-only route and a skills-only
-  install, where the preflight is never reached — the run skill's bullet reworded
-  to re-show the modes in the preflight, the consult skill keeping its
-  before-you-proceed offer and adding a non-blocking reference. The merge-time required-check and branch-protection poll
+  agent directly — the floor that covers the read-only route (which prints no
+  table) and a skills-only install (where the preflight's `pipeline.md` spec is
+  unreachable) — the run skill's bullet reworded to re-show the modes in the
+  preflight, the consult skill keeping its before-you-proceed offer and adding a
+  non-blocking reference. The merge-time required-check and branch-protection poll
   stays out, since it is unknowable at intake. A presence self-check in
   `tests/run-checks.sh` (number 25) guards the section, both skills' references,
   the single-announcement anchor, the six verbatim degradation strings, and the

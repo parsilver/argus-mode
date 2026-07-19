@@ -113,6 +113,17 @@ runs, in pipeline.md's section order:
   (the agents plus git, remote, `gh`, push rights, issues, issue types, board, and CI)
   and the mode each takes, reusing the exact degradation vocabulary. Legibility
   only, session-only, never a git artifact.
+- **Preview mode** (`pipeline.md`, Preview mode): on the `--preview` flag or an
+  unambiguous dry-run intent (ambiguous → ask), run the read-only front of
+  intake (preflight, untrusted scan/tier, `git fetch`) and the Stage 2 draft
+  plan + cost line, then stop before the issue/branch/PR are created — print
+  the draft labeled `not yet oracle-reviewed`, the cost, which gates will fire,
+  and the degrades, and end on a proceed handshake. A trivial task has nothing
+  to preview (the hatch handles it directly); existing durable state takes the
+  Resume path. On the user's yes the draft is reused into the normal run and
+  still goes through the plan review —
+  no gate is skipped, and the yes is a commitment, not a ratification of an
+  unratified goal.
 - **Git intake:** an issue with every metadata dimension the repo has
   filled per the Issue metadata contract — type, labels, milestone,
   Projects fields, relationships; judgment values (priority, size,

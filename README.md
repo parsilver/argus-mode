@@ -131,7 +131,12 @@ PR), at least one `argus-oracle` run (more if the plan goes through revise
 cycles), and a review-gate run before merge. Each run also states its own
 per-run estimate in the plan header — the path it takes and which model
 tier pays each expensive step — so the cost is visible before execution,
-not only described here. `/argus-mode:consult` is the cheap-**execution**
+not only described here. The `--preview` intake mode goes one step further:
+it drafts that plan and cost — and shows which gates and degrades will
+apply — before creating any issue, branch, or PR, so you can see the shape
+of a run before committing to it. It is a pre-commitment dry-run, not a
+cheaper path: on a yes it runs the full pipeline unchanged.
+`/argus-mode:consult` is the cheap-**execution**
 path, not a cheap path overall — its mandatory oracle
 checkpoints can exceed what a plain small-model session would cost on its
 own.

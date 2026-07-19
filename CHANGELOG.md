@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A `--preview` intake mode (`references/pipeline.md`, both `skills/*/SKILL.md`,
+  `tests/run-checks.sh`): git intake created the issue, branch/worktree, and
+  draft PR before the plan and its cost line existed, so a user unsure whether a
+  task was worth the pipeline had to commit to those artifacts sight-unseen —
+  the triviality hatch is binary and offered no "show me the plan and cost
+  first, then let me decide." Invoked with `--preview` (or an unambiguous
+  dry-run intent; an ambiguous invocation asks), the mode runs the read-only
+  front of intake — the capability preflight, the untrusted-input scan and
+  trust-tier probe, and `git fetch` — drafts the plan and per-run cost, then
+  stops before creating any issue, branch, or PR. It prints the draft plan
+  labeled "not yet oracle-reviewed", the cost estimate, which gates will fire,
+  and which degrades apply, and ends on a proceed handshake. A trivial task has
+  nothing to preview; an existing issue, PR, or branch takes the resume path
+  instead. On the user's yes the drafted plan is reused into the normal run and
+  still goes through the plan review — no gate is skipped, and the yes is a
+  commitment to spend the pipeline, not a ratification of an otherwise
+  unratified goal. Preview writes nothing durable and is session-only, and adds
+  no plan-review item and no review dimension, so the parity counts (12 and 6)
+  are unchanged. A new check in `tests/run-checks.sh` (number 27) guards the
+  mode's section and both skills' summaries, written before the prose so it
+  fails first. (#100)
 - Gate counters and active degrades in the stage-transition marker
   (`references/on-track.md`, both `skills/*/SKILL.md`, `tests/run-checks.sh`): the
   mandatory marker showed only which stage finished and which is next. The

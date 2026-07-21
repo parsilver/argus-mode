@@ -367,8 +367,9 @@ update the plan comment, exactly as in `/argus-mode:run`. Every value renders
 existing state, nothing new is tracked. `attempt Z/3` is the retry count of the
 **active check** — the incoming stage's check, not the one line 1 just reported
 complete — read back from the plan comment's retry-bound trace, and zero of
-three at a stage with no recorded failures. The block is session-only — never posted to GitHub; the comment
-update follows the team-voice contract in `git-conventions.md`.
+three at a stage with no recorded failures. The block is session-only —
+never posted to GitHub; the comment update follows the team-voice contract
+in `git-conventions.md`.
 
 ## Stage 4 — Verify
 

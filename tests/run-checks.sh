@@ -1079,6 +1079,18 @@ if awk '/^## Read-only work/{f=1;next} /^## /{f=0} f' references/pipeline.md \
 else
   err "the read-only route section does not point at the binding rule"
 fi
+# The route-scoped grant needs an expiry at the one transition that crosses
+# its scope: read-only -> git intake. Resume and Preview both restate that a
+# ratification is a snapshot rather than a standing grant; this transition is
+# the only one the new rule makes consequential, so it says so too. Asserted
+# at the reference AND both skills, since the skills are what runs.
+for f in references/pipeline.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "does not survive" "$f" && grep -qF "re-resolves the tier" "$f"; then
+    note "the relay grant expires on re-entry into git intake in $f"
+  else
+    err "no re-entry expiry for the relay grant in $f"
+  fi
+done
 if grep -qF "creates no git artifacts at intake" references/pipeline.md; then
   note "pipeline.md scopes the no-git-artifacts claim to intake"
 else
@@ -1090,11 +1102,27 @@ fi
 # twice in pipeline.md: once in the general tier list, once in the read-only
 # section. A third occurrence means someone re-generalised the trigger and must
 # re-account for it here.
-pastes=$(grep -oF "A body the user pastes in-session" references/pipeline.md | wc -l | tr -d " ")
+# WHOLE LINE, not a substring. A substring pin is defeated by the most
+# natural widening of all -- inserting an alternative into the sentence
+# ("A body the user pastes in-session, or an artifact they point the run at,
+# is ratified by relay"), which leaves every pinned substring intact and the
+# occurrence counts unmoved. Mutation-tested: the substring form shipped that
+# widening green.
+pastes=$(grep -cFx -- '- A body the user pastes in-session is **ratified by relay**: relaying it' references/pipeline.md || true)
 if [ "${pastes:-0}" -eq 1 ]; then
-  note "the general relay clause is intact and unwidened (pastes-in-session=1)"
+  note "the general relay clause is intact, whole-line (unwidened)"
 else
-  err "relay containment drift: pastes-in-session=${pastes:-0} (want 1)"
+  err "the general relay clause has been reworded or widened — its first line no longer matches verbatim"
+fi
+# Belt to that brace: the pointing gesture is what must never grant relay
+# outside the read-only section, so it may not appear in the general tier
+# section at all. Bounded to '## Untrusted input at intake', which ends where
+# '## Which route binds which question' begins.
+if awk '/^## Untrusted input at intake$/{f=1;next} /^## /{f=0} f' references/pipeline.md \
+   | grep -qE 'point(s|ed|ing)? the run at'; then
+  err "the general tier section grants relay for a pointed-at artifact — that belongs only to the read-only route"
+else
+  note "the general tier section never grants relay for a pointed-at artifact"
 fi
 # The count is pinned per FILE, not only in the reference. A pin on
 # pipeline.md alone leaves the executed prompt unguarded: a widening sentence
@@ -1189,9 +1217,15 @@ done
 # criteria" -- route-neutral, deliberately left alone, and deliberately not
 # asserted here. Scoped extraction matters: `read-only` is already present
 # elsewhere in all three files, so a whole-file grep would be green today.
+# The payload, not the token. Asserting only "read-only" inside the region
+# passes on a copy stating the OPPOSITE rule ("on the read-only route this
+# item does not apply at all") -- mutation-tested green before this was
+# tightened. The phrase below is the rule itself, contiguous on one line in
+# all three copies.
 while IFS='|' read -r f anchor; do
   [ -n "$f" ] || continue
-  if extract_block "$f" "$anchor" '^[0-9]+\. ' | grep -qF "read-only"; then
+  if extract_block "$f" "$anchor" '^[0-9]+\. ' \
+     | grep -qF "read-only route the diff target is the question as asked"; then
     note "plan-review item 2 carries the read-only scoping in $f"
   else
     err "plan-review item 2 missing the read-only scoping in $f"
@@ -1207,18 +1241,28 @@ ITEM2
 # carries"), and both are prose the section-body phrase list above could
 # otherwise be satisfied without -- the skills are the executed prompt, so each
 # must carry them rather than merely point at the reference.
-for f in skills/run/SKILL.md skills/consult/SKILL.md; do
-  if grep -qF "never a permission level" "$f"; then
-    note "report disposition (never a permission level) carried in $f"
+# Scoped, not whole-file — the discipline this check states for itself
+# above. A whole-file grep passed after the disposition sentence was deleted
+# from its rule site and the phrase restated somewhere unrelated in the same
+# file; mutation-tested.
+# Anchors differ per skill: the run skill writes each rule as one long line,
+# the consult skill wraps its bullets, so each names its own governing block.
+while IFS='|' read -r f header_anchor route_anchor; do
+  [ -n "$f" ] || continue
+  if extract_block "$f" "$header_anchor" '^$' | grep -qF "never a permission level"; then
+    note "report disposition (never a permission level) carried at its rule site in $f"
   else
-    err "report disposition (never a permission level) missing from $f"
+    err "report disposition (never a permission level) missing from its rule site in $f"
   fi
-  if grep -qF "Which route binds which question" "$f"; then
-    note "read-only binding referenced from $f"
+  if extract_block "$f" "$route_anchor" '^$' | grep -qF "Which route binds which question"; then
+    note "read-only binding referenced from the route's own bullet in $f"
   else
-    err "read-only binding not referenced from $f"
+    err "read-only binding not referenced from the route's own bullet in $f"
   fi
-done
+done <<'SKILLSITES'
+skills/run/SKILL.md|**Untrusted-input scan and trust tier:**|**Non-trivial read-only work**
+skills/consult/SKILL.md|intake-trust lines|- **Read-only route**
+SKILLSITES
 
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

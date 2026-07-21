@@ -41,7 +41,11 @@ Analysis, investigation, or a question that needs more than one file
 fails the hatch but produces **no diff and nothing to merge** — it never
 enters the git intake. Route: plan (Stage 2) → oracle plan review →
 explore/verify → deliver the report. The moment the work turns out to
-need a code change, re-enter at the git intake below.
+need a code change, re-enter at the git intake below — and the relay
+ratification does not survive that re-entry. It was granted because the
+route merged nothing, so a run that now merges re-resolves the tier under
+the general rule and refreshes the header record: a snapshot, not a
+standing grant, the same way Resume and Preview treat theirs.
 
 Which of the two intake trust questions bind here is scoped in
 `## Which route binds which question` below: the scan binds unchanged —
@@ -220,7 +224,8 @@ the basis defined above. That trigger holds **on the read-only route** and
 nowhere else: on a route that merges something, relay still means a body the
 requester relayed in-session. Pointing at an issue is how nearly every run
 starts, so a blanket ratification there would hand the goal to whoever wrote
-it. A contributing author the requester did *not* relay — a comment refining
+it. The grant belongs to the route, not to the run: a read-only run that
+re-enters the git intake loses it and re-resolves the tier there. A contributing author the requester did *not* relay — a comment refining
 the question — still goes through the minimum-over rule above, and can still
 leave the goal unratified.
 

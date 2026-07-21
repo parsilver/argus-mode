@@ -30,6 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   acceptance criteria, at all seven sites that demand them: four
   precondition-refusal blocks and three brief-construction sentences whose
   substitute lists (`PLAN.md`, the PR description) this route has neither of.
+  The grant belongs to the route rather than to the run, so it expires where
+  the route ends: a read-only run that re-enters the git intake as a code
+  change re-resolves the tier under the general rule and refreshes the header
+  record — a snapshot, not a standing grant, the same treatment resume and
+  preview already give theirs.
   A delivered report may name the artifact it answers and say a span was
   quarantined from it; the formatted records, the span, and the author's handle
   stay session-side, and no permission level reaches a git artifact. The

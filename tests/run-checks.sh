@@ -1095,22 +1095,36 @@ if extract_block references/pipeline.md "## Read-only work" '^## ' \
 else
   err "the read-only route section does not state the relay grant's expiry"
 fi
-if awk '/^## Which route binds which question$/{f=1;next} /^## /{f=0} f' references/pipeline.md \
-   | grep -qF "The grant belongs to the route, not to the run: a read-only run that"; then
-  note "the binding section states the grant belongs to the route, not the run"
-else
-  err "the binding section does not state that the grant belongs to the route"
-fi
-while IFS='|' read -r f anchor phrase; do
+# Two phrases, because the line break falls between the framing clause and
+# the operative one. Pinning only the first let the rule be REVERSED outright
+# ("keeps it, and the tier stands") with the whole suite green: grep works a
+# line at a time, so a phrase cannot reach across the wrap to its own verb.
+binding=$(awk '/^## Which route binds which question$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+while IFS= read -r phrase; do
+  [ -n "$phrase" ] || continue
+  if printf '%s\n' "$binding" | grep -qF -- "$phrase"; then
+    note "the binding section carries: $phrase"
+  else
+    err "the binding section is missing the route-not-run rule: $phrase"
+  fi
+done <<'ROUTENOTRUN'
+The grant belongs to the route, not to the run: a read-only run that
+re-enters the git intake loses it and re-resolves the tier there.
+ROUTENOTRUN
+# Terminators differ per skill. The run skill writes each rule as one line
+# followed by a blank, so '^$' bounds it at one line. The consult skill's
+# bullet list runs 71 lines without a blank, so '^$' there would swallow four
+# later bullets and scope nothing — its own bullet marker is the boundary.
+while IFS='|' read -r f anchor endre phrase; do
   [ -n "$f" ] || continue
-  if extract_block "$f" "$anchor" '^$' | grep -qF "$phrase"; then
+  if extract_block "$f" "$anchor" "$endre" | grep -qF "$phrase"; then
     note "the relay grant's re-entry expiry is carried at its rule site in $f"
   else
     err "no re-entry expiry for the relay grant at its rule site in $f"
   fi
 done <<'EXPIRY'
-skills/run/SKILL.md|**Non-trivial read-only work**|does not survive that re-entry — a run that now merges re-resolves the tier under the general rule.
-skills/consult/SKILL.md|- **Read-only route**|does not survive re-entry into the git intake — a run that now merges
+skills/run/SKILL.md|**Non-trivial read-only work**|^$|does not survive that re-entry — a run that now merges re-resolves the tier under the general rule.
+skills/consult/SKILL.md|- **Read-only route**|^- \*\*|does not survive re-entry into the git intake — a run that now merges
 EXPIRY
 if grep -qF "creates no git artifacts at intake" references/pipeline.md; then
   note "pipeline.md scopes the no-git-artifacts claim to intake"

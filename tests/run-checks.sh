@@ -1299,5 +1299,47 @@ skills/run/SKILL.md|**Untrusted-input scan and trust tier:**|**Non-trivial read-
 skills/consult/SKILL.md|intake-trust lines|- **Read-only route**
 SKILLSITES
 
+# 29. Two copies that drifted, and the guards that let them (release v0.10.0's
+#     skill review). Both defects were introduced by the very epic this release
+#     ships, and both are the same class: a rule mirrored across skills where
+#     one copy moved and the other did not.
+#
+#     (a) #97 made the Stage-4 secret-scan output mandatory and added it to the
+#     Stage-5 brief on both normal paths -- but the model gate's third door
+#     ("proceed anyway") routes the final review to argus-oracle with its OWN
+#     closed-list brief, and that list never gained it. agents/argus-oracle.md
+#     refuses a review whose secret-scan output is not attached, so a lead
+#     following the override brief literally assembles one that draws an
+#     instant refusal. Check 24 could not see it: it greps the whole file for
+#     "secret-scan", which matches elsewhere. The guard below is therefore
+#     SCOPED to the override block -- a whole-file grep is exactly what failed.
+#
+#     (b) #99's second rework bound `attempt Z/3` to the INCOMING check rather
+#     than the completed one, and shipped that binding to on-track.md and the
+#     run skill. The consult skill kept the pre-fix render. It is a rendered
+#     fence line, which this repo treats as the thing a model copies verbatim,
+#     and it lands on the path that leans hardest on literal examples. The
+#     guard pins the RENDERED line in all three places, not the prose near it.
+if extract_block skills/run/SKILL.md "3. User explicitly replies" '^$' \
+   | grep -qF "secret-scan"; then
+  note "the override path's evidence brief requires the secret-scan output"
+else
+  err "the override path's evidence brief omits the secret-scan output (run skill, model gate door 3)"
+fi
+for f in references/on-track.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "attempt 0/3 (active: <next-cmd>)" "$f"; then
+    note "the gate-counter line binds attempt to the active check in $f"
+  else
+    err "the gate-counter line drops the active-check binding in $f"
+  fi
+done
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "active check" "$f"; then
+    note "the active-check binding is stated in prose in $f"
+  else
+    err "the active-check binding is not stated in prose in $f"
+  fi
+done
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

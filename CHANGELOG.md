@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.10.0] - 2026-07-21
 
+### Fixed
+
+- The evidence brief on the model gate's override path omitted the Stage-4
+  secret-scan output (`skills/run/SKILL.md`, `tests/run-checks.sh`). When the
+  secret-scan became a mandatory Stage-4 artifact, it was added to the Stage-5
+  brief on both normal paths, but the third door of the model gate — "proceed
+  anyway" — routes the final review to `argus-oracle` with its own closed list,
+  and that list never gained it. The advisor refuses a review whose secret-scan
+  output is not attached, so a lead following the override brief literally
+  assembled one that drew an instant refusal. The existing check could not see
+  the gap because it searched the whole file for a phrase that occurs elsewhere
+  in it; the new guard is scoped to the override block.
+- The smaller skill rendered the stage-transition marker's gate-counter line
+  without its active-check binding (`skills/consult/SKILL.md`,
+  `tests/run-checks.sh`). The counter block's second revision bound `attempt
+  Z/3` to the incoming stage's check rather than the completed one, and shipped
+  that to the reference and the larger skill only. Because the line is a
+  rendered example rather than prose about one, the pre-fix form was what a
+  lead on that path would copy. The line now matches the reference in all three
+  places, the binding is stated in prose beside it, and a new guard pins the
+  rendered line rather than the surrounding text.
+
 ### Added
 
 - The untrusted-input scan bound to the read-only route

@@ -9,6 +9,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- The untrusted-input scan bound to the read-only route
+  (`references/pipeline.md`, `references/verification.md`,
+  `agents/argus-oracle.md`, both `skills/*/SKILL.md`, `tests/run-checks.sh`):
+  the trust boundary was drawn at git intake, which the read-only route never
+  enters — leaving the route most likely to read a stranger's issue covered
+  only by the review-agent backstop, and it is also the route with the least
+  backstop, since it produces no diff for the security dimension to inspect.
+  Binding it needed a decision first: plan-review item 2 revises every
+  unratified trust tier and admits only the user's ratification, while a route
+  that merges nothing has no contract for a ratification to attach to. A new
+  `## Which route binds which question` section scopes the two intake
+  questions. The scan binds on every route, unchanged. The tier resolves
+  against what the requester relayed — ratified by relay for the artifact they
+  pointed the run at, stated only inside that section so the general clause and
+  the code-change route read exactly as before — and a contributing author the
+  requester did not relay still goes through the minimum-over rule and can
+  still leave the goal unratified. What gets ratified on this route is the
+  question as asked, which is also what its plan header carries in place of the
+  acceptance criteria, at all seven sites that demand them: four
+  precondition-refusal blocks and three brief-construction sentences whose
+  substitute lists (`PLAN.md`, the PR description) this route has neither of.
+  The grant belongs to the route rather than to the run, so it expires where
+  the route ends: a read-only run that re-enters the git intake as a code
+  change re-resolves the tier under the general rule and refreshes the header
+  record — a snapshot, not a standing grant, the same treatment resume and
+  preview already give theirs.
+  A delivered report may name the artifact it answers and say a span was
+  quarantined from it; the formatted records, the span, and the author's handle
+  stay session-side, and no permission level reaches a git artifact. The
+  capability preflight's claim that this route creates no git artifacts is
+  narrowed to intake, reconciling it with the landing rule that may create a
+  `question` issue at delivery. A new check in `tests/run-checks.sh` (number
+  28) guards the section, the seven criteria sites, item 2's own region in the
+  three copies that bound the diff to an issue, and — as a pin rather than a
+  presence check — that the general relay clause was not widened. Written
+  before the prose so it fails first. The rule rides inside item 2 and the
+  precondition, adding no plan-review item and no review dimension, so the
+  parity counts (12 and 6) are unchanged. (#106)
 - A `--preview` intake mode (`references/pipeline.md`, both `skills/*/SKILL.md`,
   `tests/run-checks.sh`): git intake created the issue, branch/worktree, and
   draft PR before the plan and its cost line existed, so a user unsure whether a

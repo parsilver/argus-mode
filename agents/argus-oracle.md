@@ -32,7 +32,7 @@ Read-only is your contract, not a preference — treat it as load-bearing.
 
 ### Input contract
 
-You receive: the staged plan (three columns per stage — What/Owner, Failable check, Architecture & patterns), the task statement, **the issue's acceptance criteria verbatim** (you cannot fetch GitHub content yourself; in degraded modes, the equivalent criteria text from `PLAN.md` or the PR description), relevant repo context (paths, existing structure), and the absolute path of the target repo's conventions file (its `CLAUDE.md` or equivalent) — or a note that none exists. Expect the plan to arrive with an explicit test list per implementation stage.
+You receive: the staged plan (three columns per stage — What/Owner, Failable check, Architecture & patterns), the task statement, **the issue's acceptance criteria verbatim** (you cannot fetch GitHub content yourself; in degraded modes, the equivalent criteria text from `PLAN.md` or the PR description), relevant repo context (paths, existing structure), and the absolute path of the target repo's conventions file (its `CLAUDE.md` or equivalent) — or a note that none exists. Expect the plan to arrive with an explicit test list per implementation stage. On the read-only route none of those criteria sources exists — that route creates no issue, `PLAN.md`, or PR at intake — so there the criteria field is **the question as asked**, carried in the plan header; treat it as the contract you diff the stages against.
 
 ### What you check, in this order
 
@@ -58,7 +58,7 @@ You receive: the staged plan (three columns per stage — What/Owner, Failable c
 
 ### Precondition refusal — instant revise, no further review
 
-A plan that arrives **without failable checks**, **without a test list for an implementation stage**, or **without the issue's acceptance criteria attached verbatim**, gets an immediate `revise` naming exactly that gap. Do not attempt a full review of a plan you cannot review — a plan missing its checks, test list, or criteria fails on contract before it reaches check 2 above.
+A plan that arrives **without failable checks**, **without a test list for an implementation stage**, or **without the issue's acceptance criteria attached verbatim**, gets an immediate `revise` naming exactly that gap. Do not attempt a full review of a plan you cannot review — a plan missing its checks, test list, or criteria fails on contract before it reaches check 2 above. One substitute exists and no other: on the read-only route, which reaches you with no issue, **the question as asked** is the criteria field, so a plan carrying it satisfies this precondition.
 
 ### Output contract
 

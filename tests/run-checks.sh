@@ -1006,5 +1006,298 @@ for f in skills/run/SKILL.md skills/consult/SKILL.md; do
   fi
 done
 
+# 28. Bind the untrusted-input scan to the read-only route (issue #106). #96
+#     drew the trust boundary at git intake; the read-only route never enters
+#     that intake, so the scan bound nothing there -- on the route most likely
+#     to read a stranger's issue, since answering a question from fetched text
+#     is its whole job. It is also the route with the least backstop: no diff,
+#     so review dimension 6 never sees the text. Binding it needed a decision
+#     first, because plan-review item 2 revises every UNRATIFIED tier and admits
+#     only the user's ratification, while a route that merges nothing has no
+#     contract for a ratification to attach to. The resolution: the scan binds
+#     on every route; the tier resolves against what the requester relayed and
+#     stalls on nothing, with the QUESTION AS ASKED as the object that gets
+#     ratified and as the stand-in for the acceptance criteria at all seven
+#     sites that demand them (four precondition-refusal blocks plus three
+#     brief-construction sentences whose substitute lists this route cannot
+#     satisfy). Written RED-first -- every phrase below is absent at its
+#     asserted scope until #106's prose lands.
+#
+#     Two assertions here are deliberately NOT absence checks, and are labelled
+#     so no later reader mistakes them for RED-first phrases:
+#       * the pastes-in-session pin and the relay COUNT are pins on text that
+#         exists today. Their red leg is a mutation test -- widen the general
+#         relay clause and watch them fail -- not an absence check. They exist
+#         because carrying this rule by widening that shared clause would make a
+#         stranger-authored issue ratified on the CODE-CHANGE route too (the
+#         requester pointing at an issue is how nearly every run starts), which
+#         is the exact attack the tier exists to catch. Containment must be
+#         proven, not assumed.
+#     Rides inside item 2 and the precondition; adds no rubric item and no
+#     dimension, so check 6's parity counts (12 and 6) are untouched.
+
+# Prints the block starting at the first line containing $2 (fixed string) and
+# ending before the next line matching $3 (ERE). Used to bind a phrase to the
+# region that must carry it, rather than to the file as a whole -- a whole-file
+# grep would pass just as happily on a copy that put the phrase somewhere the
+# rule does not govern.
+extract_block() {
+  awk -v a="$2" -v e="$3" '
+    !f && index($0, a) { f = 1; print; next }
+    f && $0 ~ e { exit }
+    f { print }
+  ' "$1"
+}
+
+ro_section=$(awk '/^## Which route binds which question$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+if [ -n "$ro_section" ]; then
+  note "pipeline.md carries the '## Which route binds which question' section"
+else
+  err "pipeline.md missing the '## Which route binds which question' section"
+fi
+# Each phrase sits on one line in the prose, so a hand-wrap across a line break
+# turns its assertion RED -- the same discipline check 27 applies.
+while IFS= read -r phrase; do
+  [ -n "$phrase" ] || continue
+  if printf '%s\n' "$ro_section" | grep -qF -- "$phrase"; then
+    note "read-only binding section carries: $phrase"
+  else
+    err "read-only binding section missing the load-bearing phrase: $phrase"
+  fi
+done <<'ROPHRASES'
+binds on every route
+the question as asked
+on the read-only route
+never a permission level
+stay session-side
+ROPHRASES
+# The route's own section must reach the rule, or the binding is unreachable
+# from the place that needs it.
+if awk '/^## Read-only work/{f=1;next} /^## /{f=0} f' references/pipeline.md \
+   | grep -qF "Which route binds which question"; then
+  note "the read-only route section points at the binding rule"
+else
+  err "the read-only route section does not point at the binding rule"
+fi
+# The route-scoped grant needs an expiry at the one transition that crosses
+# its scope: read-only -> git intake. Resume and Preview both restate that a
+# ratification is a snapshot rather than a standing grant; this transition is
+# the only one the new rule makes consequential, so it says so too. Asserted
+# at the reference AND both skills, since the skills are what runs.
+# Scoped to the block that must carry it, and matched on a contiguous phrase
+# that runs PAST the rule's own verb — a two-substring whole-file grep let the
+# reference's second copy be deleted outright (the other copy satisfied both
+# substrings) and let an "unless …" exception be inserted mid-sentence. Both
+# mutations shipped green before this shape.
+if extract_block references/pipeline.md "## Read-only work" '^## ' \
+   | grep -qF "ratification does not survive that re-entry. It was granted because the"; then
+  note "the read-only route states the relay grant's expiry"
+else
+  err "the read-only route section does not state the relay grant's expiry"
+fi
+# Two phrases, because the line break falls between the framing clause and
+# the operative one. Pinning only the first let the rule be REVERSED outright
+# ("keeps it, and the tier stands") with the whole suite green: grep works a
+# line at a time, so a phrase cannot reach across the wrap to its own verb.
+binding=$(awk '/^## Which route binds which question$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+while IFS= read -r phrase; do
+  [ -n "$phrase" ] || continue
+  if printf '%s\n' "$binding" | grep -qF -- "$phrase"; then
+    note "the binding section carries: $phrase"
+  else
+    err "the binding section is missing the route-not-run rule: $phrase"
+  fi
+done <<'ROUTENOTRUN'
+The grant belongs to the route, not to the run: a read-only run that
+re-enters the git intake loses it and re-resolves the tier there.
+ROUTENOTRUN
+# Terminators differ per skill. The run skill writes each rule as one line
+# followed by a blank, so '^$' bounds it at one line. The consult skill's
+# bullet list runs 71 lines without a blank, so '^$' there would swallow four
+# later bullets and scope nothing — its own bullet marker is the boundary.
+while IFS='|' read -r f anchor endre phrase; do
+  [ -n "$f" ] || continue
+  if extract_block "$f" "$anchor" "$endre" | grep -qF "$phrase"; then
+    note "the relay grant's re-entry expiry is carried at its rule site in $f"
+  else
+    err "no re-entry expiry for the relay grant at its rule site in $f"
+  fi
+done <<'EXPIRY'
+skills/run/SKILL.md|**Non-trivial read-only work**|^$|does not survive that re-entry — a run that now merges re-resolves the tier under the general rule.
+skills/consult/SKILL.md|- **Read-only route**|^- \*\*|does not survive re-entry into the git intake — a run that now merges
+EXPIRY
+if grep -qF "creates no git artifacts at intake" references/pipeline.md; then
+  note "pipeline.md scopes the no-git-artifacts claim to intake"
+else
+  err "pipeline.md still claims the read-only route creates no git artifacts at all"
+fi
+
+# PIN, not a RED-first phrase (see the header note). The general relay clause
+# must read exactly as it does today, and `ratified by relay` must occur exactly
+# twice in pipeline.md: once in the general tier list, once in the read-only
+# section. A third occurrence means someone re-generalised the trigger and must
+# re-account for it here.
+# WHOLE LINE, not a substring. A substring pin is defeated by the most
+# natural widening of all -- inserting an alternative into the sentence
+# ("A body the user pastes in-session, or an artifact they point the run at,
+# is ratified by relay"), which leaves every pinned substring intact and the
+# occurrence counts unmoved. Mutation-tested: the substring form shipped that
+# widening green.
+pastes=$(grep -cFx -- '- A body the user pastes in-session is **ratified by relay**: relaying it' references/pipeline.md || true)
+if [ "${pastes:-0}" -eq 1 ]; then
+  note "the general relay clause is intact, whole-line (unwidened)"
+else
+  err "the general relay clause has been reworded or widened — its first line no longer matches verbatim"
+fi
+# Belt to that brace: the pointing gesture is what must never grant relay
+# outside the read-only section, so it may not appear in the general tier
+# section at all. Bounded to '## Untrusted input at intake', which ends where
+# '## Which route binds which question' begins.
+if awk '/^## Untrusted input at intake$/{f=1;next} /^## /{f=0} f' references/pipeline.md \
+   | grep -qE 'point(s|ed|ing)? the run at'; then
+  err "the general tier section grants relay for a pointed-at artifact — that belongs only to the read-only route"
+else
+  note "the general tier section never grants relay for a pointed-at artifact"
+fi
+# The count is pinned per FILE, not only in the reference. A pin on
+# pipeline.md alone leaves the executed prompt unguarded: a widening sentence
+# added to either skill would ship green, and skills-copy divergence is this
+# repo's live failure mode. Any new occurrence anywhere must be re-accounted
+# for here.
+#
+# OCCURRENCES, not lines: `grep -c` counts matching lines, and the skills wrap
+# a whole rule onto one long line, so a second grant appended to a line that
+# already carries one would not move a line count. Mutation-tested in both
+# directions before this shape was settled on.
+while IFS='|' read -r f want; do
+  [ -n "$f" ] || continue
+  got=$(grep -oF "ratified by relay" "$f" | wc -l | tr -d " ")
+  if [ "${got:-0}" -eq "$want" ]; then
+    note "relay mentions accounted for in $f ($want)"
+  else
+    err "relay containment drift in $f: 'ratified by relay'=${got:-0} (want $want)"
+  fi
+done <<'RELAYCOUNTS'
+references/pipeline.md|2
+references/verification.md|1
+skills/run/SKILL.md|2
+skills/consult/SKILL.md|2
+agents/argus-oracle.md|0
+RELAYCOUNTS
+# Defense in depth behind the counts: every paragraph that grants the relay
+# trigger must also carry the route that scopes it. The one exception is the
+# general clause, which grants it for a pasted body on every route.
+for f in references/pipeline.md references/verification.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  unscoped=$(awk 'BEGIN{RS="";FS="\n"} /ratified by relay/ && !/read-only/ && !/pastes in-session/ {n++} END{print n+0}' "$f")
+  if [ "${unscoped:-0}" -eq 0 ]; then
+    note "every relay grant is route-scoped in $f"
+  else
+    err "$unscoped relay grant(s) in $f are not scoped to the read-only route"
+  fi
+done
+# The actor of the relay trigger is the REQUESTER, never the lead. The run
+# skill addresses the lead as "you", so "what you relayed" there would let the
+# lead's own fetch satisfy the trigger and defeat the minimum-over rule for
+# contributors the requester never relayed.
+if grep -rqn "you relayed\|you pointed the run at" references/ skills/ agents/; then
+  err "the relay trigger names the lead as its actor somewhere — it is the requester"
+else
+  note "the relay trigger names the requester as its actor everywhere"
+fi
+
+# The criteria substitution at all seven sites. The four precondition-refusal
+# blocks are what produce a verdict; the three brief-construction sentences are
+# what the lead executes FIRST, and they enumerate a closed substitute list
+# (PLAN.md or the PR description) that this route has neither of -- so a
+# precondition-only carve-out would leave a file contradicting a file three
+# lines away.
+if extract_block references/verification.md "## Precondition refusal" '^## ' \
+   | grep -qF "the question as asked"; then
+  note "verification.md's precondition refusal carries the read-only substitution"
+else
+  err "verification.md's precondition refusal missing the read-only substitution"
+fi
+if extract_block agents/argus-oracle.md "### Precondition refusal" '^### ' \
+   | grep -qF "the question as asked"; then
+  note "argus-oracle.md's precondition refusal carries the read-only substitution"
+else
+  err "argus-oracle.md's precondition refusal missing the read-only substitution"
+fi
+if extract_block agents/argus-oracle.md "### Input contract" '^### ' \
+   | grep -qF "the question as asked"; then
+  note "argus-oracle.md's input contract carries the read-only substitution"
+else
+  err "argus-oracle.md's input contract missing the read-only substitution"
+fi
+for f in skills/run/SKILL.md skills/consult/SKILL.md; do
+  # Bounded by the blank line, not the next heading: in the consult skill the
+  # brief sits inside the same section, so a heading bound would let the
+  # brief's phrase satisfy the precondition's assertion and vice versa.
+  if extract_block "$f" "**Precondition refusal:**" '^$' \
+     | grep -qF "the question as asked"; then
+    note "precondition refusal carries the read-only substitution in $f"
+  else
+    err "precondition refusal missing the read-only substitution in $f"
+  fi
+  if extract_block "$f" 'Spawn `argus-oracle`' '^$' \
+     | grep -qF "the question as asked"; then
+    note "the plan-review brief carries the read-only substitution in $f"
+  else
+    err "the plan-review brief missing the read-only substitution in $f"
+  fi
+done
+
+# Item 2's own region, in the three copies that bind the diff to an ISSUE's
+# criteria. agents/argus-oracle.md:47 already reads "the attached acceptance
+# criteria" -- route-neutral, deliberately left alone, and deliberately not
+# asserted here. Scoped extraction matters: `read-only` is already present
+# elsewhere in all three files, so a whole-file grep would be green today.
+# The payload, not the token. Asserting only "read-only" inside the region
+# passes on a copy stating the OPPOSITE rule ("on the read-only route this
+# item does not apply at all") -- mutation-tested green before this was
+# tightened. The phrase below is the rule itself, contiguous on one line in
+# all three copies.
+while IFS='|' read -r f anchor; do
+  [ -n "$f" ] || continue
+  if extract_block "$f" "$anchor" '^[0-9]+\. ' \
+     | grep -qF "read-only route the diff target is the question as asked"; then
+    note "plan-review item 2 carries the read-only scoping in $f"
+  else
+    err "plan-review item 2 missing the read-only scoping in $f"
+  fi
+done <<'ITEM2'
+references/verification.md|2. **Goal-backward stage check.**
+skills/run/SKILL.md|2. Do these stages actually reach the stated goal?
+skills/consult/SKILL.md|2. **Goal-backward stage check**
+ITEM2
+
+# The report disposition and the header composition are the two halves the
+# issue asked for by name ("a rule for which header lines a read-only plan
+# carries"), and both are prose the section-body phrase list above could
+# otherwise be satisfied without -- the skills are the executed prompt, so each
+# must carry them rather than merely point at the reference.
+# Scoped, not whole-file — the discipline this check states for itself
+# above. A whole-file grep passed after the disposition sentence was deleted
+# from its rule site and the phrase restated somewhere unrelated in the same
+# file; mutation-tested.
+# Anchors differ per skill: the run skill writes each rule as one long line,
+# the consult skill wraps its bullets, so each names its own governing block.
+while IFS='|' read -r f header_anchor route_anchor; do
+  [ -n "$f" ] || continue
+  if extract_block "$f" "$header_anchor" '^$' | grep -qF "never a permission level"; then
+    note "report disposition (never a permission level) carried at its rule site in $f"
+  else
+    err "report disposition (never a permission level) missing from its rule site in $f"
+  fi
+  if extract_block "$f" "$route_anchor" '^$' | grep -qF "Which route binds which question"; then
+    note "read-only binding referenced from the route's own bullet in $f"
+  else
+    err "read-only binding not referenced from the route's own bullet in $f"
+  fi
+done <<'SKILLSITES'
+skills/run/SKILL.md|**Untrusted-input scan and trust tier:**|**Non-trivial read-only work**
+skills/consult/SKILL.md|intake-trust lines|- **Read-only route**
+SKILLSITES
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

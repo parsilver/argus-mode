@@ -1090,7 +1090,7 @@ fi
 # twice in pipeline.md: once in the general tier list, once in the read-only
 # section. A third occurrence means someone re-generalised the trigger and must
 # re-account for it here.
-pastes=$(grep -cF "A body the user pastes in-session" references/pipeline.md || true)
+pastes=$(grep -oF "A body the user pastes in-session" references/pipeline.md | wc -l | tr -d " ")
 if [ "${pastes:-0}" -eq 1 ]; then
   note "the general relay clause is intact and unwidened (pastes-in-session=1)"
 else
@@ -1101,9 +1101,14 @@ fi
 # added to either skill would ship green, and skills-copy divergence is this
 # repo's live failure mode. Any new occurrence anywhere must be re-accounted
 # for here.
+#
+# OCCURRENCES, not lines: `grep -c` counts matching lines, and the skills wrap
+# a whole rule onto one long line, so a second grant appended to a line that
+# already carries one would not move a line count. Mutation-tested in both
+# directions before this shape was settled on.
 while IFS='|' read -r f want; do
   [ -n "$f" ] || continue
-  got=$(grep -cF "ratified by relay" "$f" || true)
+  got=$(grep -oF "ratified by relay" "$f" | wc -l | tr -d " ")
   if [ "${got:-0}" -eq "$want" ]; then
     note "relay mentions accounted for in $f ($want)"
   else

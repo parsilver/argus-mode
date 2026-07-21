@@ -1299,5 +1299,75 @@ skills/run/SKILL.md|**Untrusted-input scan and trust tier:**|**Non-trivial read-
 skills/consult/SKILL.md|intake-trust lines|- **Read-only route**
 SKILLSITES
 
+# 29. Two copies that drifted, and the guards that let them (release v0.10.0's
+#     skill review). Both defects were introduced by the very epic this release
+#     ships, and both are the same class: a rule mirrored across skills where
+#     one copy moved and the other did not.
+#
+#     (a) #97 made the Stage-4 secret-scan output mandatory and added it to the
+#     Stage-5 brief on both normal paths -- but the model gate's third door
+#     ("proceed anyway") routes the final review to argus-oracle with its OWN
+#     closed-list brief, and that list never gained it. agents/argus-oracle.md
+#     refuses a review whose secret-scan output is not attached, so a lead
+#     following the override brief literally assembles one that draws an
+#     instant refusal. Check 24 could not see it: it greps the whole file for
+#     "secret-scan", which matches elsewhere. The guard below is therefore
+#     SCOPED to the override block -- a whole-file grep is exactly what failed.
+#
+#     (b) #99's second rework bound `attempt Z/3` to the INCOMING check rather
+#     than the completed one, and shipped that binding to on-track.md and the
+#     run skill. The consult skill kept the pre-fix render. It is a rendered
+#     fence line, which this repo treats as the thing a model copies verbatim,
+#     and it lands on the path that leans hardest on literal examples. The
+#     guard pins the RENDERED line in all three places, not the prose near it.
+if extract_block skills/run/SKILL.md "3. User explicitly replies" '^$' \
+   | grep -qF "secret-scan"; then
+  note "the override path's evidence brief requires the secret-scan output"
+else
+  err "the override path's evidence brief omits the secret-scan output (run skill, model gate door 3)"
+fi
+# Scoped to the block that renders it, per file. A whole-file grep here is
+# satisfied by any planted occurrence — an HTML comment, an unrelated example —
+# while the rendered line itself has drifted. Mutation-confirmed: with the real
+# line changed and a decoy appended at end of file, the unscoped form stayed
+# green in all three files.
+while IFS='|' read -r f anchor endre; do
+  [ -n "$f" ] || continue
+  if extract_block "$f" "$anchor" "$endre" | grep -qF "attempt 0/3 (active: <next-cmd>)"; then
+    note "the gate-counter line binds attempt to the active check in $f"
+  else
+    err "the gate-counter line drops the active-check binding in $f"
+  fi
+done <<'FENCE'
+references/on-track.md|Stage N done — failable check|^```
+skills/run/SKILL.md|Stage N done — failable check|^```
+skills/consult/SKILL.md|Print the **stage-transition marker block**|^$
+FENCE
+# The DISCRIMINATING clause, scoped to the block that states it — not the
+# noun "active check", which survives reversing the rule outright ("the check
+# line 1 just reported complete, not the incoming stage's") and which the run
+# skill carries only incidentally, so a whole-file grep reported a binding
+# there that the file never states. Mutation-tested both ways.
+# The run skill is deliberately absent: its fence line renders the binding
+# (asserted above) and it defers the per-row rules to on-track.md rather than
+# restating them, so asserting the prose there would demand text the design
+# does not want.
+# Per-file phrases, because each file wraps its prose differently and a
+# phrase cannot span a line break: on-track.md breaks "the incoming /
+# stage's check" across lines 126-127. Each phrase below is the clause that
+# distinguishes incoming from completed, verified contiguous in its own file.
+if awk '/^## Stage-transition marker$/{f=1;next} /^## /{f=0} f' references/on-track.md \
+   | grep -qF "not the completed one on line 1"; then
+  note "on-track.md binds the retry count to the incoming, not the completed, check"
+else
+  err "on-track.md no longer distinguishes the incoming check from the completed one"
+fi
+if extract_block skills/consult/SKILL.md "Print the **stage-transition marker block**" '^$' \
+   | grep -qF "the incoming stage's check"; then
+  note "the consult marker block binds the retry count to the incoming stage's check"
+else
+  err "the consult marker block does not bind the retry count to the incoming stage's check"
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

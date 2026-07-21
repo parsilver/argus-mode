@@ -1326,13 +1326,23 @@ if extract_block skills/run/SKILL.md "3. User explicitly replies" '^$' \
 else
   err "the override path's evidence brief omits the secret-scan output (run skill, model gate door 3)"
 fi
-for f in references/on-track.md skills/run/SKILL.md skills/consult/SKILL.md; do
-  if grep -qF "attempt 0/3 (active: <next-cmd>)" "$f"; then
+# Scoped to the block that renders it, per file. A whole-file grep here is
+# satisfied by any planted occurrence — an HTML comment, an unrelated example —
+# while the rendered line itself has drifted. Mutation-confirmed: with the real
+# line changed and a decoy appended at end of file, the unscoped form stayed
+# green in all three files.
+while IFS='|' read -r f anchor endre; do
+  [ -n "$f" ] || continue
+  if extract_block "$f" "$anchor" "$endre" | grep -qF "attempt 0/3 (active: <next-cmd>)"; then
     note "the gate-counter line binds attempt to the active check in $f"
   else
     err "the gate-counter line drops the active-check binding in $f"
   fi
-done
+done <<'FENCE'
+references/on-track.md|Stage N done — failable check|^```
+skills/run/SKILL.md|Stage N done — failable check|^```
+skills/consult/SKILL.md|Print the **stage-transition marker block**|^$
+FENCE
 # The DISCRIMINATING clause, scoped to the block that states it — not the
 # noun "active check", which survives reversing the rule outright ("the check
 # line 1 just reported complete, not the incoming stage's") and which the run

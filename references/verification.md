@@ -163,6 +163,12 @@ for the two that skip the rest of the rubric entirely when missing.
    **reviewable but not approvable** — its criteria are attached and every
    item here applies, item 1 included; the goal is simply not yet a
    contract anyone with write access stands behind.
+   **On the read-only route the diff target is the question as asked**,
+   not an issue's checklist, and the tier reads ratified by relay for the
+   artifact the requester pointed the run at (`pipeline.md`, Which route
+   binds which question). The scan record is still required there, and a
+   tier left unratified by a contributor the requester did not relay
+   still revises — what the user then ratifies is the question.
 3. **Failable-check reality.** Is every stage's check capable of actually
    going RED, per the definition above?
 4. **Test list present.** Is a test list named, before the code, for every
@@ -228,6 +234,14 @@ gets an instant `revise` naming the missing precondition — the oracle
 does not attempt items 1–12 above on a plan it cannot actually review.
 Reviewing a plan with no way to fail is theater; name the gap and send
 it back.
+
+The criteria precondition has one substitute, and only one. A read-only
+run reaches this gate with no issue, no `PLAN.md` and no PR — its
+`question` issue belongs to delivery, not intake — so there
+**the question as asked** is the criteria field, carried in the plan
+header (`pipeline.md`, Which route binds which question). Nothing else
+substitutes: a plan on any route that merges something still attaches
+the issue's criteria verbatim.
 
 ## Malformed or missing verdicts
 

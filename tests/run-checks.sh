@@ -1333,13 +1333,31 @@ for f in references/on-track.md skills/run/SKILL.md skills/consult/SKILL.md; do
     err "the gate-counter line drops the active-check binding in $f"
   fi
 done
-for f in skills/run/SKILL.md skills/consult/SKILL.md; do
-  if grep -qF "active check" "$f"; then
-    note "the active-check binding is stated in prose in $f"
-  else
-    err "the active-check binding is not stated in prose in $f"
-  fi
-done
+# The DISCRIMINATING clause, scoped to the block that states it — not the
+# noun "active check", which survives reversing the rule outright ("the check
+# line 1 just reported complete, not the incoming stage's") and which the run
+# skill carries only incidentally, so a whole-file grep reported a binding
+# there that the file never states. Mutation-tested both ways.
+# The run skill is deliberately absent: its fence line renders the binding
+# (asserted above) and it defers the per-row rules to on-track.md rather than
+# restating them, so asserting the prose there would demand text the design
+# does not want.
+# Per-file phrases, because each file wraps its prose differently and a
+# phrase cannot span a line break: on-track.md breaks "the incoming /
+# stage's check" across lines 126-127. Each phrase below is the clause that
+# distinguishes incoming from completed, verified contiguous in its own file.
+if awk '/^## Stage-transition marker$/{f=1;next} /^## /{f=0} f' references/on-track.md \
+   | grep -qF "not the completed one on line 1"; then
+  note "on-track.md binds the retry count to the incoming, not the completed, check"
+else
+  err "on-track.md no longer distinguishes the incoming check from the completed one"
+fi
+if extract_block skills/consult/SKILL.md "Print the **stage-transition marker block**" '^$' \
+   | grep -qF "the incoming stage's check"; then
+  note "the consult marker block binds the retry count to the incoming stage's check"
+else
+  err "the consult marker block does not bind the retry count to the incoming stage's check"
+fi
 
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

@@ -1091,11 +1091,50 @@ fi
 # section. A third occurrence means someone re-generalised the trigger and must
 # re-account for it here.
 pastes=$(grep -cF "A body the user pastes in-session" references/pipeline.md || true)
-relays=$(grep -cF "ratified by relay" references/pipeline.md || true)
-if [ "${pastes:-0}" -eq 1 ] && [ "${relays:-0}" -eq 2 ]; then
-  note "the general relay clause is intact and unwidened (pastes=1, relay mentions=2)"
+if [ "${pastes:-0}" -eq 1 ]; then
+  note "the general relay clause is intact and unwidened (pastes-in-session=1)"
 else
-  err "relay containment drift: pastes-in-session=${pastes:-0} (want 1), 'ratified by relay'=${relays:-0} (want 2)"
+  err "relay containment drift: pastes-in-session=${pastes:-0} (want 1)"
+fi
+# The count is pinned per FILE, not only in the reference. A pin on
+# pipeline.md alone leaves the executed prompt unguarded: a widening sentence
+# added to either skill would ship green, and skills-copy divergence is this
+# repo's live failure mode. Any new occurrence anywhere must be re-accounted
+# for here.
+while IFS='|' read -r f want; do
+  [ -n "$f" ] || continue
+  got=$(grep -cF "ratified by relay" "$f" || true)
+  if [ "${got:-0}" -eq "$want" ]; then
+    note "relay mentions accounted for in $f ($want)"
+  else
+    err "relay containment drift in $f: 'ratified by relay'=${got:-0} (want $want)"
+  fi
+done <<'RELAYCOUNTS'
+references/pipeline.md|2
+references/verification.md|1
+skills/run/SKILL.md|2
+skills/consult/SKILL.md|2
+agents/argus-oracle.md|0
+RELAYCOUNTS
+# Defense in depth behind the counts: every paragraph that grants the relay
+# trigger must also carry the route that scopes it. The one exception is the
+# general clause, which grants it for a pasted body on every route.
+for f in references/pipeline.md references/verification.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  unscoped=$(awk 'BEGIN{RS="";FS="\n"} /ratified by relay/ && !/read-only/ && !/pastes in-session/ {n++} END{print n+0}' "$f")
+  if [ "${unscoped:-0}" -eq 0 ]; then
+    note "every relay grant is route-scoped in $f"
+  else
+    err "$unscoped relay grant(s) in $f are not scoped to the read-only route"
+  fi
+done
+# The actor of the relay trigger is the REQUESTER, never the lead. The run
+# skill addresses the lead as "you", so "what you relayed" there would let the
+# lead's own fetch satisfy the trigger and defeat the minimum-over rule for
+# contributors the requester never relayed.
+if grep -rqn "you relayed\|you pointed the run at" references/ skills/ agents/; then
+  err "the relay trigger names the lead as its actor somewhere — it is the requester"
+else
+  note "the relay trigger names the requester as its actor everywhere"
 fi
 
 # The criteria substitution at all seven sites. The four precondition-refusal

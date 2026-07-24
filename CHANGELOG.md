@@ -25,7 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   names the repo's native docs location, not only `docs/` — a repo
   with no docs structure at all is a named degrade, never silent — and
   review dimension 2 holds the shipped doc to the same truthful,
-  filler-free bar as any doc, in all three review copies. The usage
+  filler-free bar as any doc, in all three review copies — and checks
+  existence at merge, not only at plan-naming: a new user-facing
+  surface in the diff whose planned doc is absent is a finding, so a
+  doc named in the plan but dropped in execution can't merge
+  undocumented. The usage
   doc is distinct from the decision record a load-bearing choice
   lands: the record captures the choice, the doc tells a user how to
   use the surface. Check 33 pins the doctrine RED-first. (#121)

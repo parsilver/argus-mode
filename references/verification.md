@@ -390,7 +390,13 @@ Checked on every review, every time — not opted into per task:
    is a dimension-2 finding, and
    the doc a new capability ships is in scope here too,
    held to the same bar as any doc — truthful, no
-   filler prose.
+   filler prose. Existence is checked here, not only named at the plan
+   gate: a new user-facing surface in the diff
+   whose planned doc is absent from the diff is a finding — no doc
+   file and no plan-stated "none warranted" leaves the surface
+   undocumented, the gap the plan-time naming alone would let through
+   at execution. Read the tree for the named doc, don't take its plan
+   entry on faith.
 3. **Architecture fit.** Boundaries respected; single responsibility held.
    Reinvention is checked here too: a diff that reimplements a helper,
    utility, or pattern the repo already provides —

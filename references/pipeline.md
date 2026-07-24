@@ -681,9 +681,11 @@ touches no user-facing surface). Checked against the repo, not assumed.
 
 This is the authoring side; the plan review checks it at rubric item 10
 (`verification.md`), the way the architecture-shaping trigger pairs a
-Stage-2 obligation with a gate check. An internal-only change — a
-refactor, a new architectural boundary with no user-facing surface —
-owes no doc and says so.
+Stage-2 obligation with a gate check, and review dimension 2 checks at
+merge that the named doc actually landed — a planned doc dropped in
+execution is a finding, not a silent omission. A plan that introduces
+no user-facing surface — a refactor, a new architectural boundary with
+no user-facing surface — owes nothing new here.
 
 - Refusal condition: a new command or flag that lands with no doc and
   no stated reason ships a capability the next user learns by reading

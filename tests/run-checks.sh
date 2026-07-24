@@ -1813,6 +1813,19 @@ for f33 in references/verification.md agents/argus-reviewer.md agents/argus-orac
     err "dimension 2 does not cover the new capability's doc page in $f33"
   fi
 done
+# Existence is checked at MERGE, not only at plan-naming (panel gap): item 10
+# names the doc at Stage 2.5, but a plan that named a doc then dropped the
+# file in execution would merge undocumented — the gap #121 exists to close,
+# relocated to the execution→merge boundary. Dimension 2 makes the doc's
+# ABSENCE a finding, so the reviewer (working tree, run mode) and the oracle
+# (working tree via #120, consult mode) verify the planned doc landed.
+for f33 in references/verification.md agents/argus-reviewer.md agents/argus-oracle.md; do
+  if grep -qF "whose planned doc is absent from the diff is a finding" "$f33"; then
+    note "dimension 2 makes a missing planned doc a finding at merge in $f33"
+  else
+    err "dimension 2 does not catch a missing planned doc at merge in $f33"
+  fi
+done
 # The Stage-2 plan-AUTHORING obligation is distinct from the Stage-2.5 gate
 # (item 10), the way the architecture-shaping trigger's conduct side is
 # distinct from its rubric item (gap 1): pipeline.md's plan doctrine plus

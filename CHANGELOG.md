@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+- A duplication sweep on the TDD refactor leg, a reinvention signal in
+  review dimension 3, and a post-implementation simplification routing
+  row (`references/quality.md`, `references/verification.md`,
+  `references/delegation.md`, both `skills/*/SKILL.md`, both review
+  agents, `tests/run-checks.sh`): reuse was enforced before code
+  existed — the simpler-alternative pass asks what already solves the
+  goal — but nothing hunted duplication after, so a diff quietly
+  reinventing a util the repo already ships passed every gate. The
+  refactor leg now sweeps the changed set for reinvention (fold into
+  the existing code, or justify the divergence in the plan comment — a
+  failable outcome); dimension 3 treats reinvention unjustified in the
+  plan as a finding, in all five copies of the dimension text; the
+  routing table names an optional simplify-type skill for a completed
+  diff, whose absent-skill fallback is the leg's own sweep. No new
+  pass, no extra spawn; detection stays reviewer judgment. Check 32
+  pins the doctrine RED-first. (#120)
+
 - An architecture-shaping trigger at Stage 2, with a mandatory
   candidates comparison on triggered plans
   (`references/pipeline.md`, `references/verification.md`,

@@ -317,7 +317,10 @@ solo-vs-fan-out criteria. Read `${CLAUDE_PLUGIN_ROOT}/references/on-track.md`
 now for loop-breaking, context budget, and the mandatory stage-transition
 marker.
 
-Same execution model as `/argus-mode:run`: TDD red → green → refactor,
+Same execution model as `/argus-mode:run`: TDD red → green → refactor
+— the refactor leg's duplication sweep included: the changed set must
+not reimplement what the repo already provides, fold or justify
+(`quality.md`, principle 4) —
 solo vs. fan-out per the same criteria, `argus-implementer` never commits,
 the lead verifies and commits every slice. The delta is **when the lead
 stops and calls `argus-oracle` mid-execution.**
@@ -459,7 +462,8 @@ an independent review. `argus-oracle` performs the final review instead,
 holding the identical bar:
 
 - Same 6 dimensions: correctness, readability (docblocks, intent-revealing
-  names), architecture fit, pattern justification, test quality (tests
+  names), architecture fit (reinvention unjustified in the plan is a
+  finding), pattern justification, test quality (tests
   that can actually fail — on a rebuild or redesign, an old
   markup-coupled suite staying green needs an explicit plan-level
   justification; no reaching green by disabling a test, raising a

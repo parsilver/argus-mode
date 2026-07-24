@@ -1670,5 +1670,59 @@ else
   err "consult trigger (b) briefs do not carry the amendment's comparison"
 fi
 
+# 32. Duplication sweep on the refactor leg + reinvention in dimension 3
+#     (issue #120). Reuse was enforced before code existed (item 1's
+#     simpler-alternative pass) but nothing hunted duplication after: a diff
+#     quietly reinventing a util the repo already ships passed every gate.
+#     The TDD refactor leg now sweeps the changed set for reinvention (fold
+#     into the existing code, or justify the divergence in the plan comment
+#     — a failable outcome, not advice); dimension 3 names reinvention
+#     unjustified in the plan as a checked signal in all five copies
+#     (verification.md, both review agents, both skills); the routing table
+#     gains a post-implementation simplification row whose absent-skill
+#     fallback is the leg's own sweep (the existing named-absence rule, no
+#     new pass, no extra spawn — the issue's out-of-scope fence). Detection
+#     stays reviewer judgment; no tooling. Written RED-first: one FAIL line
+#     per absent pin.
+if grep -qF "sweeps the changed set for reinvention" references/quality.md; then
+  note "quality.md principle 4 carries the refactor-leg duplication sweep"
+else
+  err "quality.md principle 4 missing the refactor-leg duplication sweep"
+fi
+if grep -qF "fold it into the existing code or justify the divergence" references/quality.md; then
+  note "quality.md names the fold-or-justify outcome"
+else
+  err "quality.md missing the fold-or-justify outcome"
+fi
+for f32 in references/verification.md agents/argus-reviewer.md agents/argus-oracle.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "reinvention unjustified in the plan" "$f32"; then
+    note "dimension 3 names the reinvention signal in $f32"
+  else
+    err "dimension 3 missing the reinvention signal in $f32"
+  fi
+done
+for f32 in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "duplication sweep" "$f32"; then
+    note "the refactor-leg duplication sweep carried in $f32"
+  else
+    err "the refactor-leg duplication sweep missing from $f32"
+  fi
+done
+if grep -qF "A completed diff to sweep for simplification" references/delegation.md; then
+  note "the routing table carries the post-implementation simplification row"
+else
+  err "the routing table missing the post-implementation simplification row"
+fi
+if grep -qF '`simplify`' references/delegation.md; then
+  note "the simplification row names a simplify-type candidate skill"
+else
+  err "the simplification row names no candidate skill"
+fi
+if grep -qF "no simplify-type skill" references/delegation.md; then
+  note "the no-skill fallback rides the named-absence rule"
+else
+  err "the simplification row has no named-absence fallback"
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

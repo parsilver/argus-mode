@@ -375,6 +375,11 @@ Checked on every review, every time — not opted into per task:
    changed surface — a README or doc example contradicted by the diff
    is a dimension-2 finding.
 3. **Architecture fit.** Boundaries respected; single responsibility held.
+   Reinvention is checked here too: a diff that reimplements a helper,
+   utility, or pattern the repo already provides —
+   reinvention unjustified in the plan — is a finding (`quality.md`,
+   principle 4); folding into the existing code is the default, the
+   recorded justification the exception.
 4. **Pattern justification.** Every pattern in the diff earns its
    complexity — a pattern applied without a stated reason is unjustified
    complexity, not craftsmanship.

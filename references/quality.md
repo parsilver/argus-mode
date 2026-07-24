@@ -38,10 +38,17 @@ reduce maintenance cost doesn't ship.
 ## 4. Refactor-ready, always
 
 Boy-scout rule; no god files; test coverage is the license to refactor at
-any time.
+any time. The TDD refactor leg sweeps the changed set for reinvention:
+code that reimplements a helper, utility, or pattern the repo already
+provides is a failable outcome, not a style note —
+fold it into the existing code or justify the divergence in the plan
+comment before the stage closes.
 
 - Refusal condition: code that cannot be safely refactored (no tests, no
   boundaries) is not done, regardless of whether it currently works.
+- Refusal condition: a diff that reimplements what the repo already
+  provides, with no recorded justification, ships duplication the next
+  dev must find by accident — fold it or justify it.
 
 ## 5. TDD, non-negotiable
 

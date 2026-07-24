@@ -214,7 +214,14 @@ candidates block in its plan text —
 at least two candidate architectures with their trade-offs and the
 chosen candidate's rationale — before checkpoint 1, and when in
 doubt, the trigger fires; a non-triggered plan carries nothing new.
-The plan's shape doesn't change in
+New user-facing surfaces ship their docs applies unchanged
+(`pipeline.md`, New user-facing surfaces ship their docs): a plan that
+adds a new user-facing capability — a command, flag, endpoint, config
+key, or other surface a user interacts with —
+ships the doc that surface needs,
+naming the doc page it creates or updates and where it
+is linked, or states why none is warranted; the plan review checks it
+at item 10. The plan's shape doesn't change in
 consult mode; what happens to it next does.
 
 ## Stage 2.5 — Plan review gate (checkpoint 1 of 3)
@@ -257,8 +264,12 @@ reference is unreachable:
    the unavoidable-size justification.
 9. **Third-party assets carry their license** — copied licensed assets
    name the license basis and a visibility guard.
-10. **Docs stay truthful** — a public-API or behavior change names the
-    docs it updates, or states none mention the surface (checked).
+10. **Docs stay truthful, and exist for new surfaces** — a public-API
+    or behavior change names the
+    docs it updates, or states none mention the surface (checked); and
+    a new user-facing capability names the doc it ships (the page it
+    creates or updates, and where it is linked) or states why none is
+    warranted, a repo with no docs structure a named degrade.
 11. **Repo conventions respected** — the brief points at the target
     repo's conventions file (`CLAUDE.md` or equivalent) by absolute path,
     or states none exists (checked); a plan decision that negates an

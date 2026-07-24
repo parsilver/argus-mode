@@ -222,11 +222,25 @@ for the two that skip the rest of the rubric entirely when missing.
    repo visibility (private-only assets flagged before any visibility
    change). Provenance language stays neutral — "licensed Fuse v21.1.0
    assets", not a narration of the copying.
-10. **Docs stay truthful.** A plan whose diff touches public API or
+10. **Docs stay truthful — and exist for new surfaces.** A plan whose
+    diff touches public API or
     user-visible behavior names the docs and examples it updates — or
     states "no doc mentions this surface", checked against the repo's
     docs, not assumed. A README the diff will contradict is a defect
-    the plan must already own.
+    the plan must already own. And a plan that adds a new user-facing
+    surface owes more than truthfulness:
+    a new user-facing capability names the doc it ships —
+    the doc page it creates or updates (`docs/**/*.md`, or
+    the repo's native docs location — a README section, a docs site),
+    linked where the next reader finds it (the docs index or the
+    `CLAUDE.md` pointer when one exists) — or states why none is
+    warranted (an internal-only change), checked not assumed.
+    A repo with
+    no docs structure at all is a named degrade in the final report,
+    never a silent skip. This is usage documentation, distinct from
+    the decision record a load-bearing choice lands
+    (`git-conventions.md`): the record captures the choice, the doc
+    tells a user how to use the surface.
 11. **Repo conventions respected.** The brief names the target repo's
     conventions file — its `CLAUDE.md` or equivalent, by absolute path —
     or states "none exists — checked". Read that file before ruling: a
@@ -373,7 +387,16 @@ Checked on every review, every time — not opted into per task:
    in `git-conventions.md` is the mechanical probe for it. Repo
    documentation is in scope the same way: grep the docs for the
    changed surface — a README or doc example contradicted by the diff
-   is a dimension-2 finding.
+   is a dimension-2 finding, and
+   the doc a new capability ships is in scope here too,
+   held to the same bar as any doc — truthful, no
+   filler prose. Existence is checked here, not only named at the plan
+   gate: a new user-facing surface in the diff
+   whose planned doc is absent from the diff is a finding — no doc
+   file and no plan-stated "none warranted" leaves the surface
+   undocumented, the gap the plan-time naming alone would let through
+   at execution. Read the tree for the named doc, don't take its plan
+   entry on faith.
 3. **Architecture fit.** Boundaries respected; single responsibility held.
    Reinvention is checked here too: a diff that reimplements a helper,
    utility, or pattern the repo already provides —

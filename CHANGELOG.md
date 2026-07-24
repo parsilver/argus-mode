@@ -8,6 +8,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+- A docs-exist requirement for new user-facing capabilities
+  (`references/pipeline.md`, `references/verification.md`, both
+  `skills/*/SKILL.md`, both review agents, `README.md`,
+  `tests/run-checks.sh`): the docs rules kept documentation truthful —
+  a change contradicting a README was a defect — but never required a
+  doc to exist, so a new command, flag, endpoint, or config key could
+  land fully implemented and fully undocumented with no gate going
+  red. A plan that adds a new user-facing surface now ships the doc
+  that surface needs — an authoring obligation at Stage 2 (the plan
+  names the doc page it creates or updates, `docs/**/*.md` or the
+  repo's native docs location, and where it is linked, or states why
+  none is warranted) paired with the item-10 gate limb (the plan
+  review revises a plan that skips it), the way the architecture-shaping
+  trigger pairs a Stage-2 obligation with a rubric item. The rule
+  names the repo's native docs location, not only `docs/` — a repo
+  with no docs structure at all is a named degrade, never silent — and
+  review dimension 2 holds the shipped doc to the same truthful,
+  filler-free bar as any doc, in all three review copies — and checks
+  existence at merge, not only at plan-naming: a new user-facing
+  surface in the diff whose planned doc is absent is a finding, so a
+  doc named in the plan but dropped in execution can't merge
+  undocumented. The usage
+  doc is distinct from the decision record a load-bearing choice
+  lands: the record captures the choice, the doc tells a user how to
+  use the surface. Check 33 pins the doctrine RED-first. (#121)
+
 - A duplication sweep on the TDD refactor leg, a reinvention signal in
   review dimension 3, and a post-implementation simplification routing
   row (`references/quality.md`, `references/verification.md`,

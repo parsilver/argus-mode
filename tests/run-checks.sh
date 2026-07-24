@@ -1766,5 +1766,82 @@ else
   err "the override path's evidence brief lacks the working tree"
 fi
 
+# 33. New user-facing capabilities ship their docs (issue #121). Item 10
+#     kept docs truthful — a change contradicting a README was a defect —
+#     but never demanded a doc EXIST: a new command, flag, endpoint, or
+#     config key could land fully implemented and fully undocumented with
+#     no gate going red. Item 10 now carries a second limb: a plan adding a
+#     new user-facing surface names the doc it ships (docs/**/*.md or the
+#     repo's native docs location — a README section, a docs site), linked
+#     where the next reader finds it, or states why none is warranted
+#     (an internal-only change), checked not assumed; a repo with no docs
+#     structure at all is a named degrade, never silent. Dimension 2's docs
+#     coverage extends to that new page. It is a limb of the existing item,
+#     not a new numbered item, so check 6's 12/6 parity is untouched.
+#     Written RED-first: one FAIL line per absent pin.
+for f33 in references/verification.md agents/argus-oracle.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "a new user-facing capability names the doc it ships" "$f33"; then
+    note "item 10's docs-exist limb carried in $f33"
+  else
+    err "item 10's docs-exist limb missing from $f33"
+  fi
+done
+if grep -qF "the repo's native docs location" references/verification.md; then
+  note "item 10 accepts the repo's native docs location, not only docs/"
+else
+  err "item 10 hard-codes docs/ instead of the repo's native location"
+fi
+if grep -qF "no docs structure at all is a named degrade" references/verification.md; then
+  note "a repo with no docs structure degrades by name, never silently"
+else
+  err "the no-docs-structure degrade is missing or silent"
+fi
+# Findability (oracle plan-review gap 3): the shipped doc is linked where the
+# next reader finds it. A pin distinct from native-location (b) — where the
+# doc LIVES — and from the no-structure degrade (c) — the opposite case.
+if grep -qF "linked where the next reader finds it" references/verification.md; then
+  note "item 10 requires the shipped doc be findable, not just present"
+else
+  err "item 10 does not require the shipped doc be linked/findable"
+fi
+# Dimension 2 covers the new page in ALL THREE review copies, not two: the
+# oracle's dimension-2 row IS the consult-mode delivery reviewer (gap 2).
+for f33 in references/verification.md agents/argus-reviewer.md agents/argus-oracle.md; do
+  if grep -qF "the doc a new capability ships is in scope" "$f33"; then
+    note "dimension 2 covers the new capability's doc page in $f33"
+  else
+    err "dimension 2 does not cover the new capability's doc page in $f33"
+  fi
+done
+# Existence is checked at MERGE, not only at plan-naming (panel gap): item 10
+# names the doc at Stage 2.5, but a plan that named a doc then dropped the
+# file in execution would merge undocumented — the gap #121 exists to close,
+# relocated to the execution→merge boundary. Dimension 2 makes the doc's
+# ABSENCE a finding, so the reviewer (working tree, run mode) and the oracle
+# (working tree via #120, consult mode) verify the planned doc landed.
+for f33 in references/verification.md agents/argus-reviewer.md agents/argus-oracle.md; do
+  if grep -qF "whose planned doc is absent from the diff is a finding" "$f33"; then
+    note "dimension 2 makes a missing planned doc a finding at merge in $f33"
+  else
+    err "dimension 2 does not catch a missing planned doc at merge in $f33"
+  fi
+done
+# The Stage-2 plan-AUTHORING obligation is distinct from the Stage-2.5 gate
+# (item 10), the way the architecture-shaping trigger's conduct side is
+# distinct from its rubric item (gap 1): pipeline.md's plan doctrine plus
+# both skills' Stage 2 sections carry it, not only the rubric copies.
+if grep -qF "ships the doc that surface needs" references/pipeline.md; then
+  note "pipeline.md carries the Stage-2 doc-authoring obligation"
+else
+  err "pipeline.md missing the Stage-2 doc-authoring obligation"
+fi
+for f33 in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "ships the doc that surface needs" "$f33"; then
+    note "the Stage-2 doc-authoring obligation summarized in $f33"
+  else
+    err "the Stage-2 doc-authoring obligation missing from $f33"
+  fi
+done
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

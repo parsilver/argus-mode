@@ -666,6 +666,31 @@ arm or an extra one — goes RED instead of unnoticed.
   candidates comparison anchors the run on the first plausible design
   — the exact default this trigger exists to break.
 
+## New user-facing surfaces ship their docs
+
+The docs a change must not contradict are covered at the gate (rubric
+item 10, `verification.md`); the docs a new surface must *create* are
+the plan's to own at authoring time. A plan that introduces a new
+user-facing capability — a command, flag, endpoint, config key, or
+other surface a user of the software interacts with —
+ships the doc that surface needs: it names the doc page it creates or
+updates (`docs/**/*.md`, or the repo's native docs location — a README
+section, a docs site) and where that page is linked so the next reader
+finds it, or states why none is warranted (an internal-only change
+touches no user-facing surface). Checked against the repo, not assumed.
+
+This is the authoring side; the plan review checks it at rubric item 10
+(`verification.md`), the way the architecture-shaping trigger pairs a
+Stage-2 obligation with a gate check, and review dimension 2 checks at
+merge that the named doc actually landed — a planned doc dropped in
+execution is a finding, not a silent omission. A plan that introduces
+no user-facing surface — a refactor, a new architectural boundary with
+no user-facing surface — owes nothing new here.
+
+- Refusal condition: a new command or flag that lands with no doc and
+  no stated reason ships a capability the next user learns by reading
+  source — the gap this obligation closes.
+
 ## Decomposition — the big-work counterpart of the triviality hatch
 
 Trivial work escapes the pipeline; oversized work must not squeeze

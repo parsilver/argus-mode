@@ -20,14 +20,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   first plausible design shipped unchallenged. A plan is now
   architecture-shaping when any stage creates a new module or
   subsystem, a new public API surface, or a new architectural
-  boundary (categorical arms, identical line-for-line across the
-  conduct section, the plan-review rubric, and the advisor's
-  checklist, each copy pinned so drift goes red); a triggered plan
+  boundary (categorical arms, their text identical word-for-word
+  across the conduct section, the plan-review rubric, and the
+  advisor's checklist, each copy pinned and counted so drift goes
+  red); a triggered plan
   carries an Architecture candidates block — at least two candidates
   with trade-offs, plus the chosen rationale, reuse or doing nothing
   admissible — and the plan review revises a triggered plan without
   it, checked against the trigger definition rather than reviewer
-  discretion. Non-triggered plans owe nothing (no absence line), so
+  discretion. In a decomposition each triggered slice plan carries the
+  parent's block verbatim so the gate reads it in the slice's own
+  text; the deviation trip lists in both skills mirror the arms, and
+  the trips-nothing exclusions ride every copy of the definition.
+  Non-triggered plans owe nothing (no absence line), so
   the hatch, small fixes, and the read-only route pay zero. The
   comparison rides the plan comment's existing design-decisions slot;
   load-bearing choices still land as decision records. Check 31 pins

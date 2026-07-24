@@ -243,8 +243,8 @@ reference is unreachable:
    implementation stage.
 5. **Architecture under `quality.md`** — SOLID, single responsibility,
    patterns that carry a written justification. On an
-   architecture-shaping plan (the arms live in `verification.md`
-   item 5 and `pipeline.md`; when in doubt, the trigger fires) the
+   architecture-shaping plan (the arms as stated at Stage 2 above;
+   when in doubt, the trigger fires) the
    candidates comparison must be present —
    at least two candidate architectures with trade-offs and the
    chosen rationale — and its absence is a `revise` named to the
@@ -328,7 +328,7 @@ feeling:**
 | # | Trigger | Why it's mandatory |
 |---|---|---|
 | a | Execution is about to deviate from the approved plan's stages or test list | a small lead silently re-scoping is exactly the failure mode the oracle exists to catch |
-| b | A new module, interface, or dependency **not named in the approved plan** is about to be created | architecture decisions are never delegated — the oracle is the architecture gate under a small lead |
+| b | A new module, interface, or dependency — a new public API surface or architectural boundary included (the architecture-shaping arms) — **not named in the approved plan** is about to be created | architecture decisions are never delegated — the oracle is the architecture gate under a small lead |
 | c | A stage's failable check has failed **twice** | a third blind retry is already forbidden by `on-track.md` — consult the oracle instead of trying again |
 
 Felt uncertainty is a valid **fourth, optional** trigger — never a
@@ -338,7 +338,11 @@ no uncertainty; the three mechanical triggers catch what the feeling won't.
 On any trigger: stop, state the deviation/new-dependency/failure in one
 sentence, spawn `argus-oracle` with the goal (the task statement), the
 plan, the stage in question, and
-what's proposed — for trigger (c), that is the oracle's debugging
+what's proposed — for trigger (b),
+the brief also carries the amendment's own candidates comparison
+(at least two candidate architectures with trade-offs and the chosen
+rationale, the block the trigger demands at Stage 2); for trigger
+(c), that is the oracle's debugging
 arbitration: attach the diagnose loop's ledger and expect one directive
 back (next falsification step, plan amendment, or escalate). Apply its
 verdict before continuing — same as checkpoint 1, no override path.

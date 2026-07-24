@@ -1554,6 +1554,24 @@ for sect31 in arch rubric; do
     err "the $sect31 copy does not fail toward firing on doubt"
   fi
 done
+# Additive-drift guard (review finding on #119): presence pins alone let a
+# FOURTH arm creep into one copy silently — the trigger widened on one
+# surface only. Count the arm lines per copy: exactly three, everywhere.
+# These pin text that already exists (the check-29 regression-pin idiom).
+armre31='a new (module or subsystem the tree|public API surface that code|architectural boundary between)'
+for src31 in "arch:pipeline.md section" "rubric:plan-review rubric" "oracle:advisor checklist"; do
+  key31="${src31%%:*}"; label31="${src31#*:}"
+  case "$key31" in
+    arch)   n31=$(printf '%s\n' "$arch31" | grep -cE "$armre31") ;;
+    rubric) n31=$(printf '%s\n' "$rubric31" | grep -cE "$armre31") ;;
+    oracle) n31=$(grep -cE "$armre31" agents/argus-oracle.md) ;;
+  esac
+  if [ "$n31" -eq 3 ]; then
+    note "exactly three trigger arms in the $label31"
+  else
+    err "the $label31 carries $n31 trigger arms, not three — a copy drifted"
+  fi
+done
 if printf '%s\n' "$arch31" | grep -qF "Chosen: <n> —"; then
   note "the candidates block shape carries the chosen-rationale line"
 else
@@ -1610,6 +1628,46 @@ if grep -qF "from a compared field" references/quality.md; then
   note "quality.md principle 2 mirrors the compared-field bar"
 else
   err "quality.md principle 2 missing the compared-field mirror"
+fi
+# Panel additions (#119 review): (1) a decomposition slice CARRIES the
+# parent's block verbatim — the conduct side's old "cite it" instruction
+# contradicted every mechanical gate copy; (2) the trips-nothing exclusions
+# are mirrored into both gate copies, not just the conduct section; (3) the
+# enforcement limb is pinned per gate copy (mutation runs showed a
+# single-copy revert stayed green — the Stage-2 summaries satisfied the
+# whole-file pins); (4) the deviation trip lists in both skills mirror the
+# arms, so the mid-execution re-entry promise is backed; (5) consult's
+# trigger-(b) brief carries the amendment's own comparison.
+if printf '%s\n' "$arch31" | grep -qF "carries the parent's block verbatim"; then
+  note "a triggered decomposition slice carries the parent's block"
+else
+  err "the decomposition slice rule still cites instead of carrying the block"
+fi
+for f31 in references/verification.md agents/argus-oracle.md references/pipeline.md; do
+  if grep -qF "docs for existing surfaces trip nothing" "$f31"; then
+    note "the trips-nothing exclusions carried in $f31"
+  else
+    err "the trips-nothing exclusions missing from $f31"
+  fi
+done
+for f31 in agents/argus-oracle.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "not reviewer discretion" "$f31"; then
+    note "the non-discretionary revise carried in the gate copy $f31"
+  else
+    err "the non-discretionary revise missing from the gate copy $f31"
+  fi
+done
+for f31 in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "architecture-shaping arms" "$f31"; then
+    note "the deviation trip list mirrors the trigger arms in $f31"
+  else
+    err "the deviation trip list does not mirror the trigger arms in $f31"
+  fi
+done
+if grep -qF "the amendment's own candidates comparison" skills/consult/SKILL.md; then
+  note "consult trigger (b) briefs carry the amendment's comparison"
+else
+  err "consult trigger (b) briefs do not carry the amendment's comparison"
 fi
 
 echo

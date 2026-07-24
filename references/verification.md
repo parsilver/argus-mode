@@ -187,7 +187,9 @@ for the two that skip the rest of the rubric entirely when missing.
    The arms are categorical, judged the way the sensitive-paths list
    is judged from a diff's touched files; a new file inside an
    existing module, implementing that module's existing interfaces,
-   trips nothing — and when in doubt, the trigger fires.
+   trips nothing; tests, fixtures, and
+   docs for existing surfaces trip nothing — and
+   when in doubt, the trigger fires.
    A triggered plan whose text carries no candidates comparison —
    at least two candidate architectures, each with its trade-offs,
    plus the chosen candidate's rationale — is a `revise` naming the

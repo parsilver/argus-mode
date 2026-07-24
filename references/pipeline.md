@@ -624,9 +624,10 @@ Any one arm trips it. The arms are categorical — judged from the
 plan's contents the way the sensitive-paths list is judged from a
 diff's touched files, never a keyword list to keep in sync. A new
 file inside an existing module, implementing that module's existing
-interfaces, trips nothing; tests, fixtures, and docs for existing
-surfaces trip nothing; and when in doubt, the trigger fires — a
-comparison is cheap next to an architecture rebuilt at review.
+interfaces, trips nothing; tests, fixtures, and
+docs for existing surfaces trip nothing; and
+when in doubt, the trigger fires — a comparison is cheap next to an
+architecture rebuilt at review.
 
 A triggered plan carries an **Architecture candidates block** in its
 plan text, before the plan goes to review:
@@ -644,8 +645,10 @@ text: on approve it rides into the plan comment with the rest of the
 plan (the lifecycle's "design decisions with their reasons"), and a
 choice the plan marks as load-bearing still lands as a decision
 record (`git-conventions.md`) — the block is that record's raw
-material, not a substitute. In a decomposition the comparison lives
-in the parent's plan; slice plans cite it rather than re-deriving it.
+material, not a substitute. In a decomposition the comparison is made
+once, in the parent's plan; each triggered slice plan
+carries the parent's block verbatim — a copy, not a re-derivation —
+so the gate reads it in the slice plan's own text.
 A mid-execution amendment that creates a new module, API surface, or
 boundary re-enters the plan review (the deviation rule), where this
 same trigger applies to the amendment.
@@ -653,10 +656,11 @@ same trigger applies to the amendment.
 The gate side lives beside rubric item 5 (`verification.md`): a
 triggered plan without the block is a `revise` named to the tripped
 arm — presence is mechanical, the comparison's quality stays
-judgment, and a non-triggered plan owes nothing. The arm definitions
-are deliberately identical, line for line, here, at the gate, and in
-the advisor's checklist — the guarding check pins each line in each
-file, so a copy that drifts goes RED instead of unnoticed.
+judgment, and a non-triggered plan owes nothing. The arm text is
+deliberately identical, word for word, here, at the gate, and in
+the advisor's checklist — the guarding check pins each arm in each
+file and counts the arms per copy, so a copy that drifts — an edited
+arm or an extra one — goes RED instead of unnoticed.
 
 - Refusal condition: an architecture-shaping plan approved without a
   candidates comparison anchors the run on the first plausible design

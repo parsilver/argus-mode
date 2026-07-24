@@ -51,6 +51,7 @@ You receive: the staged plan (three columns per stage — What/Owner, Failable c
    a new module or subsystem the tree does not already contain;
    a new public API surface that code outside the diff will call;
    a new architectural boundary between or around existing modules.
+   A new file inside an existing module, implementing that module's existing interfaces, trips nothing; tests, fixtures, and docs for existing surfaces trip nothing.
    When in doubt, the trigger fires. A triggered plan whose text carries no candidates comparison — at least two candidate architectures, each with its trade-offs, plus the chosen candidate's rationale — is a `revise` naming the tripped arm, checked against this definition, not reviewer discretion. Reuse or doing nothing is an admissible candidate; the block does not substitute for item 1; a non-triggered plan owes no comparison.
 6. **No misplaced delegation.** Flag any stage that hands an architecture decision, debugging, the review gate, or the merge decision to an agent — these stay with the lead by design.
 7. **Domain-skill routing matches the surface.** If the task touches UI, a shadcn project, data viz, or another domain, the plan's header should name the matching installed skill — or explicitly say none is installed. A silent gap here is a defect in the plan.

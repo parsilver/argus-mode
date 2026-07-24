@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+
+- An architecture-shaping trigger at Stage 2, with a mandatory
+  candidates comparison on triggered plans
+  (`references/pipeline.md`, `references/verification.md`,
+  `references/quality.md`, both `skills/*/SKILL.md`,
+  `agents/argus-oracle.md`, `README.md`, `tests/run-checks.sh`): the
+  plan's first architecture artifact was the single already-chosen
+  design in its third column — the simpler-alternative pass probes
+  only the reductive direction, and item 5 plus review dimension 3
+  re-check that same anchor — so on new-subsystem work the lead's
+  first plausible design shipped unchallenged. A plan is now
+  architecture-shaping when any stage creates a new module or
+  subsystem, a new public API surface, or a new architectural
+  boundary (categorical arms, identical line-for-line across the
+  conduct section, the plan-review rubric, and the advisor's
+  checklist, each copy pinned so drift goes red); a triggered plan
+  carries an Architecture candidates block — at least two candidates
+  with trade-offs, plus the chosen rationale, reuse or doing nothing
+  admissible — and the plan review revises a triggered plan without
+  it, checked against the trigger definition rather than reviewer
+  discretion. Non-triggered plans owe nothing (no absence line), so
+  the hatch, small fixes, and the read-only route pay zero. The
+  comparison rides the plan comment's existing design-decisions slot;
+  load-bearing choices still land as decision records. Check 31 pins
+  the doctrine RED-first. (#119)
+
 ### Changed
 
 - Git intake now takes an isolated worktree on every full-pipeline run

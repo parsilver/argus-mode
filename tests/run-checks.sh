@@ -1495,5 +1495,122 @@ else
   err "the preview on-yes path still carries the retired branch/worktree pairing"
 fi
 
+# 31. Architecture-shaping trigger + candidates comparison (issue #119). The
+#     plan's first architecture artifact was the single already-chosen design
+#     in the third column; item 1 probes only the reductive direction and
+#     item 5 / dimension 3 re-check that same anchor, so on new-subsystem work
+#     the lead's first plausible design shipped unchallenged. Stage 2 now
+#     applies a mechanical trigger — any stage creating a new module or
+#     subsystem, a new public API surface, or a new architectural boundary —
+#     and a triggered plan carries an Architecture candidates block (at least
+#     two candidates with trade-offs, plus the chosen rationale) before the
+#     plan review, which revises a triggered plan without it, checked against
+#     the trigger definition rather than discretion. Non-triggered plans owe
+#     nothing (no absence line — the gate re-applies the same trigger to the
+#     same text), so the hatch, small fixes, and the read-only route pay zero.
+#     Decision record for the design itself: three homes were compared
+#     (conduct section in pipeline.md / doctrine home in quality.md / gate
+#     home in verification.md); the conduct home won on zero ceremony and on
+#     matching the scout/overlap/decomposition slot, stealing the
+#     identical-arm-lines drift guard from the gate home (the plan-review
+#     brief reaches only verification.md, so the arms are restated there and
+#     in the advisor's checklist, line-for-line identical, each pinned below)
+#     and the one-sentence principle-2 mirror from the doctrine home.
+#     Written RED-first: one FAIL line per absent pin.
+arch31=$(awk '/^## Architecture-shaping trigger$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+rubric31=$(awk '/^## The oracle.s plan-review rubric$/{f=1;next} /^## /{f=0} f' references/verification.md)
+if [ -n "$arch31" ]; then
+  note "pipeline.md carries the '## Architecture-shaping trigger' section"
+else
+  err "pipeline.md missing the '## Architecture-shaping trigger' section"
+fi
+while IFS= read -r arm; do
+  [ -n "$arm" ] || continue
+  if printf '%s\n' "$arch31" | grep -qF -- "$arm"; then
+    note "trigger arm in pipeline.md: $arm"
+  else
+    err "trigger arm missing from pipeline.md section: $arm"
+  fi
+  if printf '%s\n' "$rubric31" | grep -qF -- "$arm"; then
+    note "trigger arm in the plan-review rubric: $arm"
+  else
+    err "trigger arm missing from the plan-review rubric: $arm"
+  fi
+  if grep -qF -- "$arm" agents/argus-oracle.md; then
+    note "trigger arm in the advisor checklist: $arm"
+  else
+    err "trigger arm missing from the advisor checklist: $arm"
+  fi
+done <<'ARMS31'
+a new module or subsystem the tree does not already contain
+a new public API surface that code outside the diff will call
+a new architectural boundary between or around existing modules
+ARMS31
+for sect31 in arch rubric; do
+  body31="$arch31"; [ "$sect31" = "rubric" ] && body31="$rubric31"
+  if printf '%s\n' "$body31" | grep -qF "when in doubt, the trigger fires"; then
+    note "the $sect31 copy fails toward firing on doubt"
+  else
+    err "the $sect31 copy does not fail toward firing on doubt"
+  fi
+done
+if printf '%s\n' "$arch31" | grep -qF "Chosen: <n> —"; then
+  note "the candidates block shape carries the chosen-rationale line"
+else
+  err "the candidates block shape missing the chosen-rationale line"
+fi
+if printf '%s\n' "$arch31" | grep -qF "trade-offs:"; then
+  note "the candidates block shape carries per-candidate trade-offs"
+else
+  err "the candidates block shape missing per-candidate trade-offs"
+fi
+if printf '%s\n' "$rubric31" | grep -qF "not reviewer discretion"; then
+  note "the triggered-plan revise keys off the definition, not discretion"
+else
+  err "the triggered-plan revise does not exclude reviewer discretion"
+fi
+if printf '%s\n' "$rubric31" | grep -qF "at least two candidate architectures"; then
+  note "the rubric demands at least two candidate architectures"
+else
+  err "the rubric does not demand at least two candidate architectures"
+fi
+if printf '%s\n' "$rubric31" | grep -qF "non-triggered plan owes no comparison"; then
+  note "the rubric states the zero-ceremony rule for non-triggered plans"
+else
+  err "the rubric missing the zero-ceremony rule for non-triggered plans"
+fi
+if printf '%s\n' "$rubric31" | grep -qF "does not substitute for item 1"; then
+  note "the candidates block is distinct from the simpler-alternative pass"
+else
+  err "the rubric does not keep the candidates block distinct from item 1"
+fi
+for f31 in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "architecture-shaping" "$f31"; then
+    note "architecture-shaping trigger carried in $f31"
+  else
+    err "architecture-shaping trigger missing from $f31"
+  fi
+  if grep -qF "at least two candidate architectures" "$f31"; then
+    note "two-candidate floor carried in $f31"
+  else
+    err "two-candidate floor missing from $f31"
+  fi
+  if grep -qF "Architecture-shaping trigger" "$f31"; then
+    note "the trigger section named by name in $f31"
+  else
+    err "the trigger section not named by name in $f31"
+  fi
+done
+if grep -rqF "Architecture trigger: none" references/ skills/; then
+  err "an absence-line ceremony crept in (Architecture trigger: none)"
+else
+  note "no absence-line ceremony anywhere (zero cost for non-triggered plans)"
+fi
+if grep -qF "from a compared field" references/quality.md; then
+  note "quality.md principle 2 mirrors the compared-field bar"
+else
+  err "quality.md principle 2 missing the compared-field mirror"
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

@@ -18,7 +18,11 @@ names. Code a new teammate can read without guessing.
 
 SOLID; small single-responsibility composable modules; explicit layer
 boundaries. Maintainable and scalable by construction, not by later
-heroics.
+heroics. An architecture-shaping change — the trigger and its arms
+live at the plan gate (`verification.md`, rubric item 5; conducted at
+Stage 2 per `pipeline.md`) — picks its structure from a compared field:
+at least two candidate architectures with their trade-offs, never just
+the first plausible design.
 
 - Refusal condition: a stage that skips architecture in favor of "just
   make it work" gets sent back before implementation starts.

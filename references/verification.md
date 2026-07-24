@@ -177,6 +177,31 @@ for the two that skip the rest of the rubric entirely when missing.
 5. **Architecture vs `quality.md`.** Does the chosen architecture hold
    under the doctrine — SOLID, single-responsibility modules, patterns
    that carry a written justification?
+   **The architecture-shaping limb of this item is mechanical.** Apply
+   the trigger to the plan's own contents — its named file set and its
+   Architecture & patterns column. The plan is architecture-shaping
+   when any stage creates:
+   a new module or subsystem the tree does not already contain;
+   a new public API surface that code outside the diff will call;
+   a new architectural boundary between or around existing modules.
+   The arms are categorical, judged the way the sensitive-paths list
+   is judged from a diff's touched files; a new file inside an
+   existing module, implementing that module's existing interfaces,
+   trips nothing; tests, fixtures, and
+   docs for existing surfaces trip nothing — and
+   when in doubt, the trigger fires.
+   A triggered plan whose text carries no candidates comparison —
+   at least two candidate architectures, each with its trade-offs,
+   plus the chosen candidate's rationale — is a `revise` naming the
+   tripped arm, checked against the trigger definition,
+   not reviewer discretion. The comparison's quality (a strawman
+   second candidate, a rationale its own trade-offs contradict) stays
+   this item's and item 1's judgment; reuse or doing nothing is an
+   admissible candidate, and the block
+   does not substitute for item 1 — item 1 remains the authority on
+   whether the work should exist at all.
+   A non-triggered plan owes no comparison; the conduct side lives at
+   Stage 2 (`pipeline.md`, Architecture-shaping trigger).
 6. **Lead-only decisions not delegated.** Is any stage quietly delegating a
    decision that belongs to the lead alone — architecture, debugging,
    review, merge (see `delegation.md`)?

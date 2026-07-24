@@ -600,6 +600,72 @@ gets to act on can.
   the user is a silent skip — the whole point of announce-and-ask is that
   the user, not the pipeline, decides whether to sequence or proceed.
 
+## Architecture-shaping trigger
+
+The most expensive default the gates can wave through is an
+architecture nobody chose: the plan's third column records one design,
+item 1 of the plan review probes only the reductive direction, and
+dimension 3 judges the one architecture built — after a full execution
+was already spent on it. This section makes `quality.md`'s
+architecture-before-code principle mechanical at the plan stage, where
+a structurally inferior anchor is still cheap to replace.
+
+Once the plan names its stages and file set (Stage 2) and before it
+goes to the plan-review gate, apply the trigger to the plan's own
+contents — the named file set and the Architecture & patterns column,
+the same text the plan review reads. The plan is
+**architecture-shaping** when any stage creates:
+
+- a new module or subsystem the tree does not already contain;
+- a new public API surface that code outside the diff will call;
+- a new architectural boundary between or around existing modules.
+
+Any one arm trips it. The arms are categorical — judged from the
+plan's contents the way the sensitive-paths list is judged from a
+diff's touched files, never a keyword list to keep in sync. A new
+file inside an existing module, implementing that module's existing
+interfaces, trips nothing; tests, fixtures, and
+docs for existing surfaces trip nothing; and
+when in doubt, the trigger fires — a comparison is cheap next to an
+architecture rebuilt at review.
+
+A triggered plan carries an **Architecture candidates block** in its
+plan text, before the plan goes to review:
+
+```
+Architecture candidates (trigger: <arm — what tripped it>):
+1. <candidate> — trade-offs: <what it costs or risks against the goal>
+2. <candidate> — trade-offs: <...>
+Chosen: <n> — <why it wins those trade-offs>
+```
+
+At least two candidates; reusing or extending what already exists —
+or doing nothing — is an admissible candidate. The block is plan
+text: on approve it rides into the plan comment with the rest of the
+plan (the lifecycle's "design decisions with their reasons"), and a
+choice the plan marks as load-bearing still lands as a decision
+record (`git-conventions.md`) — the block is that record's raw
+material, not a substitute. In a decomposition the comparison is made
+once, in the parent's plan; each triggered slice plan
+carries the parent's block verbatim — a copy, not a re-derivation —
+so the gate reads it in the slice plan's own text.
+A mid-execution amendment that creates a new module, API surface, or
+boundary re-enters the plan review (the deviation rule), where this
+same trigger applies to the amendment.
+
+The gate side lives beside rubric item 5 (`verification.md`): a
+triggered plan without the block is a `revise` named to the tripped
+arm — presence is mechanical, the comparison's quality stays
+judgment, and a non-triggered plan owes nothing. The arm text is
+deliberately identical, word for word, here, at the gate, and in
+the advisor's checklist — the guarding check pins each arm in each
+file and counts the arms per copy, so a copy that drifts — an edited
+arm or an extra one — goes RED instead of unnoticed.
+
+- Refusal condition: an architecture-shaping plan approved without a
+  candidates comparison anchors the run on the first plausible design
+  — the exact default this trigger exists to break.
+
 ## Decomposition — the big-work counterpart of the triviality hatch
 
 Trivial work escapes the pipeline; oversized work must not squeeze

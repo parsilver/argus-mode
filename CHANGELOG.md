@@ -6,6 +6,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+
+- Git intake now takes an isolated worktree on every full-pipeline run
+  (`references/pipeline.md`, `references/delegation.md`, both
+  `skills/*/SKILL.md`, `agents/argus-reviewer.md`, `README.md`,
+  `tests/run-checks.sh`): step 3 used to take a worktree only when the
+  in-flight probe fired, so two sessions entering intake at the same
+  moment on a clean repo could each see no in-flight signal and both
+  take the primary checkout. The conditional arm is gone — every run
+  branches off `origin/<default>` in its own worktree
+  (`git worktree add <path> -b <n>-slug origin/<default>`), no pipeline
+  path ever runs `git switch` or a fast-forward inside the primary
+  checkout, and the step-1 local-default fast-forward is retired with
+  it. The in-flight probe survives as inventory feeding the intake
+  announcement and Resume; Resume adds a worktree for an adopted branch
+  that has none and never switches the primary checkout; with no remote
+  the worktree branches off the local default tip; the triviality
+  hatch, read-only route, and preview are unchanged (no branch, no
+  worktree). The isolation model's premise is updated to match:
+  executors work in the run's worktree, and briefs carry absolute paths
+  into it because subagents inherit the session's original working
+  directory — the primary checkout. The same inheritance trap is closed
+  on the two surfaces that shared it: the review brief now names the
+  run's working tree by absolute path (the intake worktree or, on a
+  parked-primary resume, the primary checkout) and the reviewer
+  anchors every command and re-run there — a brief naming no
+  working-tree path is a refusal — and the
+  lead's own commands run inside the worktree from its creation on,
+  bootstrap commit included. The no-remote terminal merge is named as
+  the one sanctioned move of the primary checkout (clean tree, after
+  the review gate, escalating to the user otherwise); a primary
+  checkout parked on an adopted branch stays where the user parked it
+  after the merge, with the local-branch deletion deferred and named.
+  Deliberately no config flag or
+  opt-out. Check 30 pins the doctrine RED-first. (#122)
 
 ## [0.10.0] - 2026-07-21
 ### Added

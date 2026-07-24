@@ -284,39 +284,49 @@ with zero session context; the conventions are part of the deliverable,
 not decoration.
 
 1. `git fetch origin`. The branch base is `origin/<default>` — the latest,
-   not a stale local copy. Fast-forward the local default branch to it only
-   when this run branches in place (see the in-flight probe in step 3); when
-   the run takes its own worktree it branches straight off `origin/<default>`
-   and never touches the primary checkout's ref.
+   not a stale local copy. The run branches straight off it in the worktree
+   step 3 creates and never touches the primary checkout's ref: no
+   fast-forward, no `git switch` — nothing in the primary checkout moves.
+   The no-remote terminal merge is the one sanctioned exception
+   (Degradation rules), and it runs after the review gate, never here.
 2. Create a GitHub issue describing the work: `gh issue create` — title
    and description per `git-conventions.md` (failable acceptance
    criteria; bugs carry expected/actual, repro steps, verbatim
    evidence). Fill every metadata dimension the repo actually has —
    the Issue metadata contract below: discover, then apply; never
    invent.
-3. Branch — named `<issue-number>-<short-kebab-slug>`:
-   - **In-flight probe — mechanical, not a judgment call.** Other work is in
-     flight when any of these holds: the primary checkout's HEAD is not on
-     the default branch, `git worktree list` shows a non-primary worktree, or
-     `gh pr list --state open` shows a draft PR on an `<n>-*` branch. The
-     HEAD-off-default arm may false-positive on a repo where the user parks
-     on a branch — acceptable, because it fails toward taking a worktree, the
-     safe direction.
-   - **Any arm hits → this run takes its own worktree,** branched off the
-     remote ref: `git worktree add <path> -b <n>-slug origin/<default>`. It
-     never runs `git switch` or a fast-forward inside the primary checkout —
-     a second run that does silently re-points the shared checkout out from
-     under the first, whose next build or commit then lands on the wrong
-     branch. (`git fetch origin <default>:<default>` refuses whenever the
-     default branch is checked out in any worktree, so the local-ref
-     fast-forward in step 1 is only for the no-in-flight case; skip it with a
-     note otherwise — `origin/<default>` is the base regardless.)
-   - **No arm hits → a clean solo checkout** may branch in place with
-     `gh issue develop <n>` (or `git switch -c` if `gh issue develop` isn't
-     available), no worktree needed.
-   - Each arm has a named degrade: no `gh` or no remote skips the draft-PR
-     arm (named in the final report, not silent); the HEAD-off-default and
-     `git worktree list` arms still decide.
+3. Branch — named `<issue-number>-<short-kebab-slug>`, always in its own
+   isolated worktree:
+   - **Every run takes its own worktree, unconditionally:**
+     `git worktree add <path> -b <n>-slug origin/<default>` — branched
+     straight off the remote ref. No run ever runs `git switch` or a
+     fast-forward inside the primary checkout — a run that re-points the
+     shared checkout silently pulls it out from under the user and every
+     concurrent session, whose next build or commit then lands on the
+     wrong branch. Conditional isolation left exactly one collision open:
+     two runs entering intake at the same moment on a clean repo each saw
+     no in-flight signal and both took the primary checkout. Unconditional
+     isolation closes it by construction; a solo run pays one
+     `git worktree add` for it.
+   - **The in-flight probe survives as inventory.** Its three arms are
+     unchanged: the primary checkout's HEAD off the default branch, a
+     non-primary `git worktree list` entry, or an open draft PR on an
+     `<n>-*` branch. What the inventory feeds is the in-flight
+     announcement (Announce in-flight work at intake, below) and the
+     Resume check's adopt-versus-create decision —
+     never which checkout this run works in, which is no longer a
+     decision at all.
+   - No remote → the worktree branches off the local default tip instead
+     (`git worktree add <path> -b <branch> <default>`); isolation stays
+     unconditional (Degradation rules, below).
+   - Named degrade: no `gh` or no remote skips the draft-PR arm of the
+     probe (named in the final report, not silent); the other two arms
+     still run.
+   - From this step on, every command the lead runs executes inside the
+     run's worktree — the bootstrap commit included — via `cd` or
+     `git -C <path>`: the session's shell begins in the primary
+     checkout, the same inheritance trap the isolation model names for
+     subagents (`delegation.md`).
 4. Bootstrap the PR immediately, before writing any implementation code:
    - Create an empty bootstrap commit.
    - Open a **draft** PR with `Closes #<n>` on the first line of the
@@ -369,8 +379,7 @@ resumed, not previewed.
    at the head of git intake, is read-only, and creates no artifacts); the
    untrusted-input scan and trust-tier probe (Untrusted input at intake,
    above — session-side and read-only); and `git fetch origin` (git intake
-   step 1, read-only). The step-1 local-default fast-forward is skipped — it
-   is coupled to the step-3 in-flight probe, which preview never reaches.
+   step 1, read-only).
 5. **Stage 2 draft** — scout the unread surfaces by direct reads only —
    preview does not spawn the scout agent, so its one cost stays the lead's
    own reads (a task that needs a breadth-reconnaissance agent to draft a
@@ -401,8 +410,8 @@ re-draft, do not re-recite the creed, do not re-print the preflight.
 Re-take only the volatile read-only checks (a fresh `git fetch`, and a
 re-scan and trust-tier re-probe if a foreign thread grew — a snapshot is
 not a standing grant, refreshing both header records), then run git intake
-steps 2–4 in order (issue → branch/worktree → draft
-PR), and the reused draft **still goes through the Stage 2.5 plan review**,
+steps 2–4 in order (issue → worktree branch → draft PR), and the
+reused draft **still goes through the Stage 2.5 plan review**,
 exactly as any normal run. Preview defers the git ceremony and the plan
 review to the far side of the handshake and removes neither —
 no gate is skipped, the opposite of the dropped express-lane, which
@@ -427,16 +436,18 @@ fresh invocation starts clean.
 ## Announce in-flight work at intake
 
 The in-flight probe (git intake step 3) and the Resume check both inventory
-the repo's open PRs and worktrees — the probe to decide
-worktree-versus-in-place, Resume to decide adopt-versus-create. When that
+the repo's open PRs and worktrees — the probe to surface concurrent work
+(every run takes its own worktree, so no checkout choice rides on the
+result), Resume to decide adopt-versus-create. When that
 inventory holds work for a task other than this run's — an open PR on
 another issue's branch, or a worktree checked out to one — say so in-session
 before planning, naming what was found: `in flight: #12, worktree ../repo-12`.
 The announcement is session-only output, printed for the user and never
 written to a git artifact — the same treatment as the stage-transition
 marker (`on-track.md`). It is context, not a gate: it neither blocks intake
-nor changes the worktree decision the probe already made, and the plan stage
-turns it into a concrete file check (see the planned-file overlap check).
+nor changes what intake does — every run takes its own worktree regardless —
+and the plan stage turns it into a concrete file check (see the planned-file
+overlap check).
 
 - Refusal condition: an inventory that surfaced another task's PR or worktree
   and went unspoken leaves the user to discover the concurrent run at merge
@@ -492,8 +503,14 @@ of re-running intake:
 2. The model gate still runs — the resuming session's model may differ
    from the one that started the work. The creed is recited once per
    session, resumed runs included.
-3. Intake steps 2–4 are replaced by adoption: fetch, check out the
-   existing branch (or its worktree), and read the plan comment — it
+3. Intake steps 2–4 are replaced by adoption: fetch, then work in the
+   branch's existing worktree — or add one for it
+   (`git worktree add <path> <n>-slug`) when it has none, a branch an
+   older run created in place included. Adoption
+   never runs `git switch` inside the primary checkout — a primary
+   checkout already parked on the adopted branch is pre-existing state,
+   not a switch: work in it as-is, since `git worktree add` refuses a
+   second checkout of the same branch. Read the plan comment — it
    is the checklist of record. Adopted state with **no** plan comment
    means the run died before plan approval — enter at Stage 2 and
    plan against the adopted issue and branch.
@@ -745,8 +762,8 @@ report.
 | Condition | Issue / PR | Plan lives in | Reviewer scope | Merge semantics |
 |---|---|---|---|---|
 | No git repo | Offer `git init`; if declined, skip the git layer for every stage | The final report | Files created/modified this session | N/A — deliver = the final report |
-| Git repo, no remote at all | Local branch only; skip issue and PR | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | Local `git merge --no-ff` into the default branch, after the review gate — remove `PLAN.md` in a final commit on the branch first, so run state never lands on the default branch |
-| Remote exists, `gh` CLI missing | Skip issue and PR (no API access); push the branch to the remote | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | **Never merge locally while a remote exists** — the local default branch would diverge from origin and the next intake's fast-forward breaks. Deliver the pushed branch and its compare link, named in the final report; opening and merging the PR is the user's step. Push rejected (no rights) → deliver the branch locally (`git bundle` or patch file, or the user pushes), named the same way |
+| Git repo, no remote at all | Local branch only — its worktree off the local default tip; skip issue and PR | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | Local `git merge --no-ff` into the default branch, run inside the primary checkout — the only checkout holding the default branch, and the one sanctioned move of it — on a clean primary tree, after the review gate; a dirty primary tree, or one parked off the default branch, escalates to the user before any merge. Remove `PLAN.md` in a final commit on the branch first, so run state never lands on the default branch |
+| Remote exists, `gh` CLI missing | Skip issue and PR (no API access); push the branch to the remote | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | **Never merge locally while a remote exists** — the local default branch would diverge from origin while every later run branches off `origin/<default>`, hiding the merged work from every intake that follows. Deliver the pushed branch and its compare link, named in the final report; opening and merging the PR is the user's step. Push rejected (no rights) → deliver the branch locally (`git bundle` or patch file, or the user pushes), named the same way |
 | Remote exists, no push rights (fork / OSS contribution) | Issue on upstream when creatable, else skip and note; `gh repo fork --remote`, branch pushed to the fork | Issue comment as usual (PR description when no upstream issue) | Normal — PR diff | Cross-fork draft PR, readied after the review gate; merging belongs to the maintainer — deliver = the ready PR, named in the final report |
 | Issues disabled on the repo, or no permission to create them | Branch + PR, no issue | Plan comment moves to the PR description (no issue thread to host it) | Normal — PR diff | Normal — merge the PR; note the missing issue in the final report |
 | User opts out ("no issue for this one") | Honor it: branch + PR, no issue | Plan comment moves to the PR description | Normal — PR diff | Normal — merge the PR; note the opt-out in the final report |
@@ -764,7 +781,13 @@ run created and no longer needs, and name it in the final report:
 
 - a worktree created at intake is removed (`git worktree remove`);
 - the local branch is deleted after its merge (the remote branch per
-  the repo's delete-on-merge setting); an abandoned branch is deleted
+  the repo's delete-on-merge setting); when the run worked in a primary
+  checkout parked on the adopted branch (Resume), that checkout stays
+  where the user parked it — the no-switch rule holds after the merge
+  too, `git branch -d` refuses while the branch is checked out, so the
+  run defers the local-branch deletion, names the deferral in the
+  final report, and leaves moving off the branch to the user; an
+  abandoned branch is deleted
   locally and on the remote once the user confirms the abandonment;
 - on `reject`, remove the worktree but **keep the branch** — it holds
   the rejected work the user was just pointed at (and, degraded, the

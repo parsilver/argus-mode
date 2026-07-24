@@ -107,7 +107,7 @@ comment is running without the skill — see below.
 ## The pipeline
 
 1. **Model gate** — confirm the lead is on an accepted tier for the command invoked.
-2. **Intake** — triviality check (escape hatch for genuinely small edits); otherwise git intake: issue (fields filled; added to the repo's project board when one exists) → branch/worktree → draft PR.
+2. **Intake** — triviality check (escape hatch for genuinely small edits); otherwise git intake: issue (fields filled; added to the repo's project board when one exists) → branch in its own isolated worktree, every run, unconditionally → draft PR.
 3. **Plan** — staged three-column plan (what/owner, failable check, architecture & patterns); domain skill routing recorded; oversized plans decompose into a parent issue with sub-issues, one PR each.
 4. **Plan review gate** — `argus-oracle` reviews goal-backward, simpler-alternative pass first; verdict `approve` or `revise`.
 5. **Execute** — TDD red → green → refactor, solo or fanned out to `argus-implementer`/`argus-explorer`; the lead verifies and commits every slice.
@@ -126,7 +126,7 @@ comment is running without the skill — see below.
 ## What this costs
 
 This is not the cheap path — it is the quality-first path, and it says so up
-front. A medium task pays: the git ceremony (issue, branch/worktree, draft
+front. A medium task pays: the git ceremony (issue, an isolated worktree branch, draft
 PR), at least one `argus-oracle` run (more if the plan goes through revise
 cycles), and a review-gate run before merge. Each run also states its own
 per-run estimate in the plan header — the path it takes and which model

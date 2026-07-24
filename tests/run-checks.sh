@@ -1369,5 +1369,131 @@ else
   err "the consult marker block does not bind the retry count to the incoming stage's check"
 fi
 
+# 30. Unconditional worktree isolation at git intake (issue #122). Step 3 took
+#     a worktree only when the in-flight probe fired; a clean solo checkout
+#     branched in place via gh issue develop. Two sessions entering intake at
+#     the same moment on a clean repo each saw no in-flight signal and both
+#     took the primary checkout — the one collision conditional isolation left
+#     open, and the owner runs several sessions against one project routinely.
+#     Every full-pipeline run now takes its own worktree branched off
+#     origin/<default>, unconditionally; the in-flight probe survives as
+#     inventory (feeding the intake announcement and Resume, never a checkout
+#     choice); no remote branches the worktree off the local default tip; the
+#     hatch, read-only route, and preview are unchanged (no branch, no
+#     worktree). Written RED-first: every phrase below is absent until #122's
+#     prose lands, each pinned on one rendered line so a hand-wrap turns its
+#     assertion RED. Scoped to their sections the way checks 27/29 scope
+#     theirs — a whole-file grep is satisfied by decoys.
+intake30=$(awk '/^## Stage 1 — Git intake$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+if [ -n "$intake30" ]; then
+  note "pipeline.md carries the git-intake section (check 30)"
+else
+  err "pipeline.md missing the git-intake section (check 30)"
+fi
+if printf '%s\n' "$intake30" | grep -qF "its own worktree, unconditionally"; then
+  note "git intake takes a worktree unconditionally"
+else
+  err "git intake does not take a worktree unconditionally"
+fi
+if printf '%s\n' "$intake30" | grep -qF "gh issue develop"; then
+  err "git intake still offers the branch-in-place arm (gh issue develop)"
+else
+  note "the branch-in-place arm is gone from git intake"
+fi
+if printf '%s\n' "$intake30" | grep -qF "never which checkout"; then
+  note "the in-flight probe is narrowed to inventory, never checkout selection"
+else
+  err "git intake does not narrow the probe to inventory (never which checkout)"
+fi
+announce30=$(awk '/^## Announce in-flight work at intake$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+if printf '%s\n' "$announce30" | grep -qF "every run takes its own worktree"; then
+  note "the announce section reflects unconditional worktrees"
+else
+  err "the announce section still frames the probe as a checkout decision"
+fi
+degr30=$(awk '/^## Degradation rules$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+if printf '%s\n' "$degr30" | grep -qF "worktree off the local default tip"; then
+  note "the no-remote degradation names the local-default-tip worktree"
+else
+  err "the no-remote degradation does not name the local-default-tip worktree"
+fi
+resume30=$(awk '/^## Resume — the receiving side$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+if printf '%s\n' "$resume30" | grep -qF 'never runs `git switch` inside the primary checkout'; then
+  note "Resume adoption never switches the primary checkout"
+else
+  err "Resume adoption does not forbid switching the primary checkout"
+fi
+preview30=$(awk '/^## Preview mode$/{f=1;next} /^## /{f=0} f' references/pipeline.md)
+if printf '%s\n' "$preview30" | grep -qF "local-default fast-forward"; then
+  err "preview still references the retired step-1 local-default fast-forward"
+else
+  note "preview no longer references a step-1 fast-forward"
+fi
+for f30 in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "always in its own isolated worktree" "$f30"; then
+    note "unconditional worktree rule carried in $f30"
+  else
+    err "unconditional worktree rule missing from $f30"
+  fi
+done
+# Panel additions (#122 review): the reviewer and the lead both start in the
+# session's original cwd — the primary checkout, which under this doctrine
+# never holds the change — so the Stage-5 brief must anchor the reviewer to
+# the run's worktree and the lead must be told to work inside it from the
+# worktree's creation on; the no-remote terminal merge is the one sanctioned
+# move of the primary checkout, and cleanup carries the parked-primary
+# post-merge switch-back. The primary-checkout-invariant and isolation-model
+# pins predate their assertions (regression pins, the check-29 idiom); the
+# rest were written RED-first.
+if grep -qF "the run's working tree by absolute path" skills/run/SKILL.md; then
+  note "the review brief contract anchors the reviewer to the run's working tree"
+else
+  err "the review brief contract does not carry the run's working tree by absolute path"
+fi
+for f30 in skills/run/SKILL.md agents/argus-reviewer.md; do
+  if grep -qF "names no working-tree path" "$f30"; then
+    note "the missing-working-tree refusal class carried in $f30"
+  else
+    err "the missing-working-tree refusal class missing from $f30"
+  fi
+done
+if grep -qF "inside the brief's worktree" agents/argus-reviewer.md; then
+  note "the reviewer binds its commands to the brief's worktree"
+else
+  err "the reviewer does not bind its commands to the brief's worktree"
+fi
+if printf '%s\n' "$degr30" | grep -qF "run inside the primary checkout"; then
+  note "the no-remote terminal merge names its execution location"
+else
+  err "the no-remote terminal merge does not name its execution location"
+fi
+if awk '/^## Terminal-outcome cleanup$/{f=1;next} /^## /{f=0} f' references/pipeline.md \
+   | grep -qF "defers the local-branch deletion"; then
+  note "cleanup defers branch deletion on a parked-primary merge, keeping no-switch absolute"
+else
+  err "cleanup missing the parked-primary branch-deletion deferral"
+fi
+if printf '%s\n' "$intake30" | grep -qF "the bootstrap commit included"; then
+  note "git intake binds the lead's commands to the run's worktree"
+else
+  err "git intake does not bind the lead's commands to the run's worktree"
+fi
+if printf '%s\n' "$intake30" | grep -qF "nothing in the primary checkout moves"; then
+  note "git intake pins the primary-checkout invariant"
+else
+  err "git intake dropped the primary-checkout invariant"
+fi
+if awk '/^## Isolation model$/{f=1;next} /^## /{f=0} f' references/delegation.md \
+   | grep -qF "every brief carries absolute paths into the run's worktree"; then
+  note "the isolation model anchors briefs to the run's worktree"
+else
+  err "the isolation model no longer anchors briefs to the run's worktree"
+fi
+if printf '%s\n' "$preview30" | grep -qF "worktree branch → draft PR"; then
+  note "the preview on-yes path reflects unconditional worktrees"
+else
+  err "the preview on-yes path still carries the retired branch/worktree pairing"
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

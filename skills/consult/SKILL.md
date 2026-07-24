@@ -139,11 +139,14 @@ runs, in pipeline.md's section order:
   iteration) only when the requester stated them, or the issue text carries them,
   never inferred from the work; attribution metadata never created or
   reused — added to the repo's project board when one exists → branch,
-  taking an isolated worktree when the mechanical in-flight probe fires
-  (HEAD off the default branch, a non-primary worktree, or an open draft PR
-  on an `<n>-*` branch) and branching from `origin/<default>` so a
-  concurrent run never re-points the shared checkout (`pipeline.md`, git
-  intake step 3) → draft PR.
+  always in its own isolated worktree branched from `origin/<default>`
+  — unconditional (`pipeline.md`, git intake step 3), so a concurrent
+  run never re-points the shared checkout; the mechanical
+  in-flight probe still runs as inventory, feeding the in-flight
+  announcement and Resume rather than a checkout choice → draft PR.
+  From the worktree's creation on, every command the lead runs
+  executes inside it — the session's shell begins in the primary
+  checkout.
 - **In-flight work:** the intake step must announce in-flight work for
   another task in-session when the probe or the Resume check finds an open
   PR or worktree for it (`in flight: #12, worktree ../repo-12`) —

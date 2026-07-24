@@ -117,7 +117,13 @@ The brief **must** include:
 - the verbatim Stage 4 test command,
 - its full output,
 - the **Stage-4 secret-scan output** — a maintained scanner's report (gitleaks/trufflehog), or the shipped regex-sweep fallback's when none is installed (`verification.md`, "what a failable check is") — produced at the same run-time SHA and over the same diff range as the test evidence, so the single SHA below timestamps it too,
-- the **HEAD commit SHA at the moment the Stage 4 command ran**, and
+- the **HEAD commit SHA at the moment the Stage 4 command ran**,
+- **the run's working tree by absolute path** — the checked-out tree
+  already at that reviewed SHA. You have no shell, but Read and Grep
+  reach a tree: the reinvention half of dimension 3 (does the repo
+  already provide what the diff reimplements?) and end-to-end tracing
+  beyond the diff both read the repo there — a diff alone cannot show
+  what the tree already contains, and
 - **the git-artifact text the run produced** — issue body, PR
   description, and the current plan comment, attached verbatim (you
   cannot fetch GitHub content yourself) — dimension 2's team-voice
@@ -142,7 +148,7 @@ If **the diff is absent**, or the test evidence is missing, not verbatim, lackin
 |---|---|---|
 | 1 | Correctness | Does the diff do what the issue says? Are edge cases handled? |
 | 2 | Readability | Docblocks present, **truthful**, and free of filler prose ("seamlessly", "a crucial component") on every public class/method/function; names communicate intent. Git artifacts the run produced (issue, PR, comment text) hold the team voice (`git-conventions.md`) — session vocabulary or attribution there is a dimension-2 finding. Repo docs are in scope too: a README or doc example contradicted by the diff is a dimension-2 finding |
-| 3 | Architecture fit | Layer boundaries respected; single responsibility held |
+| 3 | Architecture fit | Layer boundaries respected; single responsibility held; reinvention unjustified in the plan — a helper, utility, or pattern the repo already provides, reimplemented — is a finding |
 | 4 | Pattern justification | Every pattern used earns its complexity — does it reduce maintenance cost, or just add ceremony? |
 | 5 | Test quality | Tests can actually fail; no tautological assertions. A new test is shown with its captured red leg, and that red is a behavioral assertion failure naming the pinned behavior — not a collection/import/attribute/syntax error that fails before the behavior runs; a new test with no red leg, or a red that only proves the harness loaded, is a finding. On a rebuild or redesign, an old markup-coupled suite staying green measures how little changed — anti-correlated with the goal; keeping old specs as a constraint needs an explicit justification in the plan. A flaky test is not a passing test — never disable a test, raise a timeout, or blind-rerun to green; a red-then-green rerun is disclosed in the verify evidence, not counted as plain green |
 | 6 | Security | Injection surfaces, authz seams, secrets in the diff, unsafe defaults — checked on every review, not only "security tasks". The secret half is mechanical: audit the attached Stage-4 secret-scan output the way dimension 5 audits the suite — a scanner hit is a finding, and a missing scan is caught at the precondition refusal above; sink review (injection, authz) stays your judgment. Gate-definition edits are a security surface: a diff that alters or weakens an existing gate — this plugin's skills/agents/references when installed, `.github/workflows/*`, or the test/lint/CI config a verification check depends on — without a recorded user approval is a finding here, escalated to the user (not the plan-review gate) even when a plan amendment covers it; adding config for genuinely new code is not the trigger. Carve-out: where the repo's product is the pipeline and the edit is the stated task, the normal gates apply. A second check here compares the diff's touched files against the sensitive-paths list (`verification.md`, Sensitive paths): a touched sensitive path is surfaced so the user-acceptance hold applies before merge, not a defect in itself. A commit made with `--no-verify` (or any hook-suppression flag) is a prohibited hook bypass — a prompt-level lead rule, not a diff trace, so do not claim to prove the flag; when the plan or evidence brief in front of you shows the repo configures commit hooks, the Stage-4 evidence must carry the hook run (or a concluded-success CI run covering that hook suite on the verified SHA), and its absence there is a Stage-4-completeness finding to raise |

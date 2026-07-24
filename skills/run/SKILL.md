@@ -29,7 +29,7 @@ Not accepted → **hard stop**. Present exactly these three doors; do not procee
 
 1. Switch model (`/model`) and re-run this skill.
 2. Continue under the consult pipeline instead — offer this; on the user's yes, read `${CLAUDE_PLUGIN_ROOT}/skills/consult/SKILL.md` and follow it in that same turn, carrying the user's original request over so nothing is retyped. When that path is unreachable (skills-only install), invoke the installed consult skill by name instead — the redirect is to the skill, not the file.
-3. User explicitly replies "proceed anyway" → run on the current model with reduced guarantees. Record the override and the user's stated reason in the final report. Under this override, Stage 5 routes to `argus-oracle` (final-review duty, consult evidence brief: diff as patch text or an on-disk patch file — written outside the repo tree (the session's scratch directory), or removed before any later commit — verbatim Stage 4 command and output, **the Stage-4 secret-scan output** — the advisor refuses a review without it, exactly as the reviewer does — run-time HEAD SHA, produced git-artifact text, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth) instead of `argus-reviewer` — the reviewer's `model: inherit` would grade the gate at the overriding lead's own tier. Record the substitution in the final report.
+3. User explicitly replies "proceed anyway" → run on the current model with reduced guarantees. Record the override and the user's stated reason in the final report. Under this override, Stage 5 routes to `argus-oracle` (final-review duty, consult evidence brief: diff as patch text or an on-disk patch file — written outside the repo tree (the session's scratch directory), or removed before any later commit — verbatim Stage 4 command and output, **the Stage-4 secret-scan output** — the advisor refuses a review without it, exactly as the reviewer does — run-time HEAD SHA, the run's working tree by absolute path, produced git-artifact text, and a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md` as the rubric's source of truth) instead of `argus-reviewer` — the reviewer's `model: inherit` would grade the gate at the overriding lead's own tier. Record the substitution in the final report.
 
 Never warn-and-continue past a failed gate silently.
 
@@ -150,7 +150,7 @@ Verdict is structured: `approve` or `revise` + reasons. A response lacking exact
 - **Implementers never commit.** They edit files and report; the lead verifies each slice, then commits it (serialized, Conventional Commits).
 - Parallel fan-out is allowed only across **disjoint file sets** — two executors never mutate the same file, command side effects (lockfiles, snapshots, generated artifacts) included. The lead verifies and commits only on a quiesced tree — after every in-flight executor has returned — first checking each report's files-changed list against its own brief's scope, then `git status` against the union of all scopes (`delegation.md`, isolation model).
 - The lead never delegates: architecture decisions, debugging, the review gate, verification sign-off, merge, or security-sensitive edits.
-- All implementation is TDD: red → green → **refactor**. The refactor leg is a real, planned step — not an afterthought.
+- All implementation is TDD: red → green → **refactor**. The refactor leg is a real, planned step — not an afterthought — and its duplication sweep rides it: the changed set must not reimplement a helper, utility, or pattern the repo already provides — fold into the existing code, or justify the divergence in the plan comment (`quality.md`, principle 4). On a parity goal the fold-default inverts (item 1's counterweight): the named reference is the justification, and a delta-trimming fold is the user's call.
 
 ### Self-catch rules (apply continuously)
 
@@ -201,7 +201,7 @@ Review dimensions (rubric shared with `quality.md`):
 
 1. **Correctness** — does it do what the issue says; edge cases.
 2. **Readability** — docblocks present, truthful, and free of filler prose on all public API; names communicate intent.
-3. **Architecture fit** — boundaries respected; single responsibility.
+3. **Architecture fit** — boundaries respected; single responsibility; reinvention unjustified in the plan is a finding here.
 4. **Pattern justification** — patterns earn their complexity.
 5. **Test quality** — tests can actually fail; no tautologies; no reaching green by disabling a test, raising a timeout, or a blind-rerun to green (a red-then-green rerun is disclosed, not counted as plain green).
 6. **Security** — injection surfaces, authz seams, secrets in the diff, unsafe defaults. Checked on every review, not only "security tasks". The secret half is mechanical: the reviewer audits the attached secret-scan output like the test suite — a diff without it is refused, a hit is a finding; sink review stays judgment.

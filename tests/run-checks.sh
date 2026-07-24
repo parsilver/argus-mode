@@ -1670,5 +1670,101 @@ else
   err "consult trigger (b) briefs do not carry the amendment's comparison"
 fi
 
+# 32. Duplication sweep on the refactor leg + reinvention in dimension 3
+#     (issue #120). Reuse was enforced before code existed (item 1's
+#     simpler-alternative pass) but nothing hunted duplication after: a diff
+#     quietly reinventing a util the repo already ships passed every gate.
+#     The TDD refactor leg now sweeps the changed set for reinvention (fold
+#     into the existing code, or justify the divergence in the plan comment
+#     — a failable outcome, not advice); dimension 3 names reinvention
+#     unjustified in the plan as a checked signal in all five copies
+#     (verification.md, both review agents, both skills); the routing table
+#     gains a post-implementation simplification row whose absent-skill
+#     fallback is the leg's own sweep (the existing named-absence rule, no
+#     new pass, no extra spawn — the issue's out-of-scope fence). Detection
+#     stays reviewer judgment; no tooling. Written RED-first: one FAIL line
+#     per absent pin.
+if grep -qF "sweeps the changed set for reinvention" references/quality.md; then
+  note "quality.md principle 4 carries the refactor-leg duplication sweep"
+else
+  err "quality.md principle 4 missing the refactor-leg duplication sweep"
+fi
+if grep -qF "fold it into the existing code or justify the divergence" references/quality.md; then
+  note "quality.md names the fold-or-justify outcome"
+else
+  err "quality.md missing the fold-or-justify outcome"
+fi
+for f32 in references/verification.md agents/argus-reviewer.md agents/argus-oracle.md skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "reinvention unjustified in the plan" "$f32"; then
+    note "dimension 3 names the reinvention signal in $f32"
+  else
+    err "dimension 3 missing the reinvention signal in $f32"
+  fi
+done
+for f32 in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "duplication sweep" "$f32"; then
+    note "the refactor-leg duplication sweep carried in $f32"
+  else
+    err "the refactor-leg duplication sweep missing from $f32"
+  fi
+done
+if grep -qF "A completed diff the lead elects to sweep" references/delegation.md; then
+  note "the routing table carries the elective simplification row"
+else
+  err "the routing table missing the elective simplification row"
+fi
+if grep -qF "the row is elective" references/delegation.md; then
+  note "the simplification row is explicitly elective — no per-run routing tax"
+else
+  err "the simplification row is not marked elective (universal trigger = mandatory pass)"
+fi
+if grep -qF '`simplify`' references/delegation.md; then
+  note "the simplification row names a simplify-type candidate skill"
+else
+  err "the simplification row names no candidate skill"
+fi
+if grep -qF "no simplify-type skill" references/delegation.md; then
+  note "the no-skill fallback rides the named-absence rule"
+else
+  err "the simplification row has no named-absence fallback"
+fi
+# Panel additions (#120 review): (1) the fold-default inverts on parity
+# goals — item 1's counterweight already classifies reuse-over-replace as
+# the RISK there, so the sweep must not instruct mid-execution exactly the
+# trim item 1 routes to the user; (2) the advisor's final-review path had
+# no repo to read — its evidence brief now carries the run's working tree
+# by absolute path, so the reinvention half of dimension 3 and end-to-end
+# tracing have a tree, not just a diff, on the consult and override paths.
+if grep -qF "the named reference is the divergence justification" references/quality.md; then
+  note "quality.md inverts the fold-default on parity goals"
+else
+  err "quality.md sweep lacks the parity-goal inversion"
+fi
+if grep -qF "a fold that trims the reference delta is a scope change" references/verification.md; then
+  note "dimension 3 routes parity-goal folds to the user, not the sweep"
+else
+  err "dimension 3 lacks the parity-goal fold routing"
+fi
+for f32 in skills/run/SKILL.md skills/consult/SKILL.md; do
+  if grep -qF "fold-default inverts" "$f32"; then
+    note "the parity inversion carried in $f32"
+  else
+    err "the parity inversion missing from $f32"
+  fi
+done
+for f32 in skills/consult/SKILL.md agents/argus-oracle.md; do
+  if grep -qF "the run's working tree by absolute path" "$f32"; then
+    note "the final-review evidence brief carries the working tree in $f32"
+  else
+    err "the final-review evidence brief lacks the working tree in $f32"
+  fi
+done
+if extract_block skills/run/SKILL.md "3. User explicitly replies" '^$' \
+   | grep -qF "the run's working tree by absolute path"; then
+  note "the override path's evidence brief carries the working tree"
+else
+  err "the override path's evidence brief lacks the working tree"
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

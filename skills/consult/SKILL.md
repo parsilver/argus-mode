@@ -317,7 +317,11 @@ solo-vs-fan-out criteria. Read `${CLAUDE_PLUGIN_ROOT}/references/on-track.md`
 now for loop-breaking, context budget, and the mandatory stage-transition
 marker.
 
-Same execution model as `/argus-mode:run`: TDD red → green → refactor,
+Same execution model as `/argus-mode:run`: TDD red → green → refactor
+— the refactor leg's duplication sweep included: the changed set must
+not reimplement what the repo already provides, fold or justify
+(`quality.md`, principle 4; on a parity goal the
+fold-default inverts and a delta-trimming fold is the user's call) —
 solo vs. fan-out per the same criteria, `argus-implementer` never commits,
 the lead verifies and commits every slice. The delta is **when the lead
 stops and calls `argus-oracle` mid-execution.**
@@ -459,7 +463,8 @@ an independent review. `argus-oracle` performs the final review instead,
 holding the identical bar:
 
 - Same 6 dimensions: correctness, readability (docblocks, intent-revealing
-  names), architecture fit, pattern justification, test quality (tests
+  names), architecture fit (reinvention unjustified in the plan is a
+  finding), pattern justification, test quality (tests
   that can actually fail — on a rebuild or redesign, an old
   markup-coupled suite staying green needs an explicit plan-level
   justification; no reaching green by disabling a test, raising a
@@ -507,15 +512,20 @@ missing evidence, not a review.
 4. **the git-artifact text this run produced** — issue body, PR
    description, the current plan comment — so the team-voice check
    (dimension 2) has something to read; the oracle cannot fetch
-   GitHub content itself, and
+   GitHub content itself,
 5. **a pointer to `${CLAUDE_PLUGIN_ROOT}/references/verification.md`
    as the rubric's source of truth** — the oracle applies the file,
-   not this summary.
+   not this summary, and
+6. **the run's working tree by absolute path** — the checked-out tree
+   already at the reviewed SHA, so the reinvention half of dimension 3
+   and end-to-end tracing beyond the diff have a repo to Read and
+   Grep; a diff alone cannot show what the tree already provides.
 
 The oracle audits that evidence — command, suite scope, freshness,
 artifact voice — rather than re-running the suite itself (unlike
 `argus-reviewer`, which may re-run tests). A missing diff, missing SHA,
-missing artifact text, missing secret-scan output, or stale/ambiguous
+missing artifact text, missing secret-scan output, missing working-tree
+path, or stale/ambiguous
 output is an instant refusal naming the gap: the oracle never reviews
 blind, and never audits evidence it can't trust.
 

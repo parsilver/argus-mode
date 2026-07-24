@@ -8,6 +8,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+- A duplication sweep on the TDD refactor leg, a reinvention signal in
+  review dimension 3, and a post-implementation simplification routing
+  row (`references/quality.md`, `references/verification.md`,
+  `references/delegation.md`, both `skills/*/SKILL.md`, both review
+  agents, `tests/run-checks.sh`): reuse was enforced before code
+  existed — the simpler-alternative pass asks what already solves the
+  goal — but nothing hunted duplication after, so a diff quietly
+  reinventing a util the repo already ships passed every gate. The
+  refactor leg now sweeps the changed set for reinvention (fold into
+  the existing code, or justify the divergence in the plan comment — a
+  failable outcome); dimension 3 treats reinvention unjustified in the
+  plan as a finding, in all five copies of the dimension text; the
+  routing table names an elective simplify-type skill for a completed
+  diff the lead chooses to sweep further, whose absent-skill fallback
+  is the leg's own sweep — the standing minimum, so skipping the
+  elective row is never a named-absence miss. On a parity goal the
+  fold-default inverts with the plan review's counterweight: the named
+  reference justifies the divergence and a delta-trimming fold is the
+  user's call. The advisor's final-review evidence brief (consult
+  mode, and the run skill's override path) now carries the run's
+  working tree by absolute path, so the reinvention half of dimension
+  3 and end-to-end tracing have a repo to read on those paths — a
+  missing working-tree path joins the advisor's refusal list. No new
+  pass, no extra spawn; detection stays reviewer judgment. Check 32
+  pins the doctrine RED-first. (#120)
+
 - An architecture-shaping trigger at Stage 2, with a mandatory
   candidates comparison on triggered plans
   (`references/pipeline.md`, `references/verification.md`,

@@ -240,6 +240,7 @@ Plugin-namespaced variants count as matches (e.g. a plugin's
 | Library-docs lookup — current API or version documentation for a dependency | a docs skill/server (e.g. `context7`) |
 | New-capability ideation — requirements unclear, solution space open | `brainstorming` or similar |
 | Post-incident or gate-miss writeup — root cause, what the gates missed | `post-mortem` or similar |
+| A completed diff the lead elects to sweep beyond the refactor leg's own duplication sweep — reuse, dedup, dead weight | `simplify` or a code-simplifier skill |
 | (extend this table as new domains recur — it is a starting set, not a closed list) | — |
 
 Several rows have stronger fallbacks than the quality doctrine alone:
@@ -251,7 +252,11 @@ plus review dimension 6, applied deliberately rather than in passing;
 no docs skill → the library's official documentation via web fetch,
 never memory alone; no brainstorming skill → the ambiguity gate in
 `pipeline.md` (clarify before the issue); no post-mortem skill → the
-four-field record contract in `post-mortem.md`, the minimum bar either
+four-field record contract in `post-mortem.md`;
+no simplify-type skill → the refactor leg's own duplication sweep
+(`quality.md`, principle 4) — and the row is elective: the leg's own
+sweep is the standing minimum on every run, so a plan that skips the
+elective sweep records no named absence for it — the minimum bar either
 way.
 
 If a detected domain has no installed skill matching it, the plan states

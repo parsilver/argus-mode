@@ -9,7 +9,7 @@ The `${CLAUDE_PLUGIN_ROOT}/references/` files are the source of truth: on
 any conflict between a summary in this file and a reference file, the
 reference wins.
 
-**Cost, up front:** a medium task pays the git ceremony (issue + branch/worktree + draft PR), at least one `argus-oracle` (opus) plan-review run — more on revise cycles — and an `argus-reviewer` review-gate run. Do **not** invoke this for a trivial lookup or anything the Stage 1 triviality hatch covers (≤3 changed lines AND one file AND no public-API or behavior change AND no new test warranted — a bugfix never qualifies) — handle those directly instead.
+**Cost, up front:** a medium task pays the git ceremony (issue + isolated worktree branch + draft PR), at least one `argus-oracle` (opus) plan-review run — more on revise cycles — and an `argus-reviewer` review-gate run. Do **not** invoke this for a trivial lookup or anything the Stage 1 triviality hatch covers (≤3 changed lines AND one file AND no public-API or behavior change AND no new test warranted — a bugfix never qualifies) — handle those directly instead.
 
 ## Agent availability check
 

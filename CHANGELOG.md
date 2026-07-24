@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Git intake now takes an isolated worktree on every full-pipeline run
-  (`references/pipeline.md`, both `skills/*/SKILL.md`, `README.md`,
+  (`references/pipeline.md`, `references/delegation.md`, both
+  `skills/*/SKILL.md`, `README.md`,
   `tests/run-checks.sh`): step 3 used to take a worktree only when the
   in-flight probe fired, so two sessions entering intake at the same
   moment on a clean repo could each see no in-flight signal and both
@@ -23,8 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   that has none and never switches the primary checkout; with no remote
   the worktree branches off the local default tip; the triviality
   hatch, read-only route, and preview are unchanged (no branch, no
-  worktree). Deliberately no config flag or opt-out. Check 30 pins the
-  doctrine RED-first. (#122)
+  worktree). The isolation model's premise is updated to match:
+  executors work in the run's worktree, and briefs carry absolute paths
+  into it because subagents inherit the session's original working
+  directory — the primary checkout. Deliberately no config flag or
+  opt-out. Check 30 pins the doctrine RED-first. (#122)
 
 ## [0.10.0] - 2026-07-21
 ### Added

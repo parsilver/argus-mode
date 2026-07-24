@@ -93,9 +93,12 @@ writes a line.
 ## Isolation model
 
 The working-tree model, stated once: **shared-tree fan-out with
-quiesced-tree verification.** Executors run in the session's single
-working tree — subagents inherit the session's working directory, so
-per-executor checkouts don't exist, and per-slice worktree plumbing
+quiesced-tree verification.** Executors run in the run's single working
+tree — the isolated worktree intake created (`pipeline.md`, git intake
+step 3). Subagents inherit the session's original working directory,
+which is the primary checkout that worktree exists to protect — so
+every brief carries absolute paths into the run's worktree, and
+per-executor checkouts still don't exist: per-slice worktree plumbing
 would add branch-and-merge machinery the serialized commit rule below
 already provides. Isolation therefore comes from three rules: disjoint
 file sets, a quiesced tree at verification time, and serialized

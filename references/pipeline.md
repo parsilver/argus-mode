@@ -502,7 +502,8 @@ of re-running intake:
    older run created in place included. Adoption
    never runs `git switch` inside the primary checkout — a primary
    checkout already parked on the adopted branch is pre-existing state,
-   not a switch. Read the plan comment — it
+   not a switch: work in it as-is, since `git worktree add` refuses a
+   second checkout of the same branch. Read the plan comment — it
    is the checklist of record. Adopted state with **no** plan comment
    means the run died before plan approval — enter at Stage 2 and
    plan against the adopted issue and branch.

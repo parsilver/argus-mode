@@ -1436,6 +1436,57 @@ for f30 in skills/run/SKILL.md skills/consult/SKILL.md; do
     err "unconditional worktree rule missing from $f30"
   fi
 done
+# Panel additions (#122 review): the reviewer and the lead both start in the
+# session's original cwd — the primary checkout, which under this doctrine
+# never holds the change — so the Stage-5 brief must anchor the reviewer to
+# the run's worktree and the lead must be told to work inside it from the
+# worktree's creation on; the no-remote terminal merge is the one sanctioned
+# move of the primary checkout, and cleanup carries the parked-primary
+# post-merge switch-back. The primary-checkout-invariant and isolation-model
+# pins predate their assertions (regression pins, the check-29 idiom); the
+# rest were written RED-first.
+if grep -qF "the run worktree's absolute path" skills/run/SKILL.md; then
+  note "the review brief contract anchors the reviewer to the run worktree"
+else
+  err "the review brief contract does not carry the run worktree's absolute path"
+fi
+if grep -qF "inside the brief's worktree" agents/argus-reviewer.md; then
+  note "the reviewer binds its commands to the brief's worktree"
+else
+  err "the reviewer does not bind its commands to the brief's worktree"
+fi
+if printf '%s\n' "$degr30" | grep -qF "run inside the primary checkout"; then
+  note "the no-remote terminal merge names its execution location"
+else
+  err "the no-remote terminal merge does not name its execution location"
+fi
+if awk '/^## Terminal-outcome cleanup$/{f=1;next} /^## /{f=0} f' references/pipeline.md \
+   | grep -qF "switches the primary checkout back to the default branch"; then
+  note "cleanup carries the parked-primary post-merge switch-back"
+else
+  err "cleanup missing the parked-primary post-merge switch-back"
+fi
+if printf '%s\n' "$intake30" | grep -qF "the bootstrap commit included"; then
+  note "git intake binds the lead's commands to the run's worktree"
+else
+  err "git intake does not bind the lead's commands to the run's worktree"
+fi
+if printf '%s\n' "$intake30" | grep -qF "nothing in the primary checkout moves"; then
+  note "git intake pins the primary-checkout invariant"
+else
+  err "git intake dropped the primary-checkout invariant"
+fi
+if awk '/^## Isolation model$/{f=1;next} /^## /{f=0} f' references/delegation.md \
+   | grep -qF "every brief carries absolute paths into the run's worktree"; then
+  note "the isolation model anchors briefs to the run's worktree"
+else
+  err "the isolation model no longer anchors briefs to the run's worktree"
+fi
+if printf '%s\n' "$preview30" | grep -qF "worktree branch → draft PR"; then
+  note "the preview on-yes path reflects unconditional worktrees"
+else
+  err "the preview on-yes path still carries the retired branch/worktree pairing"
+fi
 
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

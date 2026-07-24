@@ -287,6 +287,8 @@ not decoration.
    not a stale local copy. The run branches straight off it in the worktree
    step 3 creates and never touches the primary checkout's ref: no
    fast-forward, no `git switch` — nothing in the primary checkout moves.
+   The no-remote terminal merge is the one sanctioned exception
+   (Degradation rules), and it runs after the review gate, never here.
 2. Create a GitHub issue describing the work: `gh issue create` — title
    and description per `git-conventions.md` (failable acceptance
    criteria; bugs carry expected/actual, repro steps, verbatim
@@ -320,6 +322,11 @@ not decoration.
    - Named degrade: no `gh` or no remote skips the draft-PR arm of the
      probe (named in the final report, not silent); the other two arms
      still run.
+   - From this step on, every command the lead runs executes inside the
+     run's worktree — the bootstrap commit included — via `cd` or
+     `git -C <path>`: the session's shell begins in the primary
+     checkout, the same inheritance trap the isolation model names for
+     subagents (`delegation.md`).
 4. Bootstrap the PR immediately, before writing any implementation code:
    - Create an empty bootstrap commit.
    - Open a **draft** PR with `Closes #<n>` on the first line of the
@@ -403,8 +410,8 @@ re-draft, do not re-recite the creed, do not re-print the preflight.
 Re-take only the volatile read-only checks (a fresh `git fetch`, and a
 re-scan and trust-tier re-probe if a foreign thread grew — a snapshot is
 not a standing grant, refreshing both header records), then run git intake
-steps 2–4 in order (issue → branch/worktree → draft
-PR), and the reused draft **still goes through the Stage 2.5 plan review**,
+steps 2–4 in order (issue → worktree branch → draft PR), and the
+reused draft **still goes through the Stage 2.5 plan review**,
 exactly as any normal run. Preview defers the git ceremony and the plan
 review to the far side of the handshake and removes neither —
 no gate is skipped, the opposite of the dropped express-lane, which
@@ -755,7 +762,7 @@ report.
 | Condition | Issue / PR | Plan lives in | Reviewer scope | Merge semantics |
 |---|---|---|---|---|
 | No git repo | Offer `git init`; if declined, skip the git layer for every stage | The final report | Files created/modified this session | N/A — deliver = the final report |
-| Git repo, no remote at all | Local branch only — its worktree off the local default tip; skip issue and PR | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | Local `git merge --no-ff` into the default branch, after the review gate — remove `PLAN.md` in a final commit on the branch first, so run state never lands on the default branch |
+| Git repo, no remote at all | Local branch only — its worktree off the local default tip; skip issue and PR | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | Local `git merge --no-ff` into the default branch, run inside the primary checkout — the only checkout holding the default branch, and the one sanctioned move of it — on a clean primary tree, after the review gate; a dirty primary tree, or one parked off the default branch, escalates to the user before any merge. Remove `PLAN.md` in a final commit on the branch first, so run state never lands on the default branch |
 | Remote exists, `gh` CLI missing | Skip issue and PR (no API access); push the branch to the remote | `PLAN.md`, committed on the branch | `git diff <default-branch>...HEAD` | **Never merge locally while a remote exists** — the local default branch would diverge from origin while every later run branches off `origin/<default>`, hiding the merged work from every intake that follows. Deliver the pushed branch and its compare link, named in the final report; opening and merging the PR is the user's step. Push rejected (no rights) → deliver the branch locally (`git bundle` or patch file, or the user pushes), named the same way |
 | Remote exists, no push rights (fork / OSS contribution) | Issue on upstream when creatable, else skip and note; `gh repo fork --remote`, branch pushed to the fork | Issue comment as usual (PR description when no upstream issue) | Normal — PR diff | Cross-fork draft PR, readied after the review gate; merging belongs to the maintainer — deliver = the ready PR, named in the final report |
 | Issues disabled on the repo, or no permission to create them | Branch + PR, no issue | Plan comment moves to the PR description (no issue thread to host it) | Normal — PR diff | Normal — merge the PR; note the missing issue in the final report |
@@ -774,7 +781,11 @@ run created and no longer needs, and name it in the final report:
 
 - a worktree created at intake is removed (`git worktree remove`);
 - the local branch is deleted after its merge (the remote branch per
-  the repo's delete-on-merge setting); an abandoned branch is deleted
+  the repo's delete-on-merge setting); when the run worked in a primary
+  checkout parked on the adopted branch (Resume), the run first
+  switches the primary checkout back to the default branch — the one
+  post-merge exception to the no-switch rule, scoped to a branch whose
+  merge just landed; an abandoned branch is deleted
   locally and on the remote once the user confirms the abandonment;
 - on `reject`, remove the worktree but **keep the branch** — it holds
   the rejected work the user was just pointed at (and, degraded, the

@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Git intake now takes an isolated worktree on every full-pipeline run
   (`references/pipeline.md`, `references/delegation.md`, both
-  `skills/*/SKILL.md`, `README.md`,
+  `skills/*/SKILL.md`, `agents/argus-reviewer.md`, `README.md`,
   `tests/run-checks.sh`): step 3 used to take a worktree only when the
   in-flight probe fired, so two sessions entering intake at the same
   moment on a clean repo could each see no in-flight signal and both
@@ -27,7 +27,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   worktree). The isolation model's premise is updated to match:
   executors work in the run's worktree, and briefs carry absolute paths
   into it because subagents inherit the session's original working
-  directory — the primary checkout. Deliberately no config flag or
+  directory — the primary checkout. The same inheritance trap is closed
+  on the two surfaces that shared it: the review brief now names the
+  run worktree's absolute path and the reviewer anchors every command
+  and re-run there (its inherited cwd never holds the change), and the
+  lead's own commands run inside the worktree from its creation on,
+  bootstrap commit included. The no-remote terminal merge is named as
+  the one sanctioned move of the primary checkout (clean tree, after
+  the review gate, escalating to the user otherwise), and cleanup
+  switches a parked primary checkout back to the default branch after
+  an adopted branch's merge. Deliberately no config flag or
   opt-out. Check 30 pins the doctrine RED-first. (#122)
 
 ## [0.10.0] - 2026-07-21

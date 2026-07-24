@@ -144,6 +144,9 @@ runs, in pipeline.md's section order:
   run never re-points the shared checkout; the mechanical
   in-flight probe still runs as inventory, feeding the in-flight
   announcement and Resume rather than a checkout choice → draft PR.
+  From the worktree's creation on, every command the lead runs
+  executes inside it — the session's shell begins in the primary
+  checkout.
 - **In-flight work:** the intake step must announce in-flight work for
   another task in-session when the probe or the Resume check finds an open
   PR or worktree for it (`in flight: #12, worktree ../repo-12`) —

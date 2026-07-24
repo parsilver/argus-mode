@@ -42,7 +42,12 @@ any time. The TDD refactor leg sweeps the changed set for reinvention:
 code that reimplements a helper, utility, or pattern the repo already
 provides is a failable outcome, not a style note —
 fold it into the existing code or justify the divergence in the plan
-comment before the stage closes.
+comment before the stage closes. On a parity or resemblance goal the
+fold-default inverts with the plan review's counterweight
+(`verification.md`, item 1): there
+the named reference is the divergence justification, and a fold that
+trims the delta against the reference is a scope change for the user
+to approve, never the sweep's default action.
 
 - Refusal condition: code that cannot be safely refactored (no tests, no
   boundaries) is not done, regardless of whether it currently works.

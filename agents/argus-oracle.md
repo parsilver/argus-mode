@@ -117,7 +117,13 @@ The brief **must** include:
 - the verbatim Stage 4 test command,
 - its full output,
 - the **Stage-4 secret-scan output** — a maintained scanner's report (gitleaks/trufflehog), or the shipped regex-sweep fallback's when none is installed (`verification.md`, "what a failable check is") — produced at the same run-time SHA and over the same diff range as the test evidence, so the single SHA below timestamps it too,
-- the **HEAD commit SHA at the moment the Stage 4 command ran**, and
+- the **HEAD commit SHA at the moment the Stage 4 command ran**,
+- **the run's working tree by absolute path** — the checked-out tree
+  already at that reviewed SHA. You have no shell, but Read and Grep
+  reach a tree: the reinvention half of dimension 3 (does the repo
+  already provide what the diff reimplements?) and end-to-end tracing
+  beyond the diff both read the repo there — a diff alone cannot show
+  what the tree already contains, and
 - **the git-artifact text the run produced** — issue body, PR
   description, and the current plan comment, attached verbatim (you
   cannot fetch GitHub content yourself) — dimension 2's team-voice

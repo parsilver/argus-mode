@@ -379,7 +379,11 @@ Checked on every review, every time — not opted into per task:
    utility, or pattern the repo already provides —
    reinvention unjustified in the plan — is a finding (`quality.md`,
    principle 4); folding into the existing code is the default, the
-   recorded justification the exception.
+   recorded justification the exception. On a parity goal item 1's
+   counterweight inverts that default: the named reference justifies
+   the divergence, and
+   a fold that trims the reference delta is a scope change for the
+   user, not this finding's remedy.
 4. **Pattern justification.** Every pattern in the diff earns its
    complexity — a pattern applied without a stated reason is unjustified
    complexity, not craftsmanship.

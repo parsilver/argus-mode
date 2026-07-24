@@ -1445,11 +1445,18 @@ done
 # post-merge switch-back. The primary-checkout-invariant and isolation-model
 # pins predate their assertions (regression pins, the check-29 idiom); the
 # rest were written RED-first.
-if grep -qF "the run worktree's absolute path" skills/run/SKILL.md; then
-  note "the review brief contract anchors the reviewer to the run worktree"
+if grep -qF "the run's working tree by absolute path" skills/run/SKILL.md; then
+  note "the review brief contract anchors the reviewer to the run's working tree"
 else
-  err "the review brief contract does not carry the run worktree's absolute path"
+  err "the review brief contract does not carry the run's working tree by absolute path"
 fi
+for f30 in skills/run/SKILL.md agents/argus-reviewer.md; do
+  if grep -qF "names no working-tree path" "$f30"; then
+    note "the missing-working-tree refusal class carried in $f30"
+  else
+    err "the missing-working-tree refusal class missing from $f30"
+  fi
+done
 if grep -qF "inside the brief's worktree" agents/argus-reviewer.md; then
   note "the reviewer binds its commands to the brief's worktree"
 else
@@ -1461,10 +1468,10 @@ else
   err "the no-remote terminal merge does not name its execution location"
 fi
 if awk '/^## Terminal-outcome cleanup$/{f=1;next} /^## /{f=0} f' references/pipeline.md \
-   | grep -qF "switches the primary checkout back to the default branch"; then
-  note "cleanup carries the parked-primary post-merge switch-back"
+   | grep -qF "defers the local-branch deletion"; then
+  note "cleanup defers branch deletion on a parked-primary merge, keeping no-switch absolute"
 else
-  err "cleanup missing the parked-primary post-merge switch-back"
+  err "cleanup missing the parked-primary branch-deletion deferral"
 fi
 if printf '%s\n' "$intake30" | grep -qF "the bootstrap commit included"; then
   note "git intake binds the lead's commands to the run's worktree"

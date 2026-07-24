@@ -29,14 +29,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   into it because subagents inherit the session's original working
   directory — the primary checkout. The same inheritance trap is closed
   on the two surfaces that shared it: the review brief now names the
-  run worktree's absolute path and the reviewer anchors every command
-  and re-run there (its inherited cwd never holds the change), and the
+  run's working tree by absolute path (the intake worktree or, on a
+  parked-primary resume, the primary checkout) and the reviewer
+  anchors every command and re-run there — a brief naming no
+  working-tree path is a refusal — and the
   lead's own commands run inside the worktree from its creation on,
   bootstrap commit included. The no-remote terminal merge is named as
   the one sanctioned move of the primary checkout (clean tree, after
-  the review gate, escalating to the user otherwise), and cleanup
-  switches a parked primary checkout back to the default branch after
-  an adopted branch's merge. Deliberately no config flag or
+  the review gate, escalating to the user otherwise); a primary
+  checkout parked on an adopted branch stays where the user parked it
+  after the merge, with the local-branch deletion deferred and named.
+  Deliberately no config flag or
   opt-out. Check 30 pins the doctrine RED-first. (#122)
 
 ## [0.10.0] - 2026-07-21

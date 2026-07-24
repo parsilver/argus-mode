@@ -782,10 +782,12 @@ run created and no longer needs, and name it in the final report:
 - a worktree created at intake is removed (`git worktree remove`);
 - the local branch is deleted after its merge (the remote branch per
   the repo's delete-on-merge setting); when the run worked in a primary
-  checkout parked on the adopted branch (Resume), the run first
-  switches the primary checkout back to the default branch — the one
-  post-merge exception to the no-switch rule, scoped to a branch whose
-  merge just landed; an abandoned branch is deleted
+  checkout parked on the adopted branch (Resume), that checkout stays
+  where the user parked it — the no-switch rule holds after the merge
+  too, `git branch -d` refuses while the branch is checked out, so the
+  run defers the local-branch deletion, names the deferral in the
+  final report, and leaves moving off the branch to the user; an
+  abandoned branch is deleted
   locally and on the remote once the user confirms the abandonment;
 - on `reject`, remove the worktree but **keep the branch** — it holds
   the rejected work the user was just pointed at (and, degraded, the

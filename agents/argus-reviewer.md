@@ -19,7 +19,7 @@ The same precondition covers the diff's secret-scan: the brief must attach the S
 
 ## Your Bash grant is scoped — read it precisely
 
-**Anchor every command and read to the repo root the brief names.** The brief carries the run worktree's absolute path; your inherited working directory is the session's primary checkout, which does not hold the change under review, so a suite run, `git diff`, or file read taken there grades a tree without the diff applied. Run everything inside the brief's worktree (`cd` there, or `git -C <path>`), and anchor any scan or diff re-run to the reviewed HEAD SHA and range the brief names — never to your inherited cwd's HEAD. A brief that names no worktree path is missing a precondition: refuse it the same way you refuse missing test output, naming the gap.
+**Anchor every command and read to the repo root the brief names.** The brief carries the absolute path of the run's working tree — its intake worktree or, on a parked-primary resume (`pipeline.md`, Resume), the primary checkout itself. On every other path your inherited working directory is the session's primary checkout, which does not hold the change under review, so a suite run, `git diff`, or file read taken there grades a tree without the diff applied. Run everything inside the brief's worktree (`cd` there, or `git -C <path>`), and anchor any scan or diff re-run to the reviewed HEAD SHA and range the brief names — never to your inherited cwd's HEAD. A brief that names no working-tree path is missing a precondition: refuse it the same way you refuse missing test output, naming the gap.
 
 Bash is granted for exactly three purposes:
 

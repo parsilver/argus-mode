@@ -126,6 +126,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Deliberately no config flag or
   opt-out. Check 30 pins the doctrine RED-first. (#122)
 
+### Fixed
+
+- `.gitignore` now covers `.claude/`, and both skill descriptions carry the
+  `--preview` dry-run auto-trigger (`.gitignore`, both `skills/*/SKILL.md`,
+  `tests/run-checks.sh`): the directory holds local worktree state a wide
+  `git add` could otherwise sweep into a commit; and, separately, a skill's
+  description is what loads before its body, so the dry-run auto-trigger the
+  preview-mode section and README document could never fire from the
+  description — only the explicit `--preview` slash-flag did. Both descriptions
+  now carry the preview and dry-run words, and check 34 guards them by grepping
+  the extracted `description:` line so the body's own "preview" cannot fake a
+  pass. Two defects trimmed out of #117 and #115. (#127)
+
 ## [0.10.0] - 2026-07-21
 ### Added
 

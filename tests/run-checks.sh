@@ -1843,5 +1843,28 @@ for f33 in skills/run/SKILL.md skills/consult/SKILL.md; do
   fi
 done
 
+# 34. --preview description auto-trigger (issue #127). The preview-mode section
+#     (references/pipeline.md) and README:134 promise --preview triggers on the
+#     flag OR "an unambiguous dry-run intent", but a skill's description loads
+#     before its body, so a body-only intent can never auto-fire — the natural-
+#     language path is dead while only the explicit --preview slash-flag works.
+#     Both skills' description frontmatter must carry a preview token AND a
+#     dry-run token so the documented auto-trigger can fire from the description.
+#     Greps the extracted description line only — the skill body already
+#     contains "preview" (skills/run/SKILL.md preview-mode section), which a
+#     whole-file grep would mistake for a pass. Written RED-first: before #127's
+#     description edit neither token is present, so the && fails and err fires —
+#     a behavioral assertion naming the pinned trigger, not a harness-load
+#     artifact. Rides in no numbered rubric item or dimension row, so check 6's
+#     12/6 parity is untouched.
+for f34 in skills/run/SKILL.md skills/consult/SKILL.md; do
+  desc=$(grep -m1 '^description:' "$f34")
+  if printf '%s' "$desc" | grep -qi 'preview' && printf '%s' "$desc" | grep -qiE 'dry[ -]run'; then
+    note "$f34 description carries the --preview + dry-run auto-trigger intent"
+  else
+    err "$f34 description missing the preview/dry-run auto-trigger intent"
+  fi
+done
+
 echo
 if [ "$fail" -eq 0 ]; then echo "all checks passed"; else echo "checks failed"; exit 1; fi

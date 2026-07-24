@@ -1,6 +1,6 @@
 ---
 name: run
-description: The argus-mode engineering pipeline for Fable/Opus leads — staged plan with failable checks, independent oracle plan review, TDD execution with delegated agents, 6-dimension review gate before merge. Trigger when the user invokes /argus-mode:run, or the argus pipeline is requested in a session running on a Fable or Opus model. Not for trivial lookups or edits the triviality hatch covers.
+description: The argus-mode engineering pipeline for Fable/Opus leads — staged plan with failable checks, independent oracle plan review, TDD execution with delegated agents, 6-dimension review gate before merge. Trigger when the user invokes /argus-mode:run, or the argus pipeline is requested in a session running on a Fable or Opus model. Also on the --preview flag or a dry-run request (preview the plan and cost before anything is created). Not for trivial lookups or edits the triviality hatch covers.
 ---
 
 # /argus-mode:run — the Argus Mode pipeline

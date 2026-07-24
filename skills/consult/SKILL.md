@@ -1,6 +1,6 @@
 ---
 name: consult
-description: The argus-mode pipeline for Sonnet/Haiku leads — the small model executes while a pinned-opus oracle gates the plan, arbitrates architecture, and performs the final review. Trigger when the user invokes /argus-mode:consult, asks for the argus pipeline on a smaller model, or when the argus pipeline is requested in a session running on a non-Fable/Opus model. Not for trivial lookups or edits the triviality hatch covers.
+description: The argus-mode pipeline for Sonnet/Haiku leads — the small model executes while a pinned-opus oracle gates the plan, arbitrates architecture, and performs the final review. Trigger when the user invokes /argus-mode:consult, asks for the argus pipeline on a smaller model, or when the argus pipeline is requested in a session running on a non-Fable/Opus model. Also on the --preview flag or a dry-run request (preview the plan and cost before anything is created). Not for trivial lookups or edits the triviality hatch covers.
 ---
 
 # /argus-mode:consult — small-model lead + oracle checkpoints
